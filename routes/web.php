@@ -1,12 +1,28 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ZapatillaController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
 
-// Redireccionar la raíz a la lista de zapatillas
+// Página principal para autenticación
 Route::get('/', function () {
-    return redirect()->route('zapatillas.index');
-});
+    return auth()->check()
+        ? view('home')
+        : redirect()->route('login');
+})->name('home');
 
-// Rutas para CRUD de Zapatillas
-Route::resource('zapatillas', ZapatillaController::class);
+// REGISTRO
+Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
+Route::post('/register', [RegisterController::class, 'register'])->name('register');
+
+// LOGIN
+Route::get('/login', [LoginController::class, 'showForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+
+// LOGOUT
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+
+
+
+

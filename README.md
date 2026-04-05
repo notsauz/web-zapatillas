@@ -1,6 +1,13 @@
 # Web Zapatillas
 
 ## **COMANDOS RAPIDOS**
+Levantar Docker `docker compose up -d --build`
+
+Ejecutar migraciones y seeds `docker compose exec app-zap php artisan migrate:fresh --seed`
+
+Web `http://localhost:8080`
+
+Intefaz grafica de BBDD `http://localhost:8081`
 
 ### **PRIMERA VEZ (configuración inicial)**
 ```
@@ -17,6 +24,6 @@ docker compose exec app composer install
 docker compose exec app php artisan key:generate
 
 # Ejecutar migraciones y seeders (crear tablas y datos)
-docker compose exec app php artisan migrate:fresh --seed
+docker compose exec app-zap php artisan migrate:fresh --seed
 
 ```
