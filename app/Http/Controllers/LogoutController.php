@@ -15,6 +15,6 @@ class LogoutController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('zapatillas.index')->with('success', 'Sesión cerrada correctamente.');
+        return redirect()->route('home')->with('success', 'Sesión cerrada correctamente.');
     }
 }
