@@ -21,10 +21,10 @@ cp .env.example .env
 docker compose up -d --build
 
 # Instalar dependencias (Opcional)
-docker compose exec app composer install
+docker compose exec app-zap composer install
 
 # Generar key de Laravel
-docker compose exec app php artisan key:generate
+docker compose exec app-zap php artisan key:generate
 
 # Ejecutar migraciones y seeders (crear tablas y datos)
 docker compose exec app-zap php artisan migrate:fresh --seed
