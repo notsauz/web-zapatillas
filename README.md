@@ -14,6 +14,9 @@ Intefaz grafica de BBDD `http://localhost:8081`
 # Clonar el repositorio
 git clone https://github.com/notsauz/web-zapatillas
 
+# Crear el .env
+cp .env.example .env
+
 # Levantar Docker
 docker compose up -d --build
 
