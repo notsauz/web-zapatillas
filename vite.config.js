@@ -7,6 +7,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
+                'resources/css/layouts.css',
                 'resources/css/sneakers.index.css',
                 'resources/js/app.js',
                 'resources/js/catalog-lazy-load.js',
