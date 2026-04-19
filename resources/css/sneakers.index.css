@@ -1,0 +1,548 @@
+/* ==================== FILTROS RESPONSIVOS ==================== */
+
+/* Contenedor general */
+.filters-container {
+    position: relative;
+}
+
+/* Botón toggle para móvil */
+.btn-toggle-filters {
+    display: none;
+    border: none;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.btn-toggle-filters:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-toggle-filters i {
+    margin-right: 8px;
+}
+
+/* Sidebar de filtros - Desktop */
+.filter-sidebar {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Filtro section mejorado */
+.filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    position: sticky;
+    top: 70px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.filter-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-section::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.filter-section::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.filter-section::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.filter-title {
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-title.collapsible::after {
+    content: '▼';
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+}
+
+.filter-title.collapsible.collapsed::after {
+    transform: rotate(-90deg);
+}
+
+.filter-content {
+    max-height: 250px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 1;
+}
+
+.filter-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.form-check {
+    margin-bottom: 8px;
+}
+
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-label {
+    cursor: pointer;
+    user-select: none;
+    margin-left: 5px;
+}
+
+.price-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.price-inputs input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.price-inputs input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.form-select {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.btn-apply-filters,
+.btn-clear-filters {
+    width: 100%;
+    padding: 10px 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.btn-apply-filters {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-apply-filters:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-clear-filters {
+    background: #6c757d;
+    color: white;
+    border: 1px solid #6c757d;
+}
+
+.btn-clear-filters:hover {
+    background: #5a6268;
+    border-color: #5a6268;
+}
+
+/* ==================== ANIMACIONES RESPONSIVAS ==================== */
+
+/* DESKTOP (Pantalla >= 992px) - Desplizar horizontal (derecha/izquierda) */
+@media (min-width: 992px) {
+    .btn-toggle-filters {
+        display: none !important;
+    }
+
+    .filter-sidebar {
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .filter-sidebar.hidden {
+        transform: translateX(100%);
+        visibility: hidden;
+    }
+
+    .filter-section {
+        animation: slideInFromLeft 0.4s ease-out;
+    }
+
+    .filter-section.hidden {
+        animation: slideOutToLeft 0.4s ease-out forwards;
+    }
+
+    @keyframes slideInFromLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideOutToLeft {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+    }
+
+    @keyframes slideInFromRight {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideOutToRight {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+    }
+}
+
+/* TABLET (768px <= 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .btn-toggle-filters {
+        display: none !important;
+    }
+
+    .filter-section {
+        animation: slideInFromLeft 0.4s ease-out;
+    }
+
+    .filter-section.hidden {
+        display: none;
+    }
+}
+
+/* MÓVIL (< 768px) - Desplizar vertical (arriba/abajo) */
+@media (max-width: 767px) {
+    .btn-toggle-filters {
+        display: block !important;
+    }
+
+    .filter-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        animation: fadeIn 0.3s ease-out;
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    .filter-sidebar.active {
+        pointer-events: all;
+        opacity: 1;
+    }
+
+    .filter-section {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 80vh;
+        border-radius: 16px 16px 0 0;
+        background: white;
+        z-index: 1001;
+        animation: slideUpFromBottom 0.4s ease-out forwards;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+        margin-bottom: 0;
+    }
+
+    .filter-sidebar.active .filter-section {
+        animation: slideUpFromBottom 0.4s ease-out forwards;
+    }
+
+    .filter-sidebar .filter-section.hide {
+        animation: slideDownToBottom 0.4s ease-out forwards;
+    }
+
+    .filter-section::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: #ddd;
+        border-radius: 2px;
+    }
+
+    .filter-section {
+        padding-top: 30px;
+        overflow-y: auto;
+    }
+
+    @keyframes slideUpFromBottom {
+        from {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideDownToBottom {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 0.5;
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 0.5;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+}
+
+/* ==================== TARJETAS DE ZAPATILLAS ==================== */
+
+.sneaker-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.sneaker-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    border-color: #007bff;
+}
+
+.sneaker-card:hover img {
+    transform: scale(1.05);
+}
+
+.sneaker-card a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.sneaker-card a:hover {
+    text-decoration: none;
+}
+
+.sneaker-card img {
+    transition: transform 0.3s ease;
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    background-color: #f0f0f0;
+}
+
+.sneaker-card .btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border-color: #007bff;
+    transition: all 0.2s ease;
+}
+
+.sneaker-card .btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    border-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* ==================== ESTADOS DE CARGA ==================== */
+
+#loadingSpinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* ==================== GRID RESPONSIVO ==================== */
+
+.row.g-4 {
+    row-gap: 2rem;
+}
+
+.col-4.col-sm-6.col-lg-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Grid 3 columnas en móvil */
+@media (max-width: 575px) {
+    .row.g-4 {
+        row-gap: 0.5rem !important;
+        --bs-gutter-x: 0.5rem !important;
+    }
+    
+    .col-4.col-sm-6.col-lg-4 {
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+    }
+    
+    .sneaker-card {
+        border-radius: 6px;
+    }
+    
+    .sneaker-card .position-relative {
+        height: 50px !important;
+    }
+    
+    .sneaker-card .position-relative img {
+        height: 50px !important;
+    }
+    
+    .sneaker-card .card-body {
+        padding: 3px !important;
+    }
+    
+    .sneaker-card .card-title {
+        font-size: 0.65rem !important;
+        margin-bottom: 2px !important;
+        line-height: 1.2 !important;
+    }
+    
+    .sneaker-card .product-sku,
+    .sneaker-card .product-brand,
+    .sneaker-card .product-color {
+        display: none !important;
+    }
+    
+    .sneaker-card h5.text-primary {
+        font-size: 0.75rem !important;
+        margin-bottom: 3px !important;
+    }
+    
+    .sneaker-card .btn {
+        padding: 0.1rem 0.3rem !important;
+        font-size: 0.55rem !important;
+        margin-top: auto;
+    }
+}
+
+/* ==================== UTILIDADES ==================== */
+
+.overlay-hidden {
+    pointer-events: none;
+}
+
+/* Filtros container oculto */
+.filters-container.hidden {
+    display: none;
+}
+
+/* Grid expandido cuando filtros están ocultos */
+.filters-container.hidden ~ .col-lg-9 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* Transición suave del grid */
+.col-lg-9 {
+    transition: all 0.3s ease;
+}
+
+/* ==================== TRANSICIONES SUAVES ==================== */
+
+* {
+    /* Asegurar transiciones suaves */
+    transition-property: all;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
+
+button,
+a,
+input,
+select {
+    transition-property: background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
