@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -20,24 +22,33 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         // Validar datos de entrada
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        $validated = $request->validate([
+            'email' => 'required|string',
             'password' => 'required|string',
         ], [
-            'email.required' => 'El email es obligatorio.',
-            'email.email' => 'El email debe ser válido.',
+            'email.required' => 'El nombre de usuario o email es obligatorio.',
             'password.required' => 'La contraseña es obligatoria.',
         ]);
 
-        // Intentar autenticar al usuario con las credenciales proporcionadas y la opción "remember me" si está marcada
-        if (auth()->attempt($credentials, $request->filled('remember'))) {
+        // Obtener el valor ingresado
+        $loginValue = $validated['email'];
+        $password = $validated['password'];
+
+        // Intentar autenticar con username, email o nombre
+        $user = User::where('username', $loginValue)
+                    ->orWhere('email', $loginValue)
+                    ->first();
+
+        // Verificar contraseña y autenticar al usuario
+        if ($user && Hash::check($password, $user->password)) {
+            auth()->login($user, $request->filled('remember'));
             $request->session()->regenerate();
-            return redirect()->route('home')->with('success', 'Sesión iniciada correctamente.');
+            return redirect()->route('catalogo')->with('success', 'Sesión iniciada correctamente.');
         }
 
-        // Si falla la autenticación regresar al formulario con un mensaje de error y conservar el email ingresado para facilitar la corrección
+        // Si falla la autenticación regresar al formulario con un mensaje de error
         return back()
             ->withInput($request->only('email'))
-            ->withErrors(['email' => 'Email o contraseña incorrectos.']);
+            ->withErrors(['email' => 'Nombre de usuario, email o contraseña incorrectos.']);
     }
 }

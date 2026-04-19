@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Formulario de inicio de sesión -->
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow-sm">
@@ -22,10 +23,10 @@
                 <form action="{{ route('login') }}" method="POST" novalidate>
                     @csrf
 
-                    <!-- Email -->
+                    <!-- Email o Usuario -->
                     <div class="mb-3">
-                        <label for="email" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                        <label for="email" class="form-label">Nombre de Usuario o Correo Electrónico</label>
+                        <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required placeholder="Ej: tu_usuario o tu@email.com">
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -53,6 +54,7 @@
 
                 <hr class="my-4">
 
+                <!-- Enlace para registrarse -->
                 <p class="text-center mb-0">
                     ¿No tienes una cuenta? 
                     <a href="{{ route('register.form') }}">Regístrate aquí</a>

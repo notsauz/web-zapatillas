@@ -18,9 +18,12 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    // Definir los campos que se pueden asignar masivamente
     protected $fillable = [
         'name',
+        'username',
         'email',
+        'email_verified_at',
         'password',
     ];
 
@@ -29,6 +32,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    // Definir los campos que se ocultarán al convertir el modelo a un array o JSON
     protected $hidden = [
         'password',
         'remember_token',
@@ -41,6 +45,7 @@ class User extends Authenticatable
      */
     protected function casts(): array
     {
+        // Definir los campos que deben ser convertidos a tipos específicos
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',

@@ -9,6 +9,12 @@ Web `http://localhost:8080`
 
 Intefaz grafica de BBDD `http://localhost:8081`
 
+Informacion de admin en `database\seeders\AdminSeeder.php`
+
+Ejecutar seed de zapatillas `docker compose exec app-zap php artisan db:seed --class=SneakersSeeder`
+
+Ejecutar seed de zapatillas `docker compose exec app-zap php artisan db:seed --class=BrandSeeder`
+
 ### **PRIMERA VEZ (configuración inicial)**
 ```
 # Clonar el repositorio
