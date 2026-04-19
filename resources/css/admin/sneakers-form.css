@@ -1,0 +1,28 @@
+.size-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.size-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.size-btn.active {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+#dropZone:hover {
+    background-color: #e7f1ff;
+    border-color: #0d6efd !important;
+}
+
+#dropZone.dragover {
+    background-color: #cfe2ff;
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
