@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>TopSneakers: Sneakers populares</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -29,15 +30,16 @@
             <div class="user-section-mobile mobile-user">
                 @auth
                     <div class="btn-group">
+                        <a href="{{ route('profile.favorites') }}" class="btn btn-outline-light" title="Mis Favoritos">
+                            <i class="fas fa-heart"></i>
+                        </a>
                         <a href="{{ route('profile.edit') }}" class="btn btn-outline-light" title="Mi Perfil">
                             <i class="fas fa-user-circle"></i>
-                            <span>Perfil</span>
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="m-0">
                             @csrf
                             <button type="submit" class="btn btn-outline-light" title="Cerrar Sesión">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span>Salir</span>
                             </button>
                         </form>
                     </div>
@@ -105,6 +107,9 @@
                                 <i class="fas fa-lock me-1"></i> Admin
                             </a>
                         @endif
+                        <a href="{{ route('profile.favorites') }}" class="btn btn-outline-light btn-sm me-2">
+                            <i class="fas fa-heart me-1"></i> Favoritos
+                        </a>
                         <a href="{{ route('profile.edit') }}" class="btn btn-outline-light btn-sm me-2">
                             <i class="fas fa-cog me-1"></i> Mi Perfil
                         </a>
