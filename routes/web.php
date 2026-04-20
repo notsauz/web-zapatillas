@@ -33,11 +33,16 @@ Route::get('/zapatillas/{id}', [SneakerController::class, 'show'])->name('sneake
 // PERFIL (Solo usuarios autenticados)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'changePassword'])->name('profile.password');
     Route::post('/profile/send-verification', [ProfileController::class, 'sendVerificationEmail'])->name('profile.send-verification');
     Route::post('/profile/delete-account', [ProfileController::class, 'deleteAccount'])->name('profile.delete-account');
     Route::post('/profile/confirm-delete', [ProfileController::class, 'confirmDelete'])->name('profile.confirm-delete');
+
+    // Favoritos
+    Route::post('/favorites/add', [ProfileController::class, 'addFavorite'])->name('favorites.add');
+    Route::post('/favorites/remove', [ProfileController::class, 'removeFavorite'])->name('favorites.remove');
 });
 
 // Email verification (sin autenticación requerida)

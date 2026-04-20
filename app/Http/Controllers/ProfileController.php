@@ -12,6 +12,30 @@ use App\Models\User;
 class ProfileController extends Controller
 {
     /**
+     * Mostrar la página de favoritos
+     */
+    public function favorites(Request $request)
+    {
+        $user = auth()->user();
+        $query = $user->favoriteSneakers()->with('brandModel');
+        $sneakers = $query->paginate(12);
+
+        $favoriteSneakerIds = auth()->check()
+            ? $user->favoriteSneakers()->pluck('sneakers.id')->toArray()
+            : [];
+
+        if ($request->ajax() || $request->get('ajax')) {
+            return response()->json([
+                'html' => view('sneakers.partials.grid', compact('sneakers', 'favoriteSneakerIds'))->render(),
+                'hasMore' => $sneakers->hasMorePages(),
+                'currentPage' => $sneakers->currentPage(),
+            ]);
+        }
+
+        return view('profile.favorites', compact('sneakers', 'favoriteSneakerIds'));
+    }
+
+    /**
      * Mostrar el formulario de edición de perfil
      */
     public function edit()
@@ -253,5 +277,45 @@ class ProfileController extends Controller
         // Redirigir al login con mensaje de éxito
         return redirect()->route('login')
             ->with('success', 'Tu cuenta ha sido eliminada permanentemente. Lamentamos verte partir.');
+    }
+
+    /**
+     * Agregar zapatilla a favoritos
+     */
+    public function addFavorite(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'sneaker_id' => 'required|exists:sneakers,id',
+        ]);
+
+        $sneaker = \App\Models\Sneaker::find($validated['sneaker_id']);
+
+        if ($user->favoriteSneakers()->where('sneaker_id', $sneaker->id)->exists()) {
+            return redirect()->back()->with('info', 'Esta zapatilla ya está en tus favoritos.');
+        }
+
+        $user->favoriteSneakers()->attach($sneaker->id);
+
+        return redirect()->back()->with('success', 'Zapatilla agregada a favoritos.');
+    }
+
+    /**
+     * Eliminar zapatilla de favoritos
+     */
+    public function removeFavorite(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'sneaker_id' => 'required|exists:sneakers,id',
+        ]);
+
+        $sneaker = \App\Models\Sneaker::find($validated['sneaker_id']);
+
+        $user->favoriteSneakers()->detach($sneaker->id);
+
+        return redirect()->back()->with('success', 'Zapatilla eliminada de favoritos.');
     }
 }
