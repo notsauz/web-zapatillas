@@ -9,10 +9,13 @@
         <!-- Profile Edit Content -->
         <div class="col-md-10">
             <div class="card profile-card">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">
                         Mi Perfil
                     </h4>
+                    <a href="{{ route('profile.favorites') }}" class="btn btn-light btn-sm">
+                        <i class="fas fa-heart"></i> Mis Favoritos
+                    </a>
                 </div>
 
                 <!-- Profile Edit Form -->
