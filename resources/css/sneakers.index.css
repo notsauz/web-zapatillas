@@ -309,17 +309,21 @@
         border-radius: 16px 16px 0 0;
         background: white;
         z-index: 1001;
-        animation: slideUpFromBottom 0.4s ease-out forwards;
         box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
         margin-bottom: 0;
+        transform: translateY(100%);
+        opacity: 0;
+        pointer-events: none;
     }
 
     .filter-sidebar.active .filter-section {
         animation: slideUpFromBottom 0.4s ease-out forwards;
+        pointer-events: auto;
     }
 
     .filter-sidebar .filter-section.hide {
         animation: slideDownToBottom 0.4s ease-out forwards;
+        pointer-events: none;
     }
 
     .filter-section::before {

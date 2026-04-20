@@ -11,7 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (toggleMobileBtn && filterSidebar) {
         toggleMobileBtn.addEventListener('click', function() {
             filterSidebar.classList.toggle('active');
-            filterSection.classList.remove('hide');
+            
+            if (filterSidebar.classList.contains('active')) {
+                filterSection.classList.remove('hide');
+            } else {
+                filterSection.classList.add('hide');
+            }
             
             const btnText = document.getElementById('filterBtnText');
             if (btnText) {

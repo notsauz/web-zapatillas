@@ -277,5 +277,5 @@
 @endsection
 
 @section('scripts')
-    @vite(['resources/js/catalog-lazy-load.js', 'resources/js/catalog-favorites.js'])
+    @vite(['resources/js/filters-toggle.js', 'resources/js/catalog-lazy-load.js', 'resources/js/catalog-favorites.js'])
 @endsection
