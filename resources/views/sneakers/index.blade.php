@@ -187,31 +187,71 @@
                 <div class="row g-4" id="sneakerGrid">
                     @foreach($sneakers as $sneaker)
                         <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="card sneaker-card" style="position: relative; transition: all 0.3s ease;">
+                                <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
+                                @auth
+                                    @php
+                                        $isFavorited = in_array($sneaker->id, $favoriteSneakerIds);
+                                    @endphp
+                                    @if($isFavorited)
+                                        <form class="favorite-form" action="{{ route('favorites.remove') }}" method="POST"
+                                            data-add-url="{{ route('favorites.add') }}"
+                                            data-remove-url="{{ route('favorites.remove') }}"
+                                            data-card-selector=".card">
+                                            @csrf
+                                            <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
+                                            <button type="submit" class="btn btn-danger btn-sm shadow-sm"
+                                                style="width: 40px; height: 40px; border-radius: 50%;">
+                                                <i class="fas fa-heart text-white"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form class="favorite-form" action="{{ route('favorites.add') }}" method="POST"
+                                            data-add-url="{{ route('favorites.add') }}"
+                                            data-remove-url="{{ route('favorites.remove') }}"
+                                            data-card-selector=".card">
+                                            @csrf
+                                            <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm shadow-sm"
+                                                style="width: 40px; height: 40px; border-radius: 50%;">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                @else
+                                    <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm shadow-sm"
+                                        style="width: 40px; height: 40px; border-radius: 50%;">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                @endauth
+                            </div>
+
                             <a href="{{ route('sneaker.show', $sneaker->id) }}" class="text-decoration-none">
-                                <div class="card sneaker-card" style="transition: all 0.3s ease;">
                                     <div class="position-relative overflow-hidden" style="height: 250px;">
                                         <img src="{{ $sneaker->image_url }}"
-                                            alt="{{ $sneaker->name }}" class="w-100 h-100" style="object-fit: cover; transition: transform 0.3s ease;">
+                                            alt="{{ $sneaker->name }}" class="w-100 h-100"
+                                            style="object-fit: cover; transition: transform 0.3s ease;">
                                     </div>
-                                    <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title text-dark fw-bold mb-2">{{ $sneaker->name }}</h5>
-                                        <p class="text-muted mb-2 product-sku" style="font-size: 0.9rem;">
-                                            <strong>SKU:</strong> {{ $sneaker->sku }}
-                                        </p>
-                                        <p class="text-muted mb-2 product-brand" style="font-size: 0.85rem;">
-                                            <small><strong>Marca:</strong> {{ $sneaker->brand }}</small>
-                                        </p>
-                                        @if($sneaker->color)
-                                            <p class="text-muted mb-3 product-color" style="font-size: 0.85rem;">
-                                                <small><strong>Color:</strong> {{ $sneaker->color }}</small></p>
-                                        @endif
-                                        <h5 class="text-primary fw-bold mb-3">${{ number_format($sneaker->price, 2) }}</h5>
-                                        <button class="btn btn-primary btn-sm w-100 mt-auto">
-                                            <i class="fas fa-eye me-1"></i> Ver Detalles
-                                        </button>
-                                    </div>
+                                </a>
+
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-dark fw-bold mb-2">{{ $sneaker->name }}</h5>
+                                    <p class="text-muted mb-2 product-sku" style="font-size: 0.9rem;">
+                                        <strong>SKU:</strong> {{ $sneaker->sku }}
+                                    </p>
+                                    <p class="text-muted mb-2 product-brand" style="font-size: 0.85rem;">
+                                        <small><strong>Marca:</strong> {{ $sneaker->brand }}</small>
+                                    </p>
+                                    @if($sneaker->color)
+                                        <p class="text-muted mb-3 product-color" style="font-size: 0.85rem;">
+                                            <small><strong>Color:</strong> {{ $sneaker->color }}</small></p>
+                                    @endif
+                                    <h5 class="text-primary fw-bold mb-3">${{ number_format($sneaker->price, 2) }}</h5>
+                                    <a href="{{ route('sneaker.show', $sneaker->id) }}" class="btn btn-primary btn-sm w-100 mt-auto">
+                                        <i class="fas fa-eye me-1"></i> Ver Detalles
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -237,79 +277,5 @@
 @endsection
 
 @section('scripts')
-    @vite('resources/js/catalog-lazy-load.js')
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Movil: Toggle Filtros
-            const mobileBtn = document.getElementById('toggleFiltersBtn');
-            const sidebar = document.querySelector('.filter-sidebar');
-            const section = document.querySelector('.filter-section');
-            const closeBtn = document.getElementById('closeFiltersBtn');
-            
-            if (mobileBtn && sidebar) {
-                mobileBtn.addEventListener('click', function() {
-                    sidebar.classList.toggle('active');
-                    if (sidebar.classList.contains('active')) {
-                        section?.classList.remove('hide');
-                    }
-                });
-            }
-            
-            if (closeBtn && sidebar) {
-                closeBtn.addEventListener('click', function() {
-                    sidebar.classList.remove('active');
-                    section?.classList.add('hide');
-                });
-            }
-            
-            if (sidebar) {
-                sidebar.addEventListener('click', function(e) {
-                    if (e.target === sidebar) {
-                        sidebar.classList.remove('active');
-                        section?.classList.add('hide');
-                    }
-                });
-            }
-
-            // Collapsible filters
-            document.querySelectorAll('.filter-title.collapsible').forEach(title => {
-                title.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('data-target');
-                    const target = document.getElementById(targetId);
-                    if (target) {
-                        target.classList.toggle('collapsed');
-                        this.classList.toggle('collapsed');
-                    }
-                });
-            });
-
-            // Búsqueda en tiempo real
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                let searchTimeout;
-                searchInput.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        const query = this.value.trim();
-                        const sneakerGrid = document.getElementById('sneakerGrid');
-                        if (sneakerGrid) {
-                            if (query.length > 0) {
-                                fetch(`/buscar?q=${encodeURIComponent(query)}&ajax=1`)
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        sneakerGrid.innerHTML = data.html;
-                                    })
-                                    .catch(error => console.error('Error en búsqueda:', error));
-                            } else {
-                                // Si vacío, recargar la página o mostrar todos
-                                location.reload();
-                            }
-                        }
-                    }, 300); // Debounce 300ms
-                });
-            }
-        });
-    </script>
+    @vite(['resources/js/catalog-lazy-load.js', 'resources/js/catalog-favorites.js'])
 @endsection
