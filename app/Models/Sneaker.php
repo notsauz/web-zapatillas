@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\User;
 
 class Sneaker extends Model
 {
@@ -133,5 +134,13 @@ class Sneaker extends Model
         }
 
         return $sizes->unique()->sort()->values();
+    }
+
+    /**
+     * Relación con usuarios que tienen esta zapatilla como favorita
+     */
+    public function favoritedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
     }
 }

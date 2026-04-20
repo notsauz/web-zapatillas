@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Sneaker;
 
 class User extends Authenticatable
 {
@@ -51,4 +52,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-}
+
+    /**
+     * Relación con zapatillas favoritas
+     */
+    public function favoriteSneakers()
+    {
+        return $this->belongsToMany(Sneaker::class, 'favorites')->withTimestamps();
+    }
+};
