@@ -49,6 +49,11 @@ class SneakerController extends Controller
         // Obtener los resultados con paginación
         $sneakers = $query->paginate(12);
 
+        // Obtener IDs de favoritos si el usuario está autenticado
+        $favoriteSneakerIds = auth()->check()
+            ? auth()->user()->favoriteSneakers()->pluck('sneakers.id')->toArray()
+            : [];
+
         // Datos para los filtros
         $brands = Sneaker::getBrands();
         $colors = Sneaker::getColors();
@@ -57,13 +62,13 @@ class SneakerController extends Controller
         // Si es una solicitud AJAX o lazy load, retornar JSON con datos
         if ($request->ajax() || $request->get('ajax')) {
             return response()->json([
-                'html' => view('sneakers.partials.grid', compact('sneakers'))->render(),
+                'html' => view('sneakers.partials.grid', compact('sneakers', 'favoriteSneakerIds'))->render(),
                 'hasMore' => $sneakers->hasMorePages(),
                 'currentPage' => $sneakers->currentPage(),
             ]);
         }
 
-        return view('sneakers.index', compact('sneakers', 'brands', 'colors', 'sizes'));
+        return view('sneakers.index', compact('sneakers', 'brands', 'colors', 'sizes', 'favoriteSneakerIds'));
     }
 
     /**
@@ -134,6 +139,11 @@ class SneakerController extends Controller
                                    ->limit(4)
                                    ->get();
 
-        return view('sneakers.show', compact('sneaker', 'relatedSneakers'));
+        $isFavorite = false;
+        if (auth()->check()) {
+            $isFavorite = auth()->user()->favoriteSneakers()->where('sneaker_id', $sneaker->id)->exists();
+        }
+
+        return view('sneakers.show', compact('sneaker', 'relatedSneakers', 'isFavorite'));
     }
 }

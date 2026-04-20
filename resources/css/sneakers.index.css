@@ -421,13 +421,44 @@
 .sneaker-card .btn-primary {
     background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     border-color: #007bff;
+    color: white;
     transition: all 0.2s ease;
 }
 
 .sneaker-card .btn-primary:hover {
     background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
     border-color: #0056b3;
+    color: white;
     transform: translateY(-2px);
+}
+
+/* ==================== FAVORITES HEADER ==================== */
+
+.favorites-header {
+    background: rgba(13, 110, 253, 0.08);
+    border: 1px solid rgba(13, 110, 253, 0.18);
+}
+
+.favorites-header h2 {
+    font-size: clamp(1.75rem, 2.5vw, 2.1rem);
+    margin-bottom: 0.5rem;
+}
+
+.favorites-actions .btn {
+    min-width: 170px;
+}
+
+.favorites-actions .btn-outline-primary {
+    color: #0d6efd;
+    border-color: rgba(13, 110, 253, 0.35);
+}
+
+.favorites-actions .btn-outline-primary:hover {
+    background: rgba(13, 110, 253, 0.08);
+}
+
+.favorites-actions .btn-outline-secondary:hover {
+    background: rgba(108, 117, 125, 0.08);
 }
 
 /* ==================== ESTADOS DE CARGA ==================== */

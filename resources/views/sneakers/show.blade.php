@@ -52,6 +52,25 @@
             <!-- Botones -->
             <div class="d-flex gap-2">
                 <a href="{{ route('catalogo') }}" class="btn btn-outline-secondary">Volver al Catálogo</a>
+                @auth
+                    @if($isFavorite)
+                        <form action="{{ route('favorites.remove') }}" method="POST" class="d-inline">
+                            @csrf
+                            <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar de favoritos?')">
+                                <i class="fas fa-heart"></i> Quitar de Favoritos
+                            </button>
+                        </form>
+                    @else
+                        <form action="{{ route('favorites.add') }}" method="POST" class="d-inline">
+                            @csrf
+                            <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="far fa-heart"></i> Agregar a Favoritos
+                            </button>
+                        </form>
+                    @endif
+                @endauth
             </div>
         </div>
     </div>
