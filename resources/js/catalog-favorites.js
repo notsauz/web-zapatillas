@@ -41,14 +41,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitButton.className = 'btn btn-danger btn-sm shadow-sm';
                 submitButton.innerHTML = '<i class="fas fa-heart text-white"></i>';
             } else if (action === removeUrl) {
-                form.setAttribute('action', addUrl);
-                submitButton.className = 'btn btn-outline-danger btn-sm shadow-sm';
-                submitButton.innerHTML = '<i class="far fa-heart"></i>';
-                if (window.location.pathname.includes('/profile/favorites')) {
-                    const card = form.closest(cardSelector);
-                    if (card) {
-                        card.remove();
+                // Quitando de favoritos
+                const isOnFavoritesPage = window.location.pathname.includes('/profile/favorites');
+                
+                if (isOnFavoritesPage) {
+                    // Encontrar y remover la columna que contiene este producto
+                    let element = form;
+                    let foundColumn = null;
+                    
+                    // Buscar hacia arriba hasta encontrar la columna
+                    while (element && element !== document.body) {
+                        if (element.classList && (element.classList.contains('col-4') || 
+                            element.classList.contains('col-sm-6') || 
+                            element.classList.contains('col-lg-4'))) {
+                            foundColumn = element;
+                            break;
+                        }
+                        element = element.parentElement;
                     }
+                    
+                    // Si encontramos la columna, la removemos con animación
+                    if (foundColumn) {
+                        foundColumn.style.transition = 'all 0.3s ease-out';
+                        foundColumn.style.opacity = '0';
+                        foundColumn.style.transform = 'scale(0.95)';
+                        
+                        setTimeout(() => {
+                            foundColumn.remove();
+                        }, 300);
+                    }
+                } else {
+                    // En el catálogo principal, solo cambiar el icono
+                    form.setAttribute('action', addUrl);
+                    submitButton.className = 'btn btn-outline-danger btn-sm shadow-sm';
+                    submitButton.innerHTML = '<i class="far fa-heart"></i>';
                 }
             }
         })

@@ -4,7 +4,9 @@ class CatalogManager {
         this.page = 1;
         this.isLoading = false;
         this.hasMore = true;
-        this.catalogUrl = window.location.pathname;
+        // Usa siempre la ruta raíz del catálogo
+        this.catalogUrl = '/';
+        this.searchTimeout = null;
         this.init();
     }
 
@@ -14,29 +16,59 @@ class CatalogManager {
     }
 
     setupFilters() {
+        // Búsqueda con debounce
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                console.log('Búsqueda escribida:', e.target.value);
+                clearTimeout(this.searchTimeout);
+                this.searchTimeout = setTimeout(() => {
+                    console.log('Aplicando búsqueda:', e.target.value);
+                    this.resetAndApplyFilters();
+                }, 500); // Espera 500ms después de dejar de escribir
+            });
+        }
+
         // Filtros por categoría
         document.querySelectorAll('input[name="category"]').forEach(el => {
-            el.addEventListener('change', () => this.resetAndApplyFilters());
+            el.addEventListener('change', () => {
+                console.log('Categoría cambió:', el.value);
+                this.resetAndApplyFilters();
+            });
         });
 
         // Filtros por marca
         document.querySelectorAll('input[name="brand"]').forEach(el => {
-            el.addEventListener('change', () => this.resetAndApplyFilters());
+            el.addEventListener('change', () => {
+                console.log('Marca cambió:', el.value);
+                this.resetAndApplyFilters();
+            });
         });
 
         // Filtros por color
         document.querySelectorAll('input[name="color"]').forEach(el => {
-            el.addEventListener('change', () => this.resetAndApplyFilters());
+            el.addEventListener('change', () => {
+                console.log('Color cambió:', el.value);
+                this.resetAndApplyFilters();
+            });
         });
 
         // Filtros por precio
         document.querySelectorAll('input[name="min_price"], input[name="max_price"]').forEach(el => {
-            el.addEventListener('change', () => this.resetAndApplyFilters());
+            el.addEventListener('change', () => {
+                const min = document.querySelector('input[name="min_price"]')?.value;
+                const max = document.querySelector('input[name="max_price"]')?.value;
+                console.log('Precio cambió:', min, '-', max);
+                this.resetAndApplyFilters();
+            });
         });
 
         // Filtros por talla
         document.querySelectorAll('input[name="size"]').forEach(el => {
-            el.addEventListener('change', () => this.resetAndApplyFilters());
+            el.addEventListener('change', () => {
+                console.log('Talla cambió:', el.value);
+                this.resetAndApplyFilters();
+            });
         });
     }
 
@@ -95,23 +127,38 @@ class CatalogManager {
     }
 
     applyFilters() {
+        const params = this.getFilterParams();
+        
         this.isLoading = true;
-        document.getElementById('loadingSpinner')?.style.setProperty('display', 'flex');
+        const loader = document.getElementById('loadingSpinner');
+        if (loader) loader.style.display = 'flex';
 
-        fetch(`${this.catalogUrl}?${this.getFilterParams()}&ajax=1`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        const url = `${this.catalogUrl}?${params}&ajax=1`;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
+            }
         })
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('sneakerGrid').innerHTML = data.html || '';
-                this.hasMore = data.hasMore ?? false;
-                this.isLoading = false;
-                document.getElementById('loadingSpinner')?.style.setProperty('display', 'none');
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.json();
             })
-            .catch(e => {
-                console.error(e);
+            .then(data => {
+                const gridEl = document.getElementById('sneakerGrid');
+                if (gridEl && data.html) {
+                    gridEl.innerHTML = data.html;
+                }
+                this.hasMore = data.hasMore || false;
                 this.isLoading = false;
-                document.getElementById('loadingSpinner')?.style.setProperty('display', 'none');
+                if (loader) loader.style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                this.isLoading = false;
+                if (loader) loader.style.display = 'none';
             });
     }
 

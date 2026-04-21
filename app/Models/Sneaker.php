@@ -84,7 +84,14 @@ class Sneaker extends Model
      */
     public function scopePriceRange($query, $minPrice, $maxPrice)
     {
-        return $query->whereBetween('price', [$minPrice, $maxPrice]);
+        if ($minPrice !== null && $maxPrice !== null) {
+            return $query->whereBetween('price', [$minPrice, $maxPrice]);
+        } elseif ($minPrice !== null) {
+            return $query->where('price', '>=', $minPrice);
+        } elseif ($maxPrice !== null) {
+            return $query->where('price', '<=', $maxPrice);
+        }
+        return $query;
     }
 
     /**

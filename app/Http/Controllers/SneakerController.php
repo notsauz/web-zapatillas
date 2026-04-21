@@ -30,9 +30,9 @@ class SneakerController extends Controller
         }
 
         // FILTRO POR RANGO DE PRECIO
-        if ($request->filled('min_price') && $request->filled('max_price')) {
-            $minPrice = max(0, (float) $request->input('min_price'));
-            $maxPrice = max($minPrice, (float) $request->input('max_price'));
+        if ($request->filled('min_price') || $request->filled('max_price')) {
+            $minPrice = $request->filled('min_price') ? max(0, (float) $request->input('min_price')) : null;
+            $maxPrice = $request->filled('max_price') ? max(0, (float) $request->input('max_price')) : null;
             $query->priceRange($minPrice, $maxPrice);
         }
 

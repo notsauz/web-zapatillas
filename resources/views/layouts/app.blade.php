@@ -137,7 +137,7 @@
         <div class="search-container-fluid">
             <div class="search-form-hidden">
                 <div class="search-group-hidden">
-                    <input type="search" id="searchInput" class="search-input-hidden" name="q"
+                    <input type="search" id="searchInput" class="search-input-hidden" name="search"
                         placeholder="Buscar por marca, color, etc." value="" aria-label="Buscar" autocomplete="off">
                     <i class="fas fa-search search-icon-hidden"></i>
                 </div>
