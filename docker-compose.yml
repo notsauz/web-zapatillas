@@ -8,8 +8,8 @@ services:
     environment:
       MYSQL_DATABASE: zapatillas_db
       MYSQL_USER: hugo
-      MYSQL_PASSWORD: 1
-      MYSQL_ROOT_PASSWORD: 1
+      MYSQL_PASSWORD: hugotfg1
+      MYSQL_ROOT_PASSWORD: hugotfg1
     ports:
       - "3306:3306"
     volumes:
@@ -38,7 +38,7 @@ services:
       DB_PORT: 3306
       DB_DATABASE: zapatillas_db
       DB_USERNAME: hugo
-      DB_PASSWORD: 1
+      DB_PASSWORD: hugotfg1
       SESSION_DRIVER: file
       CACHE_STORE: file
       QUEUE_CONNECTION: sync
@@ -69,9 +69,7 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: db-zapatillas
-      PMA_USER: hugo
-      PMA_PASSWORD: 1
-      PMA_ROOT_PASSWORD: 1
+      PMA_ABSOLUTE_URI: http://localhost:8081/
     ports:
       - "8081:80"
     depends_on:
