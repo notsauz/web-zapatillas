@@ -3,19 +3,20 @@
 @section('admin-content')
     <link rel="stylesheet" href="{{ asset('css/admin/sneakers-form.css') }}">
 
-    <!-- Encabezado -->
+    <!-- Encabezado de la página -->
     <div class="mb-4">
         <h2>Crear Nueva Marca</h2>
         <p class="text-muted">Completa el formulario para agregar una nueva marca</p>
     </div>
 
-    <!-- Formulario de Creación -->
+    <!-- Contenedor del formulario de creación de marca -->
     <div class="card">
         <div class="card-body">
+            <!-- Formulario POST para guardar la nueva marca -->
             <form method="POST" action="{{ route('admin.brands.store') }}" enctype="multipart/form-data">
                 @csrf
 
-                <!-- Nombre de la Marca -->
+                <!-- Campo de nombre de la marca (obligatorio) -->
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre de la Marca <span class="text-danger">*</span></label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
@@ -25,12 +26,12 @@
                     @enderror
                 </div>
 
-                <!-- Logo de la Marca -->
+                <!-- Sección para carga del logo de la marca (obligatorio) -->
                 <div class="mb-3">
                     <label class="form-label d-block">Logo de la Marca <span class="text-danger">*</span>
                         (obligatorio)</label>
 
-                    <!-- Zona de Soltar Archivo -->
+                    <!-- Zona interactiva para soltar archivo del logo -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="card border-2 border-dashed" id="dropZone"
@@ -45,7 +46,7 @@
                                 accept="image/jpeg,image/png,image/gif,image/webp,image/avif" style="display: none;">
                         </div>
 
-                        <!-- Vista Previa del Logo -->
+                        <!-- Vista previa del logo con opción de eliminar -->
                         <div class="col-md-6">
                             <div id="logoPreviewContainer" style="display: none;">
                                 <img id="logoPreview" src="" alt="Preview"
@@ -57,7 +58,7 @@
                         </div>
                     </div>
 
-                    <!-- URL del Logo -->
+                    <!-- Campo alternativo para ingresar URL del logo -->
                     <div class="mb-3">
                         <label for="logo_url" class="form-label">O ingresa una URL del logo</label>
                         <input type="url" class="form-control @error('logo_url') is-invalid @enderror" id="logo_url"
@@ -68,7 +69,7 @@
                     </div>
                 </div>
 
-                <!-- Descripción -->
+                <!-- Descripción de la marca (campo opcional) -->
                 <div class="mb-3">
                     <label for="description" class="form-label">Descripción</label>
                     <textarea class="form-control @error('description') is-invalid @enderror" id="description"
@@ -79,7 +80,7 @@
                     @enderror
                 </div>
 
-                <!-- Botones -->
+                <!-- Botones de acción para enviar el formulario o cancelar -->
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-2"></i>Crear Marca

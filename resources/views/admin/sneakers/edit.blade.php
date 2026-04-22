@@ -3,18 +3,21 @@
 @section('admin-content')
 <link rel="stylesheet" href="{{ asset('css/admin/sneakers-form.css') }}">
 
+<!-- Encabezado de la página -->
 <div class="mb-4">
     <h2>Editar Zapatilla</h2>
     <p class="text-muted">Modifica los detalles de la zapatilla</p>
 </div>
 
+<!-- Contenedor del formulario de edición -->
 <div class="card">
     <div class="card-body">
+        <!-- Formulario PUT para actualizar la zapatilla existente -->
         <form method="POST" action="{{ route('admin.sneakers.update', $sneaker->id) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            <!-- Nombre de la Zapatilla -->
+            <!-- Fila 1: Nombre y marca de la zapatilla -->
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="name" class="form-label">Nombre de la Zapatilla <span class="text-danger">*</span></label>
@@ -44,7 +47,7 @@
                 </div>
             </div>
 
-            <!-- SKU -->
+            <!-- Fila 2: SKU y Categoría de la zapatilla -->
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="sku" class="form-label">SKU <span class="text-danger">*</span></label>
@@ -63,10 +66,9 @@
                     <select class="form-select @error('category') is-invalid @enderror" 
                             id="category" name="category" required>
                         <option value="">-- Selecciona una categoría --</option>
-                        <option value="hombre" {{ old('category', $sneaker->category) == 'hombre' ? 'selected' : '' }}>Hombre</option>
-                        <option value="mujer" {{ old('category', $sneaker->category) == 'mujer' ? 'selected' : '' }}>Mujer</option>
-                        <option value="niño" {{ old('category', $sneaker->category) == 'niño' ? 'selected' : '' }}>Niño</option>
-                        <option value="unisex" {{ old('category', $sneaker->category) == 'unisex' ? 'selected' : '' }}>Unisex</option>
+                        @foreach ($categories as $cat)
+                            <option value="{{ $cat }}" {{ old('category', $sneaker->category) == $cat ? 'selected' : '' }}>{{ ucfirst($cat) }}</option>
+                        @endforeach
                     </select>
                     @error('category')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -74,7 +76,7 @@
                 </div>
             </div>
 
-            <!-- Precio -->
+            <!-- Fila 3: Precio y Color -->
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="price" class="form-label">Precio <span class="text-danger">*</span></label>
@@ -100,7 +102,7 @@
                 </div>
             </div>
             
-            <!-- Descripción -->
+            <!-- Descripción de la zapatilla (campo opcional) -->
             <div class="mb-3">
                 <label for="description" class="form-label">Descripción</label>
                 <textarea class="form-control @error('description') is-invalid @enderror" 
@@ -111,7 +113,7 @@
                 @enderror
             </div>
 
-            <!-- Tallas Disponibles -->
+            <!-- Selector de tallas disponibles (botones interactivos) -->
             <div class="mb-3">
                 <label class="form-label d-block">Tallas Disponibles <span class="text-danger">*</span></label>
                 <div class="d-flex flex-wrap gap-2 mb-2" id="sizesContainer">
@@ -133,11 +135,11 @@
                 <small class="form-text text-muted">Haz clic en las tallas disponibles</small>
             </div>
 
-            <!-- Imagen -->
+            <!-- Sección para cambiar imagen de la zapatilla (opcional) -->
             <div class="mb-3">
                 <label class="form-label d-block">Imagen</label>
                 
-                <!-- Zona de Soltar Imagen -->
+                <!-- Zona interactiva para soltar archivo de imagen -->
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="card border-2 border-dashed" id="dropZone" style="min-height: 150px; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: #f8f9fa; transition: all 0.3s;">
@@ -150,7 +152,7 @@
                         <input type="file" id="imageFile" name="image_file" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" style="display: none;">
                     </div>
                     
-                    <!-- Vista Previa de la Imagen -->
+                    <!-- Vista previa de imagen actual con opción de cambiar/eliminar -->
                     <div class="col-md-6">
                         <div id="imagePreviewContainer">
                             <img id="imagePreview" src="{{ $sneaker->image_url }}" alt="Preview" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
@@ -161,7 +163,7 @@
                     </div>
                 </div>
 
-                <!-- URL de la Imagen -->
+                <!-- Campo alternativo para ingresar URL de imagen -->
                 <div class="mb-3">
                     <label for="image_url" class="form-label">O ingresa una URL de imagen</label>
                     <input type="url" class="form-control @error('image_url') is-invalid @enderror" 
@@ -173,7 +175,7 @@
                 </div>
             </div>
 
-            <!-- Botones de Acción -->
+            <!-- Botones de acción para enviar cambios o cancelar -->
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save me-2"></i>Actualizar Zapatilla

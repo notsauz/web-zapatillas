@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <!-- Barra de navegación principal (IGUAL A USUARIOS NORMALES) -->
+    <!-- Barra de navegación principal -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <!-- Logo y Nombre -->
@@ -100,17 +100,19 @@
     <!-- CONTENIDO ADMIN CON SIDEBAR -->
     <div class="d-flex" style="gap: 0;">
         <!-- Toggle Sidebar Button (Mobile) -->
-        <button class="btn btn-dark d-lg-none" id="sidebarToggle" style="position: fixed; bottom: 20px; right: 20px; z-index: 1050; border-radius: 50%; width: 50px; height: 50px; padding: 0; display: flex; align-items: center; justify-content: center;">
+        <button class="btn btn-dark d-lg-none" id="sidebarToggle"
+            style="position: fixed; bottom: 20px; right: 20px; z-index: 1050; border-radius: 50%; width: 50px; height: 50px; padding: 0; display: flex; align-items: center; justify-content: center;">
             <i class="fas fa-bars"></i>
         </button>
 
         <!-- Sidebar -->
-        <nav class="bg-light p-3" id="sidebar" style="width: 250px; min-height: calc(100vh - 56px); border-right: 1px solid #dee2e6; position: sticky; top: 56px;">
+        <nav class="bg-light p-3" id="sidebar"
+            style="width: 250px; min-height: calc(100vh - 56px); border-right: 1px solid #dee2e6; position: sticky; top: 56px;">
             <h6 class="text-uppercase text-muted mb-3">Administración</h6>
             <ul class="nav flex-column mb-4">
                 <li class="nav-item">
-                    <a class="nav-link {{ Route::currentRouteName() === 'admin.dashboard' ? 'active' : '' }}" 
-                       href="{{ route('admin.dashboard') }}">
+                    <a class="nav-link {{ Route::currentRouteName() === 'admin.dashboard' ? 'active' : '' }}"
+                        href="{{ route('admin.dashboard') }}">
                         <i class="fas fa-chart-line me-2"></i>Dashboard
                     </a>
                 </li>
@@ -119,14 +121,14 @@
             <h6 class="text-uppercase text-muted mb-3">Gestión</h6>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link {{ strpos(Route::currentRouteName(), 'admin.sneakers') !== false ? 'active' : '' }}" 
-                       href="{{ route('admin.sneakers.index') }}">
+                    <a class="nav-link {{ strpos(Route::currentRouteName(), 'admin.sneakers') !== false ? 'active' : '' }}"
+                        href="{{ route('admin.sneakers.index') }}">
                         <i class="fas fa-shoe-prints me-2"></i>Zapatillas
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ strpos(Route::currentRouteName(), 'admin.brands') !== false ? 'active' : '' }}" 
-                       href="{{ route('admin.brands.index') }}">
+                    <a class="nav-link {{ strpos(Route::currentRouteName(), 'admin.brands') !== false ? 'active' : '' }}"
+                        href="{{ route('admin.brands.index') }}">
                         <i class="fas fa-tag me-2"></i>Marcas
                     </a>
                 </li>
@@ -135,26 +137,26 @@
 
         <!-- Main content -->
         <main class="flex-grow-1 p-4" style="width: 100%; overflow-x: hidden;">
-        @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>¡Error!</strong> Por favor revisa los siguientes errores:
-                <ul class="mb-0 mt-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>¡Error!</strong> Por favor revisa los siguientes errores:
+                    <ul class="mb-0 mt-2">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-        @yield('admin-content')
+            @yield('admin-content')
         </main>
     </div>
 

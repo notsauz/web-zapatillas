@@ -1,6 +1,7 @@
 @extends('admin.layout')
 
 @section('admin-content')
+    <!-- Encabezado con título y botón para crear nueva zapatilla -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Gestión de Zapatillas</h2>
         <a href="{{ route('admin.sneakers.create') }}" class="btn btn-primary">
@@ -8,7 +9,7 @@
         </a>
     </div>
 
-    <!-- Tabla de Zapatillas -->
+    <!-- Tabla principal que muestra todas las zapatillas registradas -->
     <div class="card">
         <div class="table-responsive">
             <table class="table table-hover mb-0">
@@ -27,7 +28,7 @@
 
                 <!-- Cuerpo de la tabla -->
                 <tbody>
-                    @forelse($sneakers as $sneaker)
+                    @forelse($zapatillas as $sneaker)
                         <tr>
                             <td class="fw-bold">{{ $sneaker->name }}</td>
                             <td>
@@ -74,9 +75,10 @@
                 </tbody>
             </table>
         </div>
-        @if ($sneakers->hasPages())
+        @if ($zapatillas->hasPages())
+            <!-- Paginación para navegar entre páginas -->
             <div class="card-footer">
-                {{ $sneakers->links() }}
+                {{ $zapatillas->links() }}
             </div>
         @endif
     </div>

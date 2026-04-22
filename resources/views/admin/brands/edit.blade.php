@@ -3,34 +3,35 @@
 @section('admin-content')
     <link rel="stylesheet" href="{{ asset('css/admin/sneakers-form.css') }}">
 
-    <!-- Encabezado -->
+    <!-- Encabezado de la página -->
     <div class="mb-4">
         <h2>Editar Marca</h2>
         <p class="text-muted">Modifica los detalles de la marca</p>
     </div>
 
-    <!-- Formulario de Edición -->
+    <!-- Contenedor del formulario de edición -->
     <div class="card">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.brands.update', $brand->id) }}" enctype="multipart/form-data">
+            <!-- Formulario PUT para actualizar la marca existente -->
+            <form method="POST" action="{{ route('admin.brands.update', $marca->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
-                <!-- Nombre de la Marca -->
+                <!-- Campo de nombre de la marca (obligatorio) -->
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre de la Marca <span class="text-danger">*</span></label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-                        value="{{ old('name', $brand->name) }}" required placeholder="Ej: Nike, Adidas, Puma...">
+                        value="{{ old('name', $marca->name) }}" required placeholder="Ej: Nike, Adidas, Puma...">
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <!-- Logo de la Marca -->
+                <!-- Sección para cambiar el logo de la marca (opcional) -->
                 <div class="mb-3">
                     <label class="form-label d-block">Logo de la Marca (opcional)</label>
 
-                    <!-- Zona de Soltar -->
+                    <!-- Zona interactiva para soltar archivo del logo -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="card border-2 border-dashed" id="dropZone"
@@ -45,10 +46,10 @@
                                 accept="image/jpeg,image/png,image/gif,image/webp,image/avif" style="display: none;">
                         </div>
 
-                        <!-- Vista Previa del Logo -->
+                        <!-- Vista previa del logo actual con opción de eliminar -->
                         <div class="col-md-6">
                             <div id="logoPreviewContainer">
-                                <img id="logoPreview" src="{{ $brand->logo_url }}" alt="Preview"
+                                <img id="logoPreview" src="{{ $marca->logo_url }}" alt="Preview"
                                     style="max-width: 100%; max-height: 200px; border-radius: 8px;">
                                 <button type="button" class="btn btn-sm btn-danger mt-2 w-100" id="clearLogoBtn">
                                     <i class="fas fa-trash me-2"></i>Limpiar logo
@@ -57,7 +58,7 @@
                         </div>
                     </div>
 
-                    <!-- URL del Logo -->
+                    <!-- Campo alternativo para ingresar URL del logo -->
                     <div class="mb-3">
                         <label for="logo_url" class="form-label">O ingresa una URL del logo</label>
                         <input type="url" class="form-control @error('logo_url') is-invalid @enderror" id="logo_url"
@@ -68,18 +69,18 @@
                     </div>
                 </div>
 
-                <!-- Descripción -->
+                <!-- Descripción de la marca (campo opcional) -->
                 <div class="mb-3">
                     <label for="description" class="form-label">Descripción</label>
                     <textarea class="form-control @error('description') is-invalid @enderror" id="description"
                         name="description" rows="4"
-                        placeholder="Describe la marca, su historia, sus características...">{{ old('description', $brand->description) }}</textarea>
+                        placeholder="Describe la marca, su historia, sus características...">{{ old('description', $marca->description) }}</textarea>
                     @error('description')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <!-- Botones -->
+                <!-- Botones de acción para enviar cambios o cancelar -->
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-2"></i>Actualizar Marca

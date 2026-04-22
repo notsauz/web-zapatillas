@@ -1,6 +1,7 @@
 @extends('admin.layout')
 
 @section('admin-content')
+    <!-- Encabezado con título y botón para crear nueva marca -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Gestión de Marcas</h2>
         <a href="{{ route('admin.brands.create') }}" class="btn btn-primary">
@@ -8,7 +9,7 @@
         </a>
     </div>
 
-    <!-- Tabla de Marcas -->
+    <!-- Tabla principal que muestra todas las marcas registradas -->
     <div class="card">
         <div class="table-responsive">
             <table class="table table-hover mb-0">
@@ -26,7 +27,7 @@
 
                 <!-- Cuerpo de la tabla -->
                 <tbody>
-                    @forelse($brands as $brand)
+                    @forelse($marcas as $brand)
                         <tr>
                             <td class="fw-bold">{{ $brand->name }}</td>
                             <td>
@@ -76,9 +77,10 @@
                 </tbody>
             </table>
         </div>
-        @if ($brands->hasPages())
+        @if ($marcas->hasPages())
+            <!-- Paginación para navegar entre páginas -->
             <div class="card-footer">
-                {{ $brands->links() }}
+                {{ $marcas->links() }}
             </div>
         @endif
     </div>
