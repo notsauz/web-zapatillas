@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    @if($sneakers->count() > 0)
+    @if($zapatillas->count() > 0)
         <div class="row g-4" id="sneakerGrid">
             @include("sneakers.partials.grid", ["sneakers" => $zapatillas, "favoriteSneakerIds" => $idsFavoritos])
         </div>
