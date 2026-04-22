@@ -1,85 +1,92 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+// Obtener el token CSRF del meta tag para las peticiones POST
+let tokenCSRF = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    if (!csrfToken) {
-        console.error('CSRF token no encontrado');
-        return;
+if (!tokenCSRF) {
+    console.error('CSRF token no encontrado');
+}
+
+// Escuchar todos los envíos de formularios de favoritos
+document.body.addEventListener('submit', function (evento) {
+    // Buscar si el formulario enviado es de favoritos
+    let formulario = evento.target.closest('form.favorite-form');
+    if (!formulario) {
+        return; // No es un formulario de favoritos, seguir con el envío normal
     }
 
-    document.body.addEventListener('submit', function(event) {
-        const form = event.target.closest('form.favorite-form');
-        if (!form) {
-            return;
-        }
+    // Prevenir el envío tradicional del formulario
+    evento.preventDefault();
 
-        event.preventDefault();
+    // Obtener datos del formulario
+    let accionActual = formulario.getAttribute('action'); // URL actual (agregar o eliminar)
+    let urlAgregarFavorito = formulario.dataset.addUrl; // URL para agregar a favoritos
+    let urlEliminarFavorito = formulario.dataset.removeUrl; // URL para eliminar de favoritos
+    let selectorTarjetaProducto = formulario.dataset.cardSelector || '.card'; // Selector de la tarjeta del producto
+    let botonEnviar = formulario.querySelector('button[type="submit"]'); // Botón de envío
+    let datosFormulario = new FormData(formulario); // Datos del formulario (sneaker_id)
 
-        const action = form.getAttribute('action');
-        const addUrl = form.dataset.addUrl;
-        const removeUrl = form.dataset.removeUrl;
-        const cardSelector = form.dataset.cardSelector || '.card';
-        const submitButton = form.querySelector('button[type="submit"]');
-        const formData = new FormData(form);
+    // Enviar petición AJAX para agregar/eliminar favorito
+    fetch(accionActual, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': tokenCSRF,
+            'Accept': 'application/json'
+        },
+        body: datosFormulario,
+    })
+        .then(respuesta => respuesta.json().catch(() => ({}))) // Convertir a JSON, si falla devolver objeto vacío
+        .then(datos => {
+            // Verificar si la acción era AGREGAR a favoritos
+            let esAccionAgregar = accionActual === urlAgregarFavorito;
 
-        fetch(action, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: formData,
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al actualizar favoritos');
-            }
-            return response.json().catch(() => ({}));
-        })
-        .then(() => {
-            if (action === addUrl) {
-                form.setAttribute('action', removeUrl);
-                submitButton.className = 'btn btn-danger btn-sm shadow-sm';
-                submitButton.innerHTML = '<i class="fas fa-heart text-white"></i>';
-            } else if (action === removeUrl) {
-                // Quitando de favoritos
-                const isOnFavoritesPage = window.location.pathname.includes('/profile/favorites');
-                
-                if (isOnFavoritesPage) {
-                    // Encontrar y remover la columna que contiene este producto
-                    let element = form;
-                    let foundColumn = null;
-                    
-                    // Buscar hacia arriba hasta encontrar la columna
-                    while (element && element !== document.body) {
-                        if (element.classList && (element.classList.contains('col-4') || 
-                            element.classList.contains('col-sm-6') || 
-                            element.classList.contains('col-lg-4'))) {
-                            foundColumn = element;
+            if (esAccionAgregar) {
+                // Cambiar el formulario para que ahora sea ELIMINAR
+                formulario.setAttribute('action', urlEliminarFavorito);
+                // Cambiar estilo del botón a rojo (favorito activo)
+                botonEnviar.className = 'btn btn-danger btn-sm shadow-sm';
+                botonEnviar.innerHTML = '<i class="fas fa-heart text-white"></i>';
+
+            } else {
+                // La acción era ELIMINAR de favoritos
+                let estaEnPaginaFavoritos = window.location.pathname.includes('/profile/favorites');
+
+                if (estaEnPaginaFavoritos) {
+                    // Estamos en la página de favoritos, hay que eliminar la tarjeta del DOM
+                    let elementoActual = formulario;
+                    let columnaProducto = null;
+
+                    // Buscar hacia arriba hasta encontrar la columna que contiene el producto
+                    while (elementoActual && elementoActual !== document.body) {
+                        if (elementoActual.classList && (
+                            elementoActual.classList.contains('col-4') ||
+                            elementoActual.classList.contains('col-sm-6') ||
+                            elementoActual.classList.contains('col-lg-4')
+                        )) {
+                            columnaProducto = elementoActual;
                             break;
                         }
-                        element = element.parentElement;
+                        elementoActual = elementoActual.parentElement;
                     }
-                    
-                    // Si encontramos la columna, la removemos con animación
-                    if (foundColumn) {
-                        foundColumn.style.transition = 'all 0.3s ease-out';
-                        foundColumn.style.opacity = '0';
-                        foundColumn.style.transform = 'scale(0.95)';
-                        
+
+                    // Si encontramos la columna, eliminarla con animación
+                    if (columnaProducto) {
+                        columnaProducto.style.transition = 'all 0.3s ease-out';
+                        columnaProducto.style.opacity = '0';
+                        columnaProducto.style.transform = 'scale(0.95)';
+
                         setTimeout(() => {
-                            foundColumn.remove();
+                            columnaProducto.remove(); // Eliminar del DOM después de la animación
                         }, 300);
                     }
                 } else {
-                    // En el catálogo principal, solo cambiar el icono
-                    form.setAttribute('action', addUrl);
-                    submitButton.className = 'btn btn-outline-danger btn-sm shadow-sm';
-                    submitButton.innerHTML = '<i class="far fa-heart"></i>';
+                    // Estamos en el catálogo normal, solo cambiar el botón a "no favorito"
+                    formulario.setAttribute('action', urlAgregarFavorito);
+                    // Cambiar estilo del botón a blanco (favorito inactivo)
+                    botonEnviar.className = 'btn btn-outline-danger btn-sm shadow-sm';
+                    botonEnviar.innerHTML = '<i class="far fa-heart"></i>';
                 }
             }
         })
         .catch(error => {
-            console.error(error);
+            console.error('Error al actualizar favoritos:', error);
         });
-    });
 });

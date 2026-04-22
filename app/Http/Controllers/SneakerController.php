@@ -60,7 +60,7 @@ class SneakerController extends Controller
         // Si es una solicitud AJAX o lazy load, retornar JSON con datos
         if ($peticion->ajax() || $peticion->get("ajax")) {
             return response()->json([
-                "html" => view("sneakers.partials.grid", compact("zapatillas", "idsFavoritos"))->render(),
+                "html" => view("sneakers.partials.grid", ["sneakers" => $zapatillas, "favoriteSneakerIds" => $idsFavoritos])->render(),
                 "hasMore" => $zapatillas->hasMorePages(),
                 "currentPage" => $zapatillas->currentPage(),
             ]);

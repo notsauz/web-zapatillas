@@ -1,200 +1,201 @@
-// Catálogo simple con Lazy Load
-class CatalogManager {
+// Gestor del catálogo con carga diferida (lazy load)
+class GestorCatalogo {
     constructor() {
-        this.page = 1;
-        this.isLoading = false;
-        this.hasMore = true;
-        // Usa siempre la ruta raíz del catálogo
-        this.catalogUrl = '/';
-        this.searchTimeout = null;
-        this.init();
+        this.paginaActual = 1;              // Página actual de la paginación
+        this.estaCargando = false;          // Evita peticiones simultáneas
+        this.hayMasPaginas = true;          // Indica si el servidor tiene más productos
+        this.urlBase = "/";                 // URL base del catálogo
+        this.temporizadorBusqueda = null;   // Para el debounce del input de búsqueda
+        this.iniciar();
     }
 
-    init() {
-        this.setupFilters();
-        this.setupIntersectionObserver();
+    iniciar() {
+        this.configurarEventosFiltros();
+        this.configurarCargaInfinita();
     }
 
-    setupFilters() {
-        // Búsqueda con debounce
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                console.log('Búsqueda escribida:', e.target.value);
-                clearTimeout(this.searchTimeout);
-                this.searchTimeout = setTimeout(() => {
-                    console.log('Aplicando búsqueda:', e.target.value);
-                    this.resetAndApplyFilters();
-                }, 500); // Espera 500ms después de dejar de escribir
+    configurarEventosFiltros() {
+        // Campo de búsqueda con debounce (espera 500ms tras dejar de escribir)
+        let inputBusqueda = document.getElementById("searchInput");
+        if (inputBusqueda) {
+            inputBusqueda.addEventListener("input", (evento) => {
+                clearTimeout(this.temporizadorBusqueda);
+                this.temporizadorBusqueda = setTimeout(() => {
+                    this.reiniciarYAplicarFiltros();
+                }, 500);
             });
         }
 
-        // Filtros por categoría
-        document.querySelectorAll('input[name="category"]').forEach(el => {
-            el.addEventListener('change', () => {
-                console.log('Categoría cambió:', el.value);
-                this.resetAndApplyFilters();
-            });
+        // Radio buttons de categoría
+        let radiosCategoria = document.querySelectorAll('input[name="category"]');
+        radiosCategoria.forEach(radio => {
+            radio.addEventListener("change", () => this.reiniciarYAplicarFiltros());
         });
 
-        // Filtros por marca
-        document.querySelectorAll('input[name="brand"]').forEach(el => {
-            el.addEventListener('change', () => {
-                console.log('Marca cambió:', el.value);
-                this.resetAndApplyFilters();
-            });
+        // Radio buttons de marca
+        let radiosMarca = document.querySelectorAll('input[name="brand"]');
+        radiosMarca.forEach(radio => {
+            radio.addEventListener("change", () => this.reiniciarYAplicarFiltros());
         });
 
-        // Filtros por color
-        document.querySelectorAll('input[name="color"]').forEach(el => {
-            el.addEventListener('change', () => {
-                console.log('Color cambió:', el.value);
-                this.resetAndApplyFilters();
-            });
+        // Radio buttons de color
+        let radiosColor = document.querySelectorAll('input[name="color"]');
+        radiosColor.forEach(radio => {
+            radio.addEventListener("change", () => this.reiniciarYAplicarFiltros());
         });
 
-        // Filtros por precio
-        document.querySelectorAll('input[name="min_price"], input[name="max_price"]').forEach(el => {
-            el.addEventListener('change', () => {
-                const min = document.querySelector('input[name="min_price"]')?.value;
-                const max = document.querySelector('input[name="max_price"]')?.value;
-                console.log('Precio cambió:', min, '-', max);
-                this.resetAndApplyFilters();
-            });
-        });
+        // Inputs de precio mínimo y máximo
+        let inputPrecioMin = document.querySelector('input[name="min_price"]');
+        let inputPrecioMax = document.querySelector('input[name="max_price"]');
+        if (inputPrecioMin) {
+            inputPrecioMin.addEventListener("change", () => this.reiniciarYAplicarFiltros());
+        }
+        if (inputPrecioMax) {
+            inputPrecioMax.addEventListener("change", () => this.reiniciarYAplicarFiltros());
+        }
 
-        // Filtros por talla
-        document.querySelectorAll('input[name="size"]').forEach(el => {
-            el.addEventListener('change', () => {
-                console.log('Talla cambió:', el.value);
-                this.resetAndApplyFilters();
-            });
+        // Radio buttons de talla
+        let radiosTalla = document.querySelectorAll('input[name="size"]');
+        radiosTalla.forEach(radio => {
+            radio.addEventListener("change", () => this.reiniciarYAplicarFiltros());
         });
     }
 
-    setupIntersectionObserver() {
-        const sentinel = document.getElementById('sentinel');
-        if (!sentinel) return;
+    configurarCargaInfinita() {
+        // Elemento centinela que al hacerse visible dispara la carga de más productos
+        let centinela = document.getElementById("sentinel");
+        if (!centinela) return;
 
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && this.hasMore && !this.isLoading) {
-                    this.loadMore();
-                }
-            });
-        }, { rootMargin: '100px' });
+        let observador = new IntersectionObserver((entradas) => {
+            let entrada = entradas[0];
+            // Si el centinela es visible Y hay más páginas Y no está cargando actualmente
+            if (entrada.isIntersecting && this.hayMasPaginas && !this.estaCargando) {
+                this.cargarSiguientePagina();
+            }
+        }, {
+            rootMargin: "100px" // Dispara la carga 100px antes de que el centinela sea visible
+        });
 
-        observer.observe(sentinel);
+        observador.observe(centinela);
     }
 
-    resetAndApplyFilters() {
-        this.page = 1;
-        this.hasMore = true;
-        this.applyFilters();
+    reiniciarYAplicarFiltros() {
+        this.paginaActual = 1;           // Volver a la primera página
+        this.hayMasPaginas = true;       // Asumir que hay más páginas con los nuevos filtros
+        this.cargarProductos(true);      // true = reemplazar contenido existente
     }
 
-    getFilterParams() {
-        const params = new URLSearchParams();
+    construirParametrosURL() {
+        let parametros = new URLSearchParams();
 
-        // Búsqueda
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput?.value) params.append('search', searchInput.value);
+        // Búsqueda por texto
+        let inputBusqueda = document.getElementById("searchInput");
+        if (inputBusqueda && inputBusqueda.value.trim() !== "") {
+            parametros.append("search", inputBusqueda.value.trim());
+        }
 
-        // Categoría
-        const categoryInput = document.querySelector('input[name="category"]:checked');
-        if (categoryInput?.value) params.append('category', categoryInput.value);
+        // Categoría seleccionada
+        let radioCategoria = document.querySelector('input[name="category"]:checked');
+        if (radioCategoria && radioCategoria.value) {
+            parametros.append("category", radioCategoria.value);
+        }
 
-        // Marca
-        const brandInput = document.querySelector('input[name="brand"]:checked');
-        if (brandInput?.value) params.append('brand', brandInput.value);
+        // Marca seleccionada
+        let radioMarca = document.querySelector('input[name="brand"]:checked');
+        if (radioMarca && radioMarca.value) {
+            parametros.append("brand", radioMarca.value);
+        }
 
-        // Color
-        const colorInput = document.querySelector('input[name="color"]:checked');
-        if (colorInput?.value) params.append('color', colorInput.value);
+        // Color seleccionado
+        let radioColor = document.querySelector('input[name="color"]:checked');
+        if (radioColor && radioColor.value) {
+            parametros.append("color", radioColor.value);
+        }
 
-        // Precio
-        const minPrice = document.querySelector('input[name="min_price"]');
-        const maxPrice = document.querySelector('input[name="max_price"]');
-        if (minPrice?.value) params.append('min_price', minPrice.value);
-        if (maxPrice?.value) params.append('max_price', maxPrice.value);
+        // Precio mínimo
+        let inputPrecioMin = document.querySelector('input[name="min_price"]');
+        if (inputPrecioMin && inputPrecioMin.value) {
+            parametros.append("min_price", inputPrecioMin.value);
+        }
 
-        // Talla
-        const sizeInput = document.querySelector('input[name="size"]:checked');
-        if (sizeInput?.value) params.append('size', sizeInput.value);
+        // Precio máximo
+        let inputPrecioMax = document.querySelector('input[name="max_price"]');
+        if (inputPrecioMax && inputPrecioMax.value) {
+            parametros.append("max_price", inputPrecioMax.value);
+        }
 
-        params.append('page', this.page);
-        return params.toString();
+        // Talla seleccionada
+        let radioTalla = document.querySelector('input[name="size"]:checked');
+        if (radioTalla && radioTalla.value) {
+            parametros.append("size", radioTalla.value);
+        }
+
+        // Página actual
+        parametros.append("page", this.paginaActual.toString());
+
+        return parametros.toString();
     }
 
-    applyFilters() {
-        const params = this.getFilterParams();
-        
-        this.isLoading = true;
-        const loader = document.getElementById('loadingSpinner');
-        if (loader) loader.style.display = 'flex';
+    cargarProductos(reemplazarContenido = false) {
+        // Evitar peticiones duplicadas
+        if (this.estaCargando) return;
 
-        const url = `${this.catalogUrl}?${params}&ajax=1`;
+        this.estaCargando = true;
+
+        // Mostrar spinner de carga
+        let spinner = document.getElementById("loadingSpinner");
+        if (spinner) spinner.style.display = "flex";
+
+        let parametros = this.construirParametrosURL();
+        let url = `${this.urlBase}?${parametros}&ajax=1`;
 
         fetch(url, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json'
+                "X-Requested-With": "XMLHttpRequest",
+                "Accept": "application/json"
             }
         })
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                const gridEl = document.getElementById('sneakerGrid');
-                if (gridEl && data.html) {
-                    gridEl.innerHTML = data.html;
+            .then(respuesta => respuesta.json())
+            .then(datos => {
+                let contenedorGrid = document.getElementById("sneakerGrid");
+
+                if (reemplazarContenido) {
+                    // Reemplazar todo el contenido (cuando se aplican filtros)
+                    contenedorGrid.innerHTML = datos.html || "";
+                } else {
+                    // Añadir más productos al final (carga infinita)
+                    if (datos.html) {
+                        let divTemporal = document.createElement("div");
+                        divTemporal.innerHTML = datos.html;
+                        let nuevasTarjetas = divTemporal.querySelectorAll(".col-4, .col-sm-6, .col-lg-4");
+                        nuevasTarjetas.forEach(tarjeta => {
+                            contenedorGrid.appendChild(tarjeta);
+                        });
+                    }
                 }
-                this.hasMore = data.hasMore || false;
-                this.isLoading = false;
-                if (loader) loader.style.display = 'none';
+
+                // Actualizar si hay más páginas disponibles
+                this.hayMasPaginas = datos.hasMore || false;
+
+                // Ocultar spinner
+                this.estaCargando = false;
+                if (spinner) spinner.style.display = "none";
             })
             .catch(error => {
-                console.error('Error:', error);
-                this.isLoading = false;
-                if (loader) loader.style.display = 'none';
+                console.error("Error al cargar productos:", error);
+                this.estaCargando = false;
+                if (spinner) spinner.style.display = "none";
             });
     }
 
-    loadMore() {
-        this.page++;
-        this.isLoading = true;
-        document.getElementById('loadingSpinner')?.style.setProperty('display', 'flex');
-
-        fetch(`${this.catalogUrl}?${this.getFilterParams()}&ajax=1`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
-        })
-            .then(r => r.json())
-            .then(data => {
-                const gridContainer = document.getElementById('sneakerGrid');
-                
-                // Agregar el HTML retornado
-                if (data.html) {
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = data.html;
-                    const newProducts = tempDiv.querySelectorAll('.col-4, .col-sm-6, .col-lg-4');
-                    newProducts.forEach(el => gridContainer.appendChild(el));
-                }
-                
-                // Verificar si hay más páginas
-                this.hasMore = data.hasMore ?? false;
-                
-                this.isLoading = false;
-                document.getElementById('loadingSpinner')?.style.setProperty('display', 'none');
-            })
-            .catch(e => {
-                console.error(e);
-                this.hasMore = false;
-                this.isLoading = false;
-                document.getElementById('loadingSpinner')?.style.setProperty('display', 'none');
-            });
+    cargarSiguientePagina() {
+        this.paginaActual++;                    // Incrementar página
+        this.cargarProductos(false);            // false = añadir al final, no reemplazar
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => new CatalogManager());
+// Iniciar cuando el DOM esté completamente cargado
+document.addEventListener("DOMContentLoaded", () => {
+    new GestorCatalogo();
+});
