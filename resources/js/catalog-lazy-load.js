@@ -1,11 +1,11 @@
 // Gestor del catálogo con carga diferida (lazy load)
 class GestorCatalogo {
     constructor() {
-        this.paginaActual = 1;              // Página actual de la paginación
-        this.estaCargando = false;          // Evita peticiones simultáneas
-        this.hayMasPaginas = true;          // Indica si el servidor tiene más productos
-        this.urlBase = "/";                 // URL base del catálogo
-        this.temporizadorBusqueda = null;   // Para el debounce del input de búsqueda
+        this.paginaActual = 1; // Página actual de la paginación
+        this.estaCargando = false; // Evita peticiones simultáneas
+        this.hayMasPaginas = true; // Indica si el servidor tiene más productos
+        this.urlBase = window.location.pathname || "/"; // Usar la ruta actual para evitar cargar el catálogo general desde la página de favoritos
+        this.temporizadorBusqueda = null; // Para el debounce del input de búsqueda
         this.iniciar();
     }
 
