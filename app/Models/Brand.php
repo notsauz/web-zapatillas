@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Brand extends Model
 {
-    // Definir el nombre de la tabla
-    protected $fillable = ['name', 'description', 'logo_url'];
+    // Campos que se pueden asignar masivamente
+    protected $fillable = ["name", "description", "logo_url"];
 
-    // Relación con las zapatillas
+    // Relación: una marca tiene muchas zapatillas
     public function sneakers(): HasMany
     {
         return $this->hasMany(Sneaker::class);

@@ -11,143 +11,122 @@ class Sneaker extends Model
 {
     use HasFactory;
 
-    // Definir el nombre de la tabla
-    protected $table = 'sneakers';
+    // Nombre de la tabla
+    protected $table = "sneakers";
 
-    // Definir los campos que se pueden asignar masivamente
+    // Campos que se pueden asignar masivamente
     protected $fillable = [
-        'name',
-        'sku',
-        'brand_id',
-        'category',
-        'price',
-        'image_url',
-        'sizes',
-        'color',
-        'description',
+        "name",
+        "sku",
+        "brand_id",
+        "category",
+        "price",
+        "image_url",
+        "sizes",
+        "color",
+        "description",
     ];
 
-    // Definir los campos que deben ser convertidos a tipos específicos
+    // Conversión de tipos de datos
     protected $casts = [
-        'price' => 'decimal:2',
-        'sizes' => 'array',
+        "price" => "decimal:2",
+        "sizes" => "array",
     ];
 
-    // Relación con la marca
+    // Relación: zapatilla pertenece a una marca
     public function brandModel(): BelongsTo
     {
-        return $this->belongsTo(Brand::class, 'brand_id');
+        return $this->belongsTo(Brand::class, "brand_id");
     }
 
-    // Obtener el nombre de la marca a través de la relación
+    // Obtener el nombre de la marca
     public function getBrandAttribute()
     {
         return $this->brandModel?->name;
     }
 
-    /**
-     * Scope para filtrar por categoría
-     */
-    public function scopeByCategory($query, $category)
+    // Scope: filtrar por categoría
+    public function scopeByCategory($consulta, $categoria)
     {
-        return $query->where('category', $category);
+        return $consulta->where("category", $categoria);
     }
 
-    /**
-     * Scope para filtrar por marca
-     */
-    public function scopeByBrand($query, $brand)
+    // Scope: filtrar por marca
+    public function scopeByBrand($consulta, $marca)
     {
-        return $query->whereHas('brandModel', function ($subQuery) use ($brand) {
-            $subQuery->where('name', $brand);
+        return $consulta->whereHas("brandModel", function ($subConsulta) use ($marca) {
+            $subConsulta->where("name", $marca);
         });
     }
 
-    /**
-     * Scope para búsqueda por nombre, SKU o marca
-     */
-    public function scopeSearch($query, $term)
+    // Scope: búsqueda por nombre, SKU, color o marca
+    public function scopeSearch($consulta, $termino)
     {
-        //
-        return $query->where(function ($q) use ($term) {
-            $q->where('name', 'like', "%{$term}%")
-                ->orWhere('sku', 'like', "%{$term}%")
-                ->orWhere('color', 'like', "%{$term}%")
-                ->orWhereHas('brandModel', function ($subQ) use ($term) {
-                    $subQ->where('name', 'like', "%{$term}%");
+        return $consulta->where(function ($q) use ($termino) {
+            $q->where("name", "like", "%{$termino}%")
+                ->orWhere("sku", "like", "%{$termino}%")
+                ->orWhere("color", "like", "%{$termino}%")
+                ->orWhereHas("brandModel", function ($subQ) use ($termino) {
+                    $subQ->where("name", "like", "%{$termino}%");
                 });
         });
     }
 
-    /**
-     * Scope para filtrar por rango de precio
-     */
-    public function scopePriceRange($query, $minPrice, $maxPrice)
+    // Scope: filtrar por rango de precio
+    public function scopePriceRange($consulta, $precioMin, $precioMax)
     {
-        if ($minPrice !== null && $maxPrice !== null) {
-            return $query->whereBetween('price', [$minPrice, $maxPrice]);
-        } elseif ($minPrice !== null) {
-            return $query->where('price', '>=', $minPrice);
-        } elseif ($maxPrice !== null) {
-            return $query->where('price', '<=', $maxPrice);
+        if ($precioMin !== null && $precioMax !== null) {
+            return $consulta->whereBetween("price", [$precioMin, $precioMax]);
+        } elseif ($precioMin !== null) {
+            return $consulta->where("price", ">=", $precioMin);
+        } elseif ($precioMax !== null) {
+            return $consulta->where("price", "<=", $precioMax);
         }
-        return $query;
+        return $consulta;
     }
 
-    /**
-     * Scope para filtrar por color
-     */
-    public function scopeByColor($query, $color)
+    // Scope: filtrar por color
+    public function scopeByColor($consulta, $color)
     {
-        return $query->where('color', $color);
+        return $consulta->where("color", $color);
     }
 
-    /**
-     * Scope para filtrar por talla
-     */
-    public function scopeBySize($query, $size)
+    // Scope: filtrar por talla
+    public function scopeBySize($consulta, $talla)
     {
-        return $query->whereJsonContains('sizes', $size);
+        return $consulta->whereJsonContains("sizes", $talla);
     }
 
-    /**
-     * Obtener todas las marcas únicas
-     */
+    // Obtener todas las marcas únicas
     public static function getBrands()
     {
-        return Brand::select('name')->orderBy('name')->pluck('name');
+        return Brand::select("name")->orderBy("name")->pluck("name");
     }
 
-    /**
-     * Obtener todos los colores únicos
-     */
+    // Obtener todos los colores únicos
     public static function getColors()
     {
-        return self::select('color')->distinct()->whereNotNull('color')->pluck('color')->sort();
+        return self::select("color")->distinct()->whereNotNull("color")->pluck("color")->sort();
     }
 
-    /**
-     * Obtener todas las tallas disponibles
-     */
+    // Obtener todas las tallas disponibles
     public static function getAvailableSizes()
     {
-        $sneakers = self::all();
-        $sizes = collect();
+        $zapatillas = self::all();
+        $tallas = collect();
 
-        foreach ($sneakers as $sneaker) {
-            if ($sneaker->sizes) {
-                $sizes = $sizes->merge($sneaker->sizes);
+        foreach ($zapatillas as $zapatilla) {
+            if ($zapatilla->sizes) {
+                $tallas = $tallas->merge($zapatilla->sizes);
             }
         }
 
-        return $sizes->unique()->sort()->values();
+        return $tallas->unique()->sort()->values();
     }
 
-    /**
-     * Relación con usuarios que tienen esta zapatilla como favorita
-     */
+    // Relación: usuarios que tienen esta zapatilla como favorita
     public function favoritedByUsers()
     {
-        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+        return $this->belongsToMany(User::class, "favorites")->withTimestamps();
     }
 }

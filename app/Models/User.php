@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,53 +10,35 @@ use App\Models\Sneaker;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    // Definir los campos que se pueden asignar masivamente
+    // Campos que se pueden asignar masivamente
     protected $fillable = [
-        'name',
-        'username',
-        'email',
-        'email_verified_at',
-        'password',
+        "name",
+        "username",
+        "email",
+        "email_verified_at",
+        "password",
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    // Definir los campos que se ocultarán al convertir el modelo a un array o JSON
+    // Campos ocultos en arrays/JSON
     protected $hidden = [
-        'password',
-        'remember_token',
+        "password",
+        "remember_token",
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    // Conversión de tipos de datos
     protected function casts(): array
     {
-        // Definir los campos que deben ser convertidos a tipos específicos
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            "email_verified_at" => "datetime",
+            "password" => "hashed",
         ];
     }
 
-    /**
-     * Relación con zapatillas favoritas
-     */
+    // Relación: zapatillas favoritas del usuario
     public function favoriteSneakers()
     {
-        return $this->belongsToMany(Sneaker::class, 'favorites')->withTimestamps();
+        return $this->belongsToMany(Sneaker::class, "favorites")->withTimestamps();
     }
-};
+}
