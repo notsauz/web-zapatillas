@@ -1,11 +1,11 @@
-@forelse($sneakers as $sneaker)
+@forelse($zapatillas as $sneaker)
     <div class="col-4 col-sm-6 col-lg-4">
         <!-- Tarjeta de Producto -->
         <div class="position-relative">
             <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
                 @auth
                     @php
-                        $isFavorited = in_array($sneaker->id, $favoriteSneakerIds);
+                        $isFavorited = in_array($sneaker->id, $idsFavoritos);
                     @endphp
                     @if($isFavorited)
                         <form class="favorite-form" action="{{ route('favorites.remove') }}" method="POST"

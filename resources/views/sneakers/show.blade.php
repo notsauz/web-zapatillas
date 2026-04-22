@@ -1,10 +1,35 @@
-@extends('layouts.app')
+@extends("layouts.app")
 
-@section('content')
+@section("content")
+    @if(session("success"))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session("success") }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session("error"))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session("error") }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session("info"))
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ session("info") }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session("warning"))
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ session("warning") }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     <div class="row">
         <!-- Imagen del Producto -->
         <div class="col-md-6 mb-4">
-            <img src="{{ $sneaker->image_url ?? 'https://via.placeholder.com/400x400?text=Sneaker' }}"
+            <img src="{{ $sneaker->image_url ?? "https://via.placeholder.com/400x400?text=Sneaker" }}"
                 alt="{{ $sneaker->name }}" class="img-fluid rounded">
         </div>
 
@@ -36,7 +61,7 @@
                 @if($sneaker->sizes)
                     <p>
                         <strong>Tallas Disponibles:</strong>
-                        {{ implode(', ', $sneaker->sizes) }}
+                        {{ implode(", ", $sneaker->sizes) }}
                     </p>
                 @endif
             </div>
@@ -51,18 +76,18 @@
 
             <!-- Botones -->
             <div class="d-flex gap-2">
-                <a href="{{ route('catalogo') }}" class="btn btn-outline-secondary">Volver al Catálogo</a>
+                <a href="{{ route("catalogo") }}" class="btn btn-outline-secondary">Volver al Catálogo</a>
                 @auth
-                    @if($isFavorite)
-                        <form action="{{ route('favorites.remove') }}" method="POST" class="d-inline">
+                    @if($esFavorito)
+                        <form action="{{ route("favorites.remove") }}" method="POST" class="d-inline">
                             @csrf
                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar de favoritos?')">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm("¿Eliminar de favoritos?")">
                                 <i class="fas fa-heart"></i> Quitar de Favoritos
                             </button>
                         </form>
                     @else
-                        <form action="{{ route('favorites.add') }}" method="POST" class="d-inline">
+                        <form action="{{ route("favorites.add") }}" method="POST" class="d-inline">
                             @csrf
                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
                             <button type="submit" class="btn btn-outline-danger">
@@ -76,13 +101,13 @@
     </div>
 
     <!-- Productos Relacionados -->
-    @if($relatedSneakers->count() > 0)
+    @if($relacionadas->count() > 0)
         <div class="row mt-5 pt-4 border-top">
             <div class="col-12">
                 <h4>Otros modelos {{ $sneaker->brand }}</h4>
             </div>
 
-            @foreach($relatedSneakers as $related)
+            @foreach($relacionadas as $related)
                 <div class="col-md-3 mb-4">
                     <div class="card h-100">
                         <img src="{{ $related->image_url }}" alt="{{ $related->name }}" class="card-img-top"
@@ -93,7 +118,7 @@
                                 <small>{{ $related->sku }}</small>
                             </p>
                             <h6 class="text-success">${{ number_format($related->price, 2) }}</h6>
-                            <a href="{{ route('sneaker.show', $related->id) }}" class="btn btn-outline-primary btn-sm w-100">
+                            <a href="{{ route("sneaker.show", $related->id) }}" class="btn btn-outline-primary btn-sm w-100">
                                 Ver Detalles
                             </a>
                         </div>

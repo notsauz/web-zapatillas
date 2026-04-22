@@ -1,13 +1,13 @@
-@extends('layouts.app')
+@extends("layouts.app")
 
-@section('content')
+@section("content")
     <div class="mb-4">
         <h1 class="mb-4">Marcas Disponibles</h1>
         <p class="text-muted">Explora todas nuestras marcas de zapatillas premium</p>
     </div>
 
     <div class="row g-4">
-        @forelse($brands as $brand)
+        @forelse($marcas as $brand)
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="/marcas/{{ urlencode($brand) }}" class="text-decoration-none">
                     <div class="card h-100 text-center p-4 brand-card" style="cursor: pointer; transition: all 0.3s;">

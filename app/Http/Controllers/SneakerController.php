@@ -7,143 +7,104 @@ use Illuminate\Http\Request;
 
 class SneakerController extends Controller
 {
-    /**
-     * Mostrar el catálogo principal de zapatillas
-     */
-    public function index(Request $request)
+    // Mostrar el catálogo de zapatillas con soporte para búsqueda, filtros por categoría, marca, precio, color y talla, además de paginación y carga dinámica con AJAX
+    public function index(Request $peticion)
     {
-        $query = Sneaker::query();
+        $consulta = Sneaker::query();
 
         // BÚSQUEDA
-        if ($request->filled('search')) {
-            $query->search($request->input('search'));
+        if ($peticion->filled("search")) {
+            $consulta->search($peticion->input("search"));
         }
 
         // FILTRO POR CATEGORÍA
-        if ($request->filled('category')) {
-            $query->byCategory($request->input('category'));
+        if ($peticion->filled("category")) {
+            $consulta->byCategory($peticion->input("category"));
         }
 
         // FILTRO POR MARCA
-        if ($request->filled('brand')) {
-            $query->byBrand($request->input('brand'));
+        if ($peticion->filled("brand")) {
+            $consulta->byBrand($peticion->input("brand"));
         }
 
         // FILTRO POR RANGO DE PRECIO
-        if ($request->filled('min_price') || $request->filled('max_price')) {
-            $minPrice = $request->filled('min_price') ? max(0, (float) $request->input('min_price')) : null;
-            $maxPrice = $request->filled('max_price') ? max(0, (float) $request->input('max_price')) : null;
-            $query->priceRange($minPrice, $maxPrice);
+        if ($peticion->filled("min_price") || $peticion->filled("max_price")) {
+            $precioMin = $peticion->filled("min_price") ? max(0, (float) $peticion->input("min_price")) : null;
+            $precioMax = $peticion->filled("max_price") ? max(0, (float) $peticion->input("max_price")) : null;
+            $consulta->priceRange($precioMin, $precioMax);
         }
 
         // FILTRO POR COLOR
-        if ($request->filled('color')) {
-            $query->byColor($request->input('color'));
+        if ($peticion->filled("color")) {
+            $consulta->byColor($peticion->input("color"));
         }
 
         // FILTRO POR TALLA
-        if ($request->filled('size')) {
-            $query->bySize($request->input('size'));
+        if ($peticion->filled("size")) {
+            $consulta->bySize($peticion->input("size"));
         }
 
         // Obtener los resultados con paginación
-        $sneakers = $query->paginate(12);
+        $zapatillas = $consulta->paginate(12);
 
         // Obtener IDs de favoritos si el usuario está autenticado
-        $favoriteSneakerIds = auth()->check()
-            ? auth()->user()->favoriteSneakers()->pluck('sneakers.id')->toArray()
+        $idsFavoritos = auth()->check()
+            ? auth()->user()->favoriteSneakers()->pluck("sneakers.id")->toArray()
             : [];
 
         // Datos para los filtros
-        $brands = Sneaker::getBrands();
-        $colors = Sneaker::getColors();
-        $sizes = Sneaker::getAvailableSizes();
+        $marcas = Sneaker::getBrands();
+        $colores = Sneaker::getColors();
+        $tallas = Sneaker::getAvailableSizes();
 
         // Si es una solicitud AJAX o lazy load, retornar JSON con datos
-        if ($request->ajax() || $request->get('ajax')) {
+        if ($peticion->ajax() || $peticion->get("ajax")) {
             return response()->json([
-                'html' => view('sneakers.partials.grid', compact('sneakers', 'favoriteSneakerIds'))->render(),
-                'hasMore' => $sneakers->hasMorePages(),
-                'currentPage' => $sneakers->currentPage(),
+                "html" => view("sneakers.partials.grid", compact("zapatillas", "idsFavoritos"))->render(),
+                "hasMore" => $zapatillas->hasMorePages(),
+                "currentPage" => $zapatillas->currentPage(),
             ]);
         }
 
-        return view('sneakers.index', compact('sneakers', 'brands', 'colors', 'sizes', 'favoriteSneakerIds'));
+        return view("sneakers.index", compact("zapatillas", "marcas", "colores", "tallas", "idsFavoritos"));
     }
 
-    /**
-     * Filtrar zapatillas por categoría
-     */
-    public function byCategory(Request $request, $category)
+    // Mostrar zapatillas filtradas por categoría
+    public function byCategory(Request $peticion, $categoria)
     {
-        $request->merge(['category' => $category]);
-        return $this->index($request);
+        $peticion->merge(["category" => $categoria]);
+        return $this->index($peticion);
     }
 
-    /**
-     * Mostrar todas las marcas disponibles
-     */
-    public function allBrands(Request $request)
+    // Mostrar todas las marcas disponibles para el filtro
+    public function allBrands(Request $peticion)
     {
-        $brands = Sneaker::getBrands();
-        return view('sneakers.brands', compact('brands'));
+        $marcas = Sneaker::getBrands();
+        return view("sneakers.brands", compact("marcas"));
     }
 
-    /**
-     * Mostrar zapatillas de una marca específica
-     */
-    public function byBrand(Request $request, $brand)
+    // Filtrar zapatillas por marca
+    public function byBrand(Request $peticion, $marca)
     {
-        $brand = urldecode($brand);
-        $request->merge(['brand' => $brand]);
-        return $this->index($request);
+        $marca = urldecode($marca);
+        $peticion->merge(["brand" => $marca]);
+        return $this->index($peticion);
     }
 
-    /**
-     * Buscar zapatillas
-     */
-    public function search(Request $request)
-    {
-        if (!$request->filled('q')) {
-            if ($request->ajax()) {
-                return response()->json(['html' => '', 'hasMore' => false, 'currentPage' => 1]);
-            }
-            return redirect()->route('catalogo');
-        }
-
-        $request->merge(['search' => $request->input('q')]);
-
-        // Si es AJAX, devolver JSON
-        if ($request->ajax()) {
-            $query = Sneaker::query();
-            $query->search($request->input('search'));
-            $sneakers = $query->paginate(12);
-            return response()->json([
-                'html' => view('sneakers.partials.grid', compact('sneakers'))->render(),
-                'hasMore' => $sneakers->hasMorePages(),
-                'currentPage' => $sneakers->currentPage(),
-            ]);
-        }
-
-        return $this->index($request);
-    }
-
-    /**
-     * Mostrar detalles de una zapatilla (opcional)
-     */
+    // Mostrar detalles de una zapatilla específica con productos relacionados y estado de favorito
     public function show($id)
     {
-        $sneaker = Sneaker::findOrFail($id);
-        $relatedSneakers = Sneaker::where('brand', $sneaker->brand)
-                                   ->where('id', '!=', $sneaker->id)
-                                   ->limit(4)
-                                   ->get();
+        $zapatilla = Sneaker::findOrFail($id);
+        $relacionadas = Sneaker::where("brand", $zapatilla->brand)
+            ->where("id", "!=", $zapatilla->id)
+            ->limit(4)
+            ->get();
 
-        $isFavorite = false;
+        $esFavorito = false;
         if (auth()->check()) {
-            $isFavorite = auth()->user()->favoriteSneakers()->where('sneaker_id', $sneaker->id)->exists();
+            $esFavorito = auth()->user()->favoriteSneakers()->where("sneaker_id", $zapatilla->id)->exists();
         }
 
-        return view('sneakers.show', compact('sneaker', 'relatedSneakers', 'isFavorite'));
+        return view("sneakers.show", compact("zapatilla", "relacionadas", "esFavorito"));
     }
 }
