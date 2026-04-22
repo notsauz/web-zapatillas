@@ -1,10 +1,35 @@
-@extends('layouts.app')
+@extends("layouts.app")
 
-@section('styles')
-    @vite('resources/css/sneakers.index.css')
+@section("styles")
+    @vite("resources/css/sneakers.index.css")
 @endsection
 
-@section('content')
+@section("content")
+    @if(session("success"))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session("success") }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session("error"))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session("error") }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session("info"))
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ session("info") }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session("warning"))
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ session("warning") }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     <div class="favorites-header mb-4 p-4 shadow-sm rounded-4">
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
             <div>
@@ -12,10 +37,10 @@
                 <p class="text-muted mb-0">Tu catálogo personal de favoritos, con el mismo estilo de visualización que el catálogo normal.</p>
             </div>
             <div class="favorites-actions btn-group" role="group" aria-label="Acciones de navegación">
-                <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary btn-sm">
+                <a href="{{ route("profile.edit") }}" class="btn btn-outline-secondary btn-sm">
                     <i class="fas fa-arrow-left me-1"></i> Volver al Perfil
                 </a>
-                <a href="{{ route('catalogo') }}" class="btn btn-outline-primary btn-sm">
+                <a href="{{ route("catalogo") }}" class="btn btn-outline-primary btn-sm">
                     <i class="fas fa-th-large me-1"></i> Volver al Catálogo
                 </a>
             </div>
@@ -24,7 +49,7 @@
 
     @if($sneakers->count() > 0)
         <div class="row g-4" id="sneakerGrid">
-            @include('sneakers.partials.grid', ['sneakers' => $sneakers, 'favoriteSneakerIds' => $favoriteSneakerIds])
+            @include("sneakers.partials.grid", ["sneakers" => $zapatillas, "favoriteSneakerIds" => $idsFavoritos])
         </div>
 
         <div id="loadingSpinner" class="text-center mt-4" style="display: none;">
@@ -38,11 +63,11 @@
         <div class="alert alert-info text-center">
             <h5>No tienes zapatillas favoritas aún</h5>
             <p>Explora el catálogo y agrega tus preferidas haciendo clic en el corazón.</p>
-            <a href="{{ route('catalogo') }}" class="btn btn-primary">Ir al Catálogo</a>
+            <a href="{{ route("catalogo") }}" class="btn btn-primary">Ir al Catálogo</a>
         </div>
     @endif
 @endsection
 
-@section('scripts')
-    @vite(['resources/js/catalog-lazy-load.js', 'resources/js/catalog-favorites.js'])
+@section("scripts")
+    @vite(["resources/js/catalog-lazy-load.js", "resources/js/catalog-favorites.js"])
 @endsection

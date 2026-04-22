@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends("layouts.app")
 
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('css/profile.edit.css') }}">
+@section("styles")
+    <link rel="stylesheet" href="{{ asset("css/profile.edit.css") }}">
 @endsection
 
-@section('content')
+@section("content")
     <div class="row justify-content-center">
         <!-- Profile Edit Content -->
         <div class="col-md-10">
@@ -13,13 +13,38 @@
                     <h4 class="mb-0">
                         Mi Perfil
                     </h4>
-                    <a href="{{ route('profile.favorites') }}" class="btn btn-light btn-sm">
+                    <a href="{{ route("profile.favorites") }}" class="btn btn-light btn-sm">
                         <i class="fas fa-heart"></i> Mis Favoritos
                     </a>
                 </div>
 
                 <!-- Profile Edit Form -->
                 <div class="card-body">
+                    @if(session("success"))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session("success") }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+                    @if(session("error"))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session("error") }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+                    @if(session("info"))
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            {{ session("info") }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+                    @if(session("warning"))
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{ session("warning") }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+
                     <!-- Tabs Navigation -->
                     <ul class="nav nav-tabs mb-4" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -56,16 +81,16 @@
 
                         <!-- 1. INFORMACIÓN PERSONAL -->
                         <div class="tab-pane fade show active" id="info-pane" role="tabpanel">
-                            <form action="{{ route('profile.update') }}" method="POST">
+                            <form action="{{ route("profile.update") }}" method="POST">
                                 @csrf
-                                @method('PUT')
+                                @method("PUT")
 
                                 <!-- Nombre Completo -->
                                 <div class="mb-3">
                                     <label for="name" class="form-label"><strong>Nombre Completo</strong></label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                                        name="name" value="{{ old('name', $user->name) }}" required>
-                                    @error('name')
+                                    <input type="text" class="form-control @error("name") is-invalid @enderror" id="name"
+                                        name="name" value="{{ old("name", $usuario->name) }}" required>
+                                    @error("name")
                                         <div class="invalid-feedback d-block">
                                             {{ $message }}
                                         </div>
@@ -73,7 +98,7 @@
                                 </div>
 
                                 <!-- Email editable o solo lectura según verificación -->
-                                @if($user->email_verified_at)
+                                @if($usuario->email_verified_at)
                                     <!-- Email verificado: mostrar solo como información -->
                                     <div class="mb-3">
                                         <label for="email" class="form-label">
@@ -81,7 +106,7 @@
                                             <span class="badge bg-success ms-2">Verificado</span>
                                         </label>
                                         <input type="email" class="form-control" id="email" name="email"
-                                            value="{{ $user->email }}" readonly disabled>
+                                            value="{{ $usuario->email }}" readonly disabled>
                                         <small class="form-text text-muted d-block mt-2">
                                             Tu correo está verificado y protegido. No puede ser modificado.
                                         </small>
@@ -93,9 +118,9 @@
                                             <strong>Correo Electrónico</strong>
                                             <span class="badge bg-warning ms-2">Sin Verificar</span>
                                         </label>
-                                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                                            name="email" value="{{ old('email', $user->email) }}" required>
-                                        @error('email')
+                                        <input type="email" class="form-control @error("email") is-invalid @enderror" id="email"
+                                            name="email" value="{{ old("email", $usuario->email) }}" required>
+                                        @error("email")
                                             <div class="invalid-feedback d-block">
                                                 {{ $message }}
                                             </div>
@@ -116,7 +141,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         Guardar Cambios
                                     </button>
-                                    <a href="{{ route('catalogo') }}" class="btn btn-secondary">
+                                    <a href="{{ route("catalogo") }}" class="btn btn-secondary">
                                         Volver
                                     </a>
                                 </div>
@@ -125,7 +150,7 @@
 
                         <!-- 2. CAMBIAR CONTRASEÑA -->
                         <div class="tab-pane fade" id="password-pane" role="tabpanel">
-                            <form action="{{ route('profile.password') }}" method="POST">
+                            <form action="{{ route("profile.password") }}" method="POST">
                                 @csrf
 
                                 <!-- Contraseña Actual -->
@@ -133,9 +158,9 @@
                                     <label for="current_password" class="form-label"><strong>Contraseña
                                             Actual</strong></label>
                                     <input type="password"
-                                        class="form-control @error('current_password') is-invalid @enderror"
+                                        class="form-control @error("current_password") is-invalid @enderror"
                                         id="current_password" name="current_password" required>
-                                    @error('current_password')
+                                    @error("current_password")
                                         <div class="invalid-feedback d-block">
                                             {{ $message }}
                                         </div>
@@ -147,9 +172,9 @@
                                 <!-- Nueva Contraseña -->
                                 <div class="mb-3">
                                     <label for="new_password" class="form-label"><strong>Nueva Contraseña</strong></label>
-                                    <input type="password" class="form-control @error('new_password') is-invalid @enderror"
+                                    <input type="password" class="form-control @error("new_password") is-invalid @enderror"
                                         id="new_password" name="new_password" required>
-                                    @error('new_password')
+                                    @error("new_password")
                                         <div class="invalid-feedback d-block">
                                             {{ $message }}
                                         </div>
@@ -186,12 +211,12 @@
                             <h5 class="mb-3">Estado de Verificación de Email</h5>
 
                             <!-- Estado de Verificación -->
-                            @if($user->email_verified_at)
+                            @if($usuario->email_verified_at)
                                 <div class="verification-badge verified">
                                     <strong>Email Verificado</strong><br>
                                     <small>Tu correo electrónico está completamente verificado y protegido</small><br>
                                     <small style="font-size: 0.75rem; margin-top: 5px; display: block;">Verificado el:
-                                        {{ $user->email_verified_at->format('d/m/Y H:i') }}</small>
+                                        {{ $usuario->email_verified_at->format("d/m/Y H:i") }}</small>
                                 </div>
                             @else
                                 <div class="verification-badge not-verified">
@@ -208,7 +233,7 @@
                             </div>
 
                             <!-- Acción de Verificación -->
-                            @if(!$user->email_verified_at)
+                            @if(!$usuario->email_verified_at)
                                 <div class="card border-warning">
                                     <div class="card-body">
                                         <h6 class="card-title text-warning mb-3">Acción Requerida</h6>
@@ -216,7 +241,7 @@
                                             Tu correo electrónico aún no está verificado. Verifica tu email para aumentar la
                                             seguridad de tu cuenta.
                                         </p>
-                                        <form action="{{ route('profile.send-verification') }}" method="POST" class="mb-3">
+                                        <form action="{{ route("profile.send-verification") }}" method="POST" class="mb-3">
                                             @csrf
                                             <button type="submit" class="btn btn-success">
                                                 Enviar Email de Verificación
@@ -232,7 +257,7 @@
                                     <div class="card-body">
                                         <h6 class="card-title text-success mb-3">Todo Correcto</h6>
                                         <p class="card-text mb-2">
-                                            Tu correo electrónico <strong>{{ $user->email }}</strong> está verificado y
+                                            Tu correo electrónico <strong>{{ $usuario->email }}</strong> está verificado y
                                             protegido.
                                         </p>
                                         <small class="form-text text-muted">
@@ -253,9 +278,9 @@
                             </div>
 
                             <!-- Nota de Advertencia -->
-                            @if(session('warning'))
+                            @if(session("warning"))
                                 <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
-                                    {{ session('warning') }}
+                                    {{ session("warning") }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                 </div>
                             @endif
@@ -271,18 +296,18 @@
                                         confirmar la eliminación en una segunda pantalla.
                                     </p>
 
-                                    @if(!session('delete_account_confirmed'))
+                                    @if(!session("delete_account_confirmed"))
                                         <!-- Primer paso: Pedir contraseña -->
-                                        <form action="{{ route('profile.delete-account') }}" method="POST">
+                                        <form action="{{ route("profile.delete-account") }}" method="POST">
                                             @csrf
                                             <!-- Contraseña Actual -->
                                             <div class="mb-3">
                                                 <label for="delete_password" class="form-label"><strong>Contraseña de
                                                         Confirmación</strong></label>
                                                 <input type="password"
-                                                    class="form-control @error('password') is-invalid @enderror"
+                                                    class="form-control @error("password") is-invalid @enderror"
                                                     id="delete_password" name="password" required>
-                                                @error('password')
+                                                @error("password")
                                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                                 @enderror
                                                 <small class="form-text text-muted">Introduce tu contraseña para
@@ -312,7 +337,7 @@
                             </div>
 
                             <!-- Botón de Volver -->
-                            <a href="{{ route('catalogo') }}" class="btn btn-secondary mt-3">
+                            <a href="{{ route("catalogo") }}" class="btn btn-secondary mt-3">
                                 Volver
                             </a>
                         </div>
@@ -323,7 +348,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@section("scripts")
     <!-- Modal de confirmación final -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -359,7 +384,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Cancelar
                     </button>
-                    <form action="{{ route('profile.confirm-delete') }}" method="POST" class="d-inline">
+                    <form action="{{ route("profile.confirm-delete") }}" method="POST" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-danger">
                             Sí, ELIMINAR MI CUENTA PERMANENTEMENTE
@@ -372,8 +397,8 @@
 
     <script>
         // Auto-hide alerts después de 30 segundos
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.alert').forEach(function (alert) {
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".alert").forEach(function (alert) {
                 setTimeout(function () {
                     const bsAlert = new bootstrap.Alert(alert);
                     bsAlert.close();
