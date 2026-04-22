@@ -24,7 +24,7 @@ class ProfileController extends Controller
 
         if ($peticion->ajax() || $peticion->get("ajax")) {
             return response()->json([
-                "html" => view("sneakers.partials.grid", compact("zapatillas", "idsFavoritos"))->render(),
+                "html" => view("sneakers.partials.grid", ["sneakers" => $zapatillas, "favoriteSneakerIds" => $idsFavoritos])->render(),
                 "hasMore" => $zapatillas->hasMorePages(),
                 "currentPage" => $zapatillas->currentPage(),
             ]);
