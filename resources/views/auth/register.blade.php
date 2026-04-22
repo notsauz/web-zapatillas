@@ -36,8 +36,10 @@
                         <div class="mb-3">
                             <label for="username" class="form-label">Nombre de Usuario</label>
                             <input type="text" class="form-control @error('username') is-invalid @enderror" id="username"
-                                name="username" value="{{ old('username') }}" required placeholder="Solo letras, números, - y _">
-                            <small class="form-text text-muted">Mínimo 3 caracteres, solo letras, números, guiones y guiones bajos</small>
+                                name="username" value="{{ old('username') }}" required
+                                placeholder="Solo letras, números, - y _">
+                            <small class="form-text text-muted">Mínimo 3 caracteres, solo letras, números, guiones y guiones
+                                bajos</small>
                             @error('username')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

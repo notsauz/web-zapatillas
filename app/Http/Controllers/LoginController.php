@@ -8,47 +8,32 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    /**
-     * Mostrar el formulario de login
-     */
+    // Muestra el formulario de inicio de sesión
     public function showForm()
     {
-        return view('auth.login');
+        return view("auth.login");
     }
 
-    /**
-     * Procesar el login del usuario
-     */
-    public function login(Request $request)
+    // Procesa el inicio de sesión
+    public function login(Request $peticion)
     {
-        // Validar datos de entrada
-        $validated = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string',
-        ], [
-            'email.required' => 'El nombre de usuario o email es obligatorio.',
-            'password.required' => 'La contraseña es obligatoria.',
+        $datos = $peticion->validate([
+            "email" => "required|string",
+            "password" => "required|string",
         ]);
 
-        // Obtener el valor ingresado
-        $loginValue = $validated['email'];
-        $password = $validated['password'];
+        // Buscar usuario por email o username
+        $usuario = User::where("username", $datos["email"])
+            ->orWhere("email", $datos["email"])
+            ->first();
 
-        // Intentar autenticar con username, email o nombre
-        $user = User::where('username', $loginValue)
-                    ->orWhere('email', $loginValue)
-                    ->first();
-
-        // Verificar contraseña y autenticar al usuario
-        if ($user && Hash::check($password, $user->password)) {
-            auth()->login($user, $request->filled('remember'));
-            $request->session()->regenerate();
-            return redirect()->route('catalogo')->with('success', 'Sesión iniciada correctamente.');
+        // Verificar credenciales
+        if ($usuario && Hash::check($datos["password"], $usuario->password)) {
+            auth()->login($usuario, $peticion->filled("remember"));
+            $peticion->session()->regenerate();
+            return redirect()->route("catalogo")->with("success", "Sesión iniciada correctamente.");
         }
 
-        // Si falla la autenticación regresar al formulario con un mensaje de error
-        return back()
-            ->withInput($request->only('email'))
-            ->withErrors(['email' => 'Nombre de usuario, email o contraseña incorrectos.']);
+        return back()->withErrors(["email" => "Credenciales incorrectas."])->withInput($peticion->only("email"));
     }
 }
