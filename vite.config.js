@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/catalog-lazy-load.js',
                 'resources/js/catalog-favorites.js',
+                'resources/js/sneaker-recently-viewed.js',
                 'resources/js/filters-toggle.js',
                 'resources/js/admin/layout.js',
                 'resources/js/admin/brands-form.js',

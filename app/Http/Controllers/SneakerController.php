@@ -4,9 +4,73 @@ namespace App\Http\Controllers;
 
 use App\Models\Sneaker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class SneakerController extends Controller
 {
+    // Nombre de la cookie para almacenar zapatillas visitadas recientemente
+    private const VIEWED_SNEAKERS_COOKIE = "viewed_sneakers";
+    // Máximo de zapatillas a guardar en el historial
+    private const MAX_VIEWED_SNEAKERS = 5;
+    // Duración de la cookie: 30 días
+    private const COOKIE_DURATION = 86400 * 30;
+
+    // Obtener las últimas zapatillas visitadas desde la cookie
+    public function getViewedSneakers()
+    {
+        $viewedIds = json_decode(Cookie::get(self::VIEWED_SNEAKERS_COOKIE, "[]"), true);
+
+        if (empty($viewedIds)) {
+            return collect([]);
+        }
+
+        return Sneaker::whereIn("id", $viewedIds)->get()->map(function ($sneaker) use ($viewedIds) {
+            $sneaker->viewed_at = array_search($sneaker->id, $viewedIds);
+            return $sneaker;
+        })->sortBy("viewed_at")->values();
+    }
+
+    // API: Obtener zapatillas visitadas recientemente en formato JSON
+    public function getRecentlyViewed()
+    {
+        $sneakers = $this->getViewedSneakers();
+
+        return response()->json([
+            "sneakers" => $sneakers->map(function ($sneaker) {
+                return [
+                    "id" => $sneaker->id,
+                    "name" => $sneaker->name,
+                    "price" => $sneaker->price,
+                    "image_url" => $sneaker->image_url,
+                    "url" => route("sneaker.show", $sneaker->id)
+                ];
+            })
+        ]);
+    }
+
+    // Agregar una zapatilla al historial de visitadas
+    private function addToViewedSneakers($sneakerId)
+    {
+        $viewedIds = json_decode(Cookie::get(self::VIEWED_SNEAKERS_COOKIE, "[]"), true);
+
+        // Eliminar si ya existe (para mover al inicio)
+        $viewedIds = array_filter($viewedIds, function ($id) use ($sneakerId) {
+            return $id != $sneakerId;
+        });
+
+        // Agregar al inicio
+        array_unshift($viewedIds, $sneakerId);
+
+        // Mantener solo las últimas MAX_VIEWED_SNEAKERS
+        $viewedIds = array_slice($viewedIds, 0, self::MAX_VIEWED_SNEAKERS);
+
+        Cookie::queue(
+            self::VIEWED_SNEAKERS_COOKIE,
+            json_encode($viewedIds),
+            self::COOKIE_DURATION
+        );
+    }
+
     // Mostrar el catálogo de zapatillas con soporte para búsqueda, filtros por categoría, marca, precio, color y talla, además de paginación y carga dinámica con AJAX
     public function index(Request $peticion)
     {
@@ -52,6 +116,9 @@ class SneakerController extends Controller
             ? auth()->user()->favoriteSneakers()->pluck("sneakers.id")->toArray()
             : [];
 
+        // Obtener zapatillas vistas recientemente
+        $vistasRecently = $this->getViewedSneakers();
+
         // Datos para los filtros
         $marcas = Sneaker::getBrands();
         $colores = Sneaker::getColors();
@@ -66,7 +133,7 @@ class SneakerController extends Controller
             ]);
         }
 
-        return view("sneakers.index", compact("zapatillas", "marcas", "colores", "tallas", "idsFavoritos"));
+        return view("sneakers.index", compact("zapatillas", "marcas", "colores", "tallas", "idsFavoritos", "vistasRecently"));
     }
 
     // Mostrar zapatillas filtradas por categoría
@@ -94,17 +161,24 @@ class SneakerController extends Controller
     // Mostrar detalles de una zapatilla específica con productos relacionados y estado de favorito
     public function show($id)
     {
-        $zapatilla = Sneaker::findOrFail($id);
-        $relacionadas = Sneaker::where("brand", $zapatilla->brand)
-            ->where("id", "!=", $zapatilla->id)
+        $sneaker = Sneaker::findOrFail($id);
+
+        // Agregar a las zapatillas visitadas recientemente (cookie)
+        $this->addToViewedSneakers($sneaker->id);
+
+        $relacionadas = Sneaker::where("brand", $sneaker->brand)
+            ->where("id", "!=", $sneaker->id)
             ->limit(4)
             ->get();
 
         $esFavorito = false;
         if (auth()->check()) {
-            $esFavorito = auth()->user()->favoriteSneakers()->where("sneaker_id", $zapatilla->id)->exists();
+            $esFavorito = auth()->user()->favoriteSneakers()->where("sneaker_id", $sneaker->id)->exists();
         }
 
-        return view("sneakers.show", compact("zapatilla", "relacionadas", "esFavorito"));
+        // Obtener zapatillas vistas recientemente
+        $vistasRecently = $this->getViewedSneakers();
+
+        return view("sneakers.show", compact("sneaker", "relacionadas", "esFavorito", "vistasRecently"));
     }
 }

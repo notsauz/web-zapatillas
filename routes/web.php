@@ -30,6 +30,9 @@ Route::get("/marcas/{brand}", [SneakerController::class, "byBrand"])->name("marc
 Route::get("/buscar", [SneakerController::class, "search"])->name("buscar");
 Route::get("/zapatillas/{id}", [SneakerController::class, "show"])->name("sneaker.show");
 
+// API - Zapatillas visitadas recientemente (AJAX)
+Route::get("/api/recently-viewed", [SneakerController::class, "getRecentlyViewed"])->name("sneaker.recently-viewed");
+
 // PERFIL (Solo usuarios autenticados)
 Route::middleware("auth")->group(function () {
     Route::get("/profile", [ProfileController::class, "edit"])->name("profile.edit");
@@ -57,7 +60,7 @@ Route::get("/home", function () {
 Route::middleware(["auth", "is_admin"])->group(function () {
     // Dashboard
     Route::get("/admin", [AdminController::class, "index"])->name("admin.dashboard");
-    
+
     // Gestión de Zapatillas
     Route::get("/admin/sneakers", [AdminController::class, "listSneakers"])->name("admin.sneakers.index");
     Route::get("/admin/sneakers/create", [AdminController::class, "createSneaker"])->name("admin.sneakers.create");
@@ -65,7 +68,7 @@ Route::middleware(["auth", "is_admin"])->group(function () {
     Route::get("/admin/sneakers/{id}/edit", [AdminController::class, "editSneaker"])->name("admin.sneakers.edit");
     Route::put("/admin/sneakers/{id}", [AdminController::class, "updateSneaker"])->name("admin.sneakers.update");
     Route::delete("/admin/sneakers/{id}", [AdminController::class, "destroySneaker"])->name("admin.sneakers.destroy");
-    
+
     // Gestión de Marcas
     Route::get("/admin/brands", [AdminController::class, "listBrands"])->name("admin.brands.index");
     Route::get("/admin/brands/create", [AdminController::class, "createBrand"])->name("admin.brands.create");

@@ -208,6 +208,9 @@
             </div>
 
             @if($zapatillas->count() > 0)
+                <!-- Zapatillas Visitadas Recientemente (cargado dinámicamente) -->
+                <div id="recently-viewed-container" data-url="{{ route("sneaker.recently-viewed") }}"></div>
+
                 <!-- Grid de Zapatillas con Lazy Load -->
                 <div class="row g-4" id="sneakerGrid">
                     @foreach($zapatillas as $sneaker)
@@ -302,5 +305,5 @@
 @endsection
 
 @section("scripts")
-    @vite(["resources/js/filters-toggle.js", "resources/js/catalog-lazy-load.js", "resources/js/catalog-favorites.js"])
+    @vite(["resources/js/filters-toggle.js", "resources/js/catalog-lazy-load.js", "resources/js/catalog-favorites.js", "resources/js/sneaker-recently-viewed.js"])
 @endsection
