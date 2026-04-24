@@ -208,6 +208,9 @@
             </div>
 
             @if($zapatillas->count() > 0)
+                <!-- Zapatillas Más Favoritas -->
+                @include("sneakers.partials.top-favorites")
+
                 <!-- Zapatillas Visitadas Recientemente (cargado desde PHP) -->
                 @include("sneakers.partials.recently-viewed")
 

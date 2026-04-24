@@ -129,4 +129,17 @@ class Sneaker extends Model
     {
         return $this->belongsToMany(User::class, "favorites")->withTimestamps();
     }
+
+    // Obtener el número de favoritos de esta zapatilla
+    public function getFavoritesCountAttribute()
+    {
+        return $this->favoritedByUsers()->count();
+    }
+
+    // Scope: ordenar por número de favoritos (más favoritos primero)
+    public function scopeMostFavorited($consulta)
+    {
+        return $consulta->withCount("favoritedByUsers")
+            ->orderBy("favorited_by_users_count", "desc");
+    }
 }

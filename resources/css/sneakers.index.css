@@ -559,6 +559,24 @@
     max-width: 100%;
 }
 
+/* ==================== TOP FAVORITES ==================== */
+.top-favorites-section {
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #ffcccc;
+}
+
+.top-favorite-card {
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.top-favorite-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
 /* Transición suave del grid */
 .col-lg-9 {
     transition: all 0.3s ease;

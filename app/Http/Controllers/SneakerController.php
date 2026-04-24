@@ -119,6 +119,14 @@ class SneakerController extends Controller
         // Obtener zapatillas vistas recientemente
         $vistasRecently = $this->getViewedSneakers();
 
+        // Obtener zapatillas más favoritas (top 5) para mostrar en el catálogo
+        $zapatillasTop = Sneaker::with("brandModel")
+            ->withCount("favoritedByUsers")
+            ->having("favorited_by_users_count", ">", 0)
+            ->orderBy("favorited_by_users_count", "desc")
+            ->take(5)
+            ->get();
+
         // Datos para los filtros
         $marcas = Sneaker::getBrands();
         $colores = Sneaker::getColors();
@@ -133,7 +141,7 @@ class SneakerController extends Controller
             ]);
         }
 
-        return view("sneakers.index", compact("zapatillas", "marcas", "colores", "tallas", "idsFavoritos", "vistasRecently"));
+        return view("sneakers.index", compact("zapatillas", "marcas", "colores", "tallas", "idsFavoritos", "vistasRecently", "zapatillasTop"));
     }
 
     // Mostrar zapatillas filtradas por categoría
@@ -180,5 +188,23 @@ class SneakerController extends Controller
         $vistasRecently = $this->getViewedSneakers();
 
         return view("sneakers.show", compact("sneaker", "relacionadas", "esFavorito", "vistasRecently"));
+    }
+
+    // Mostrar ranking de zapatillas más favoritas
+    public function topFavorites()
+    {
+        // Obtener zapatillas ordenadas por número de favoritos
+        $zapatillas = Sneaker::with("brandModel")
+            ->withCount("favoritedByUsers")
+            ->having("favorited_by_users_count", ">", 0)
+            ->orderBy("favorited_by_users_count", "desc")
+            ->paginate(20);
+
+        // Obtener IDs de favoritos del usuario actual
+        $idsFavoritos = auth()->check()
+            ? auth()->user()->favoriteSneakers()->pluck("sneakers.id")->toArray()
+            : [];
+
+        return view("sneakers.top-favorites", compact("zapatillas", "idsFavoritos"));
     }
 }
