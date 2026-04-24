@@ -208,8 +208,8 @@
             </div>
 
             @if($zapatillas->count() > 0)
-                <!-- Zapatillas Visitadas Recientemente (cargado dinámicamente) -->
-                <div id="recently-viewed-container" data-url="{{ route("sneaker.recently-viewed") }}"></div>
+                <!-- Zapatillas Visitadas Recientemente (cargado desde PHP) -->
+                @include("sneakers.partials.recently-viewed")
 
                 <!-- Grid de Zapatillas con Lazy Load -->
                 <div class="row g-4" id="sneakerGrid">

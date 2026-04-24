@@ -9,11 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Obtener la URL de la API desde el atributo data-url
     let urlAPI = contenedorRecientes.dataset.url;
 
-    // Obtener los IDs de localStorage
-    let viewedIds = JSON.parse(localStorage.getItem("viewed_sneakers") || "[]");
+    // Obtener los IDs de la cookie (igual que PHP)
+    let viewedIds = getViewedFromCookie();
 
     // Si no hay IDs guardados, no mostrar nada
-    if (viewedIds.length === 0) {
+    if (!viewedIds || viewedIds.length === 0) {
         return;
     }
 
@@ -73,10 +73,31 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
+// Función para obtener las zapatillas visitadas desde las cookies
+function getViewedFromCookie() {
+    const name = "viewed_sneakers=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            try {
+                return JSON.parse(c.substring(name.length, c.length));
+            } catch (e) {
+                return [];
+            }
+        }
+    }
+    return [];
+}
+
 // Función para guardar una zapatilla como visitada
 // Esta función debe llamarse cuando se visita una página de detalles
 function addToRecentlyViewed(sneakerId) {
-    let viewedIds = JSON.parse(localStorage.getItem("viewed_sneakers") || "[]");
+    let viewedIds = getViewedFromCookie();
     
     // Eliminar si ya existe (para mover al inicio)
     viewedIds = viewedIds.filter(id => id != sneakerId);
@@ -87,6 +108,8 @@ function addToRecentlyViewed(sneakerId) {
     // Mantener solo las últimas 5
     viewedIds = viewedIds.slice(0, 5);
     
-    // Guardar en localStorage
-    localStorage.setItem("viewed_sneakers", JSON.stringify(viewedIds));
+    // Guardar en cookie (30 días)
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (30 * 24 * 60 * 60 * 1000));
+    document.cookie = "viewed_sneakers=" + JSON.stringify(viewedIds) + ";expires=" + expires.toUTCString() + ";path=/";
 }

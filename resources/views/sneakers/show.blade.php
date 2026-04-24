@@ -128,3 +128,12 @@
         </div>
     @endif
 @endsection
+
+@section('scripts')
+    @vite(["resources/js/sneaker-recently-viewed.js"])
+    <script>
+        if (typeof addToRecentlyViewed === 'function') {
+            addToRecentlyViewed({{ $sneaker->id }});
+        }
+    </script>
+@endsection
