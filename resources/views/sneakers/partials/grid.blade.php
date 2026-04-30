@@ -9,8 +9,7 @@
                     @endphp
                     @if($isFavorited)
                         <form class="favorite-form" action="{{ route('favorites.remove') }}" method="POST"
-                            data-add-url="{{ route('favorites.add') }}"
-                            data-remove-url="{{ route('favorites.remove') }}"
+                            data-add-url="{{ route('favorites.add') }}" data-remove-url="{{ route('favorites.remove') }}"
                             data-card-selector=".card">
                             @csrf
                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
@@ -21,8 +20,7 @@
                         </form>
                     @else
                         <form class="favorite-form" action="{{ route('favorites.add') }}" method="POST"
-                            data-add-url="{{ route('favorites.add') }}"
-                            data-remove-url="{{ route('favorites.remove') }}"
+                            data-add-url="{{ route('favorites.add') }}" data-remove-url="{{ route('favorites.remove') }}"
                             data-card-selector=".card">
                             @csrf
                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">

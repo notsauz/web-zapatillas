@@ -1,6 +1,6 @@
 <div class="sneaker-card">
     <div class="sneaker-image">
-        <img src="{{ $sneaker->image_url ?? 'https://via.placeholder.com/250x200?text=No+Image' }}"
+        <img src="{{ $sneaker->image_url }}"
             alt="{{ $sneaker->name }}" loading="lazy">
     </div>
     <!-- Información del Producto -->
