@@ -577,6 +577,132 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
 }
 
+.recently-viewed-card,
+.top-favorite-card {
+    min-height: 100%;
+    padding: 0.85rem;
+}
+
+.recently-viewed-card img,
+.top-favorite-card img {
+    height: 72px !important;
+    object-fit: cover !important;
+    width: 100% !important;
+}
+
+.recently-viewed-card .mt-2 small,
+.top-favorite-card .mt-2 small {
+    font-size: 0.82rem;
+}
+
+.recently-viewed-card .mt-2,
+.top-favorite-card .mt-2 {
+    gap: 0.15rem;
+}
+
+@media (max-width: 576px) {
+    .recently-viewed-card,
+    .top-favorite-card {
+        padding: 0.7rem;
+    }
+
+    .recently-viewed-card img,
+    .top-favorite-card img {
+        height: 62px !important;
+    }
+
+    .recently-viewed-card .mt-2 small,
+    .top-favorite-card .mt-2 small {
+        font-size: 0.75rem;
+    }
+
+    .recently-viewed-card .mt-2,
+    .top-favorite-card .mt-2 {
+        display: grid;
+        gap: 0.15rem;
+    }
+
+    .recently-viewed-card small.text-truncate,
+    .top-favorite-card small.text-truncate {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* ==================== CATÁLOGO RESPONSIVE ==================== */
+.sneaker-card .position-relative {
+    height: 250px;
+}
+
+.sneaker-card img {
+    height: 250px;
+}
+
+@media (max-width: 991px) {
+    .filter-section {
+        padding: 1rem;
+    }
+
+    .btn-toggle-filters {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .sneaker-card .position-relative {
+        height: 220px !important;
+    }
+
+    .sneaker-card .card-body {
+        padding: 1rem;
+    }
+
+    .sneaker-card .card-title {
+        font-size: 1rem;
+    }
+
+    .sneaker-card .product-sku,
+    .sneaker-card .product-brand,
+    .sneaker-card .product-color {
+        display: none;
+    }
+
+    .sneaker-card h5.text-primary {
+        font-size: 1.05rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .sneaker-card .btn {
+        padding: 0.55rem 0.8rem;
+        font-size: 0.92rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .sneaker-card .position-relative {
+        height: 180px !important;
+    }
+
+    .sneaker-card .card-body {
+        padding: 0.85rem;
+    }
+
+    .sneaker-card .card-title {
+        font-size: 0.95rem;
+    }
+
+    .sneaker-card h5.text-primary {
+        font-size: 1rem;
+    }
+
+    .btn-toggle-filters {
+        font-size: 0.92rem;
+        padding: 0.65rem 0.85rem;
+    }
+}
+
 /* Transición suave del grid */
 .col-lg-9 {
     transition: all 0.3s ease;

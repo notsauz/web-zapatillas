@@ -260,3 +260,74 @@
 .mobile-user .btn-primary:hover {
     background: linear-gradient(145deg, #0d6efd, #0a58ca);
 }
+
+/* ==================== GLOBAL RESPONSIVE IMPROVEMENTS ==================== */
+html,
+body {
+    min-height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+img,
+.img-fluid,
+.card-img-top {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (max-width: 991px) {
+    .navbar .container-fluid {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .navbar-nav .nav-link {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .navbar-nav,
+    .desktop-user {
+        width: 100%;
+    }
+
+    .desktop-user {
+        justify-content: flex-start;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 767px) {
+    .container-fluid {
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+    }
+
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .navbar .btn,
+    .nav-link,
+    .form-control,
+    .form-select,
+    .search-input-hidden {
+        min-height: 2.5rem;
+    }
+
+    .search-section-hidden {
+        padding: 0.35rem 0;
+    }
+
+    .search-input-hidden {
+        padding: 0.7rem 1.5rem 0.7rem 0.35rem;
+    }
+}

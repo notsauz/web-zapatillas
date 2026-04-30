@@ -193,7 +193,7 @@
                 <!-- Grid de Zapatillas con Lazy Load -->
                 <div class="row g-4" id="sneakerGrid">
                     @foreach($zapatillas as $sneaker)
-                        <div class="col-4 col-sm-6 col-lg-4">
+                        <div class="col-12 col-sm-6 col-lg-4">
                             <div class="card sneaker-card" style="position: relative; transition: all 0.3s ease;">
                                 <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
                                 @auth

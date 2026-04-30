@@ -51,14 +51,14 @@
             @endif
 
             <!-- Botones -->
-            <div class="d-flex gap-2">
+            <div class="d-flex flex-column flex-sm-row gap-2">
                 <a href="{{ route("catalogo") }}" class="btn btn-outline-secondary">Volver al Catálogo</a>
                 @auth
                     @if($esFavorito)
                         <form action="{{ route("favorites.remove") }}" method="POST" class="d-inline">
                             @csrf
                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm("¿Eliminar de favoritos?")">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar de favoritos?')">
                                 <i class="fas fa-heart"></i> Quitar de Favoritos
                             </button>
                         </form>
@@ -84,7 +84,7 @@
             </div>
 
             @foreach($relacionadas as $related)
-                <div class="col-md-3 mb-4">
+                <div class="col-12 col-sm-6 col-md-3 mb-4">
                     <div class="card h-100">
                         <img src="{{ $related->image_url }}" alt="{{ $related->name }}" class="card-img-top"
                             style="height: 250px; object-fit: cover;">
