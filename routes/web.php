@@ -33,6 +33,9 @@ Route::get("/zapatillas/{id}", [SneakerController::class, "show"])->name("sneake
 // API - Zapatillas visitadas recientemente (AJAX)
 Route::get("/api/recently-viewed", [SneakerController::class, "getRecentlyViewed"])->name("sneaker.recently-viewed");
 
+// API - Zapatillas más favoritas (AJAX)
+Route::get("/api/top-favorites", [SneakerController::class, "topFavoritesAjax"])->name("sneaker.top-favorites.ajax");
+
 // PERFIL (Solo usuarios autenticados)
 Route::middleware("auth")->group(function () {
     Route::get("/profile", [ProfileController::class, "edit"])->name("profile.edit");

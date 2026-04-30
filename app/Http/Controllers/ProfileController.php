@@ -275,10 +275,17 @@ class ProfileController extends Controller
         $zapatilla = \App\Models\Sneaker::find($datos["sneaker_id"]);
 
         if ($usuario->favoriteSneakers()->where("sneaker_id", $zapatilla->id)->exists()) {
+            if ($peticion->ajax() || $peticion->wantsJson()) {
+                return response()->json(["message" => "Esta zapatilla ya está en tus favoritos."], 200);
+            }
             return redirect()->back()->with("info", "Esta zapatilla ya está en tus favoritos.");
         }
 
         $usuario->favoriteSneakers()->attach($zapatilla->id);
+
+        if ($peticion->ajax() || $peticion->wantsJson()) {
+            return response()->json(["message" => "Zapatilla agregada a favoritos."], 200);
+        }
 
         return redirect()->back()->with("success", "Zapatilla agregada a favoritos.");
     }
@@ -295,6 +302,10 @@ class ProfileController extends Controller
         $zapatilla = \App\Models\Sneaker::find($datos["sneaker_id"]);
 
         $usuario->favoriteSneakers()->detach($zapatilla->id);
+
+        if ($peticion->ajax() || $peticion->wantsJson()) {
+            return response()->json(["message" => "Zapatilla eliminada de favoritos."], 200);
+        }
 
         return redirect()->back()->with("success", "Zapatilla eliminada de favoritos.");
     }

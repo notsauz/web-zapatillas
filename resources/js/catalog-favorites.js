@@ -5,6 +5,35 @@ if (!tokenCSRF) {
     console.error('CSRF token no encontrado');
 }
 
+function refreshTopFavoritesSection() {
+    let topFavoritesSection = document.getElementById('topFavoritesSection');
+    if (!topFavoritesSection) {
+        return;
+    }
+
+    let url = topFavoritesSection.dataset.url;
+    if (!url) {
+        return;
+    }
+
+    fetch(url, {
+        headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache'
+        },
+        cache: 'no-store'
+    })
+        .then(response => response.json())
+        .then(json => {
+            if (json.html) {
+                topFavoritesSection.outerHTML = json.html;
+            }
+        })
+        .catch(error => {
+            console.error('Error al actualizar sección de Más Favoritas:', error);
+        });
+}
+
 // Escuchar todos los envíos de formularios de favoritos
 document.body.addEventListener('submit', function (evento) {
     // Buscar si el formulario enviado es de favoritos
@@ -44,7 +73,6 @@ document.body.addEventListener('submit', function (evento) {
                 // Cambiar estilo del botón a rojo (favorito activo)
                 botonEnviar.className = 'btn btn-danger btn-sm shadow-sm';
                 botonEnviar.innerHTML = '<i class="fas fa-heart text-white"></i>';
-
             } else {
                 // La acción era ELIMINAR de favoritos
                 let estaEnPaginaFavoritos = window.location.pathname.includes('/profile/favorites');
@@ -85,6 +113,9 @@ document.body.addEventListener('submit', function (evento) {
                     botonEnviar.innerHTML = '<i class="far fa-heart"></i>';
                 }
             }
+
+            // Refrescar bloque de Más Favoritas si existe en la página
+            refreshTopFavoritesSection();
         })
         .catch(error => {
             console.error('Error al actualizar favoritos:', error);

@@ -207,4 +207,26 @@ class SneakerController extends Controller
 
         return view("sneakers.top-favorites", compact("zapatillas", "idsFavoritos"));
     }
+
+    // Obtener top favoritas en AJAX para refrescar el bloque sin recargar
+    public function topFavoritesAjax()
+    {
+        $zapatillasTop = Sneaker::with("brandModel")
+            ->withCount("favoritedByUsers")
+            ->having("favorited_by_users_count", ">", 0)
+            ->orderBy("favorited_by_users_count", "desc")
+            ->take(5)
+            ->get();
+
+        $idsFavoritos = auth()->check()
+            ? auth()->user()->favoriteSneakers()->pluck("sneakers.id")->toArray()
+            : [];
+
+        return response()->json([
+            "html" => view("sneakers.partials.top-favorites", [
+                "zapatillasTop" => $zapatillasTop,
+                "idsFavoritos" => $idsFavoritos,
+            ])->render(),
+        ], 200);
+    }
 }

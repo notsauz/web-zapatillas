@@ -1,11 +1,12 @@
 @php $zapatillasTop = $zapatillasTop ?? collect([]); @endphp
-@if($zapatillasTop->count() > 0)
-    <div class="top-favorites-section mb-4">
-        <h5 class="mb-3">
-            <i class="fas fa-heart text-danger me-2"></i>Más Favoritas
-        </h5>
-        <div class="row g-2">
-            @foreach($zapatillasTop as $index => $sneaker)
+<div id="topFavoritesSection" data-url="{{ route('sneaker.top-favorites.ajax') }}">
+    @if($zapatillasTop->count() > 0)
+        <div class="top-favorites-section mb-4">
+            <h5 class="mb-3">
+                <i class="fas fa-heart text-danger me-2"></i>Más Favoritas
+            </h5>
+            <div class="row g-2">
+                @foreach($zapatillasTop as $index => $sneaker)
                 <div class="col-6 col-md-4 col-lg-2">
                     <a href="{{ route("sneaker.show", $sneaker->id) }}" class="text-decoration-none">
                         <div class="top-favorite-card p-2 border rounded shadow-sm h-100">
@@ -23,4 +24,5 @@
             @endforeach
         </div>
     </div>
-@endif
+    @endif
+</div>
