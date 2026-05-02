@@ -3,9 +3,9 @@
 @section('admin-content')
     <!-- Encabezado con título y botón para crear nueva marca -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Gestión de Marcas</h2>
+        <h2>{{ __('Gestión de Marcas') }}</h2>
         <a href="{{ route('admin.brands.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Agregar Marca
+            <i class="fas fa-plus me-2"></i>{{ __('Agregar Marca') }}
         </a>
     </div>
 
@@ -17,11 +17,11 @@
                 <!-- Encabezado de la tabla -->
                 <thead>
                     <tr class="table-light">
-                        <th>Nombre</th>
-                        <th>Zapatillas</th>
-                        <th>Logo</th>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
+                        <th>{{ __('Nombre') }}</th>
+                        <th>{{ __('Zapatillas') }}</th>
+                        <th>{{ __('Logo') }}</th>
+                        <th>{{ __('Descripción') }}</th>
+                        <th>{{ __('Acciones') }}</th>
                     </tr>
                 </thead>
 
@@ -31,7 +31,7 @@
                         <tr>
                             <td class="fw-bold">{{ $brand->name }}</td>
                             <td>
-                                <span class="badge bg-secondary">{{ $brand->sneakers_count ?? 0 }} zapatillas</span>
+                                <span class="badge bg-secondary">{{ $brand->sneakers_count ?? 0 }} {{ __('zapatillas') }}</span>
                             </td>
                             <!-- Logo -->
                             <td>
@@ -61,7 +61,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Estás seguro de que deseas eliminar esta marca y sus zapatillas asociadas?');">
+                                        onclick="return confirm('{{ __('¿Estás seguro de que deseas eliminar esta marca y sus zapatillas asociadas?') }}');">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -70,7 +70,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="text-center text-muted py-4">
-                                <i class="fas fa-inbox me-2"></i>No hay marcas registradas
+                                <i class="fas fa-inbox me-2"></i>{{ __('No hay marcas registradas') }}
                             </td>
                         </tr>
                     @endforelse

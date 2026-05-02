@@ -15,7 +15,7 @@
 
             <!-- SKU -->
             <p class="text-muted">
-                SKU: <strong>{{ $sneaker->sku }}</strong>
+                {{ __('SKU:') }} <strong>{{ $sneaker->sku }}</strong>
             </p>
 
             <!-- Precio -->
@@ -24,19 +24,19 @@
             <!-- Información Adicional -->
             <div class="mb-4">
                 <p>
-                    <strong>Marca:</strong> {{ $sneaker->brand }}
+                    <strong>{{ __('Marca:') }}</strong> {{ $sneaker->brand }}
                 </p>
                 <p>
-                    <strong>Categoría:</strong> {{ ucfirst($sneaker->category) }}
+                    <strong>{{ __('Categoría:') }}</strong> {{ __(ucfirst($sneaker->category)) }}
                 </p>
                 @if($sneaker->color)
                     <p>
-                        <strong>Color:</strong> {{ $sneaker->color }}
+                        <strong>{{ __('Color:') }}</strong> {{ $sneaker->translated_color }}
                     </p>
                 @endif
                 @if($sneaker->sizes)
                     <p>
-                        <strong>Tallas Disponibles:</strong>
+                        <strong>{{ __('Tallas Disponibles:') }}</strong>
                         {{ implode(", ", $sneaker->sizes) }}
                     </p>
                 @endif
@@ -45,21 +45,22 @@
             <!-- Descripción -->
             @if($sneaker->description)
                 <div class="mb-4">
-                    <h5>Descripción</h5>
-                    <p>{{ $sneaker->description }}</p>
+                    <h5>{{ __('Descripción') }}</h5>
+                    <p>{{ __($sneaker->description) }}</p>
                 </div>
             @endif
 
             <!-- Botones -->
             <div class="d-flex flex-column flex-sm-row gap-2">
-                <a href="{{ route("catalogo") }}" class="btn btn-outline-secondary">Volver al Catálogo</a>
+                <a href="{{ route("catalogo") }}" class="btn btn-outline-secondary">{{ __('Volver al Catálogo') }}</a>
                 @auth
                     @if($esFavorito)
                         <form action="{{ route("favorites.remove") }}" method="POST" class="d-inline">
                             @csrf
                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar de favoritos?')">
-                                <i class="fas fa-heart"></i> Quitar de Favoritos
+                            <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('{{ __('¿Eliminar de favoritos?') }}')">
+                                <i class="fas fa-heart"></i> {{ __('Quitar de Favoritos') }}
                             </button>
                         </form>
                     @else
@@ -67,7 +68,7 @@
                             @csrf
                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
                             <button type="submit" class="btn btn-outline-danger">
-                                <i class="far fa-heart"></i> Agregar a Favoritos
+                                <i class="far fa-heart"></i> {{ __('Agregar a Favoritos') }}
                             </button>
                         </form>
                     @endif
@@ -80,7 +81,7 @@
     @if($relacionadas->count() > 0)
         <div class="row mt-5 pt-4 border-top">
             <div class="col-12">
-                <h4>Otros modelos {{ $sneaker->brand }}</h4>
+                <h4>{{ __('Productos Relacionados') }}</h4>
             </div>
 
             @foreach($relacionadas as $related)
@@ -95,7 +96,7 @@
                             </p>
                             <h6 class="text-success">${{ number_format($related->price, 2) }}</h6>
                             <a href="{{ route("sneaker.show", $related->id) }}" class="btn btn-outline-primary btn-sm w-100">
-                                Ver Detalles
+                                {{ __('Ver Detalles') }}
                             </a>
                         </div>
                     </div>

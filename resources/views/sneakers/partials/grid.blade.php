@@ -1,5 +1,5 @@
 @forelse($sneakers as $sneaker)
-    <div class="col-12 col-sm-6 col-lg-4">
+    <div class="col-6 col-sm-4 col-lg-4">
         <!-- Tarjeta de Producto -->
         <div class="position-relative">
             <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
@@ -51,23 +51,23 @@
                         <h5 class="card-title text-dark fw-bold mb-2">{{ $sneaker->name }}</h5>
                         <!-- SKU -->
                         <p class="text-muted mb-2 product-sku" style="font-size: 0.9rem;">
-                            <strong>SKU:</strong> {{ $sneaker->sku }}
+                            <strong>{{ __('SKU:') }}</strong> {{ $sneaker->sku }}
                         </p>
                         <!-- Marca -->
                         <p class="text-muted mb-2 product-brand" style="font-size: 0.85rem;">
-                            <small><strong>Marca:</strong> {{ $sneaker->brand }}</small>
+                            <small><strong>{{ __('Marca:') }}</strong> {{ $sneaker->brand }}</small>
                         </p>
                         <!-- Color (si existe) -->
                         @if($sneaker->color)
                             <p class="text-muted mb-3 product-color" style="font-size: 0.85rem;">
-                                <small><strong>Color:</strong> {{ $sneaker->color }}</small>
+                                <small><strong>{{ __('Color:') }}</strong> {{ $sneaker->translated_color }}</small>
                             </p>
                         @endif
                         <!-- Precio -->
                         <h5 class="text-primary fw-bold mb-3">${{ number_format($sneaker->price, 2) }}</h5>
                         <!-- Botón de Detalles -->
                         <button class="btn btn-primary btn-sm w-100 mt-auto">
-                            <i class="fas fa-eye me-1"></i> Ver Detalles
+                            <i class="fas fa-eye me-1"></i> {{ __('Ver Detalles') }}
                         </button>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
     </div>
 @empty
     <div class="alert alert-info text-center">
-        <h5>No se encontraron zapatillas</h5>
-        <p>Intenta ajustar los filtros o la búsqueda</p>
+        <h5>{{ __('No se encontraron zapatillas') }}</h5>
+        <p>{{ __('Intenta ajustar los filtros o la búsqueda') }}</p>
     </div>
 @endforelse

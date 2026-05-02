@@ -51,7 +51,7 @@ class BrandSeeder extends Seeder
             ],
             [
                 'name' => 'Saucony',
-                'logo_url' => 'https://atlasstoked.com/img/cms/blog/imported/saucony-1024x310.jpg',
+                'logo_url' => 'https://cdn.worldvectorlogo.com/logos/saucony-3.svg',
                 'description' => 'Innovación en zapatillas para correr.',
             ],
             [

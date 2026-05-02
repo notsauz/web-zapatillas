@@ -13,7 +13,7 @@ Informacion de admin en `database\seeders\AdminSeeder.php`
 
 Ejecutar seed de zapatillas `docker compose exec app-zap php artisan db:seed --class=SneakersSeeder`
 
-Ejecutar seed de zapatillas `docker compose exec app-zap php artisan db:seed --class=BrandSeeder`
+Ejecutar seed de marcas `docker compose exec app-zap php artisan db:seed --class=BrandSeeder`
 
 ### **REQUISITOS**
 - Docker y Docker Compose

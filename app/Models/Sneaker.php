@@ -103,6 +103,31 @@ class Sneaker extends Model
         return Brand::select("name")->orderBy("name")->pluck("name");
     }
 
+    // Traducir etiquetas compuestas como colores y textos creados en la base de datos
+    public static function translateLabel(?string $text): ?string
+    {
+        if (!$text) {
+            return $text;
+        }
+
+        $parts = preg_split('/(\/|,)/u', $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+        return collect($parts)
+            ->map(function ($part) {
+                if ($part === '/' || $part === ',') {
+                    return $part;
+                }
+
+                return __($part);
+            })
+            ->implode('');
+    }
+
+    public function getTranslatedColorAttribute()
+    {
+        return self::translateLabel($this->color);
+    }
+
     // Obtener todos los colores únicos
     public static function getColors()
     {

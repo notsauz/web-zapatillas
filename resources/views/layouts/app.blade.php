@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
@@ -23,37 +23,41 @@
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('catalogo') }}">
                 <img src="{{ asset('logo.png') }}" alt="Logo TopSneakers" class="rounded"
                     style="height: 40px; width: 40px; object-fit: contain;">
-                <span>TopSneakers</span>
+                <span class="d-none d-lg-inline">TopSneakers</span>
             </a>
 
             <!-- Sección de usuario para móvil (siempre visible a la derecha) - Botones más grandes -->
             <div class="user-section-mobile mobile-user">
                 @auth
                     <div class="btn-group">
-                        <a href="{{ route('profile.favorites') }}" class="btn btn-outline-light" title="Mis Favoritos">
+                        <a href="{{ route('profile.favorites') }}" class="btn btn-outline-light"
+                            title="{{ __('Mis Favoritos') }}">
                             <i class="fas fa-heart"></i>
                         </a>
-                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-light" title="Mi Perfil">
+                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-light" title="{{ __('Mi Perfil') }}">
                             <i class="fas fa-user-circle"></i>
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="m-0">
                             @csrf
-                            <button type="submit" class="btn btn-outline-light" title="Cerrar Sesión">
+                            <button type="submit" class="btn btn-outline-light" title="{{ __('Cerrar Sesión') }}">
                                 <i class="fas fa-sign-out-alt"></i>
                             </button>
                         </form>
                     </div>
+                    @include('partials.language-switcher')
                 @else
                     <div class="btn-group">
-                        <a href="{{ route('login') }}" class="btn btn-outline-light" title="Iniciar Sesión">
+                        <a href="{{ route('login') }}" class="btn btn-outline-light" title="{{ __('Iniciar Sesión') }}">
                             <i class="fas fa-sign-in-alt"></i>
-                            <span>Login</span>
+                            <span>{{ __('Iniciar Sesión') }}</span>
                         </a>
-                        <a href="{{ route('register.form') }}" class="btn btn-primary btn-sm" title="Registrarse">
+                        <a href="{{ route('register.form') }}" class="btn btn-primary btn-sm"
+                            title="{{ __('Registrarse') }}">
                             <i class="fas fa-user-plus"></i>
-                            <span>Registro</span>
+                            <span>{{ __('Registrarse') }}</span>
                         </a>
                     </div>
+                    @include('partials.language-switcher')
                 @endauth
             </div>
 
@@ -67,31 +71,31 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->route()->getName() === 'catalogo' ? 'active' : '' }}"
                             href="{{ route('catalogo') }}">
-                            <i class="fas fa-home me-1"></i> Inicio
+                            <i class="fas fa-home me-1"></i> {{ __('Inicio') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->route()->getName() === 'marcas.index' ? 'active' : '' }}"
                             href="{{ route('marcas.index') }}">
-                            <i class="fas fa-tag me-1"></i> Marcas
+                            <i class="fas fa-tag me-1"></i> {{ __('Marcas') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->input('category') === 'hombre' ? 'active' : '' }}"
                             href="{{ route('categoria', 'hombre') }}">
-                            <i class="fas fa-male me-1"></i> Hombres
+                            <i class="fas fa-male me-1"></i> {{ __('Hombres') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->input('category') === 'mujer' ? 'active' : '' }}"
                             href="{{ route('categoria', 'mujer') }}">
-                            <i class="fas fa-female me-1"></i> Mujeres
+                            <i class="fas fa-female me-1"></i> {{ __('Mujeres') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->input('category') === 'niño' ? 'active' : '' }}"
                             href="{{ route('categoria', 'niño') }}">
-                            <i class="fas fa-child me-1"></i> Niños
+                            <i class="fas fa-child me-1"></i> {{ __('Niños') }}
                         </a>
                     </li>
                 </ul>
@@ -108,26 +112,27 @@
                             </a>
                         @endif
                         <a href="{{ route('profile.favorites') }}" class="btn btn-outline-light btn-sm me-2">
-                            <i class="fas fa-heart me-1"></i> Favoritos
+                            <i class="fas fa-heart me-1"></i> {{ __('Favoritos') }}
                         </a>
                         <a href="{{ route('profile.edit') }}" class="btn btn-outline-light btn-sm me-2">
-                            <i class="fas fa-cog me-1"></i> Mi Perfil
+                            <i class="fas fa-cog me-1"></i> {{ __('Mi Perfil') }}
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="m-0">
                             @csrf
                             <button type="submit" class="btn btn-outline-light btn-sm">
-                                <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+                                <i class="fas fa-sign-out-alt me-1"></i> {{ __('Cerrar Sesión') }}
                             </button>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm me-2">
-                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
+                            <i class="fas fa-sign-in-alt me-1"></i> {{ __('Iniciar Sesión') }}
                         </a>
                         <a href="{{ route('register.form') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-user-plus me-1"></i> Registrarse
+                            <i class="fas fa-user-plus me-1"></i> {{ __('Registrarse') }}
                         </a>
                     @endauth
                 </div>
+                @include('partials.language-switcher')
             </div>
         </div>
     </nav>
@@ -138,7 +143,8 @@
             <div class="search-form-hidden">
                 <div class="search-group-hidden">
                     <input type="search" id="searchInput" class="search-input-hidden" name="search"
-                        placeholder="Buscar por marca, color, etc." value="" aria-label="Buscar" autocomplete="off">
+                        placeholder="{{ __('Buscar por marca, color, etc.') }}" value="" aria-label="{{ __('Buscar') }}"
+                        autocomplete="off">
                     <i class="fas fa-search search-icon-hidden"></i>
                 </div>
             </div>

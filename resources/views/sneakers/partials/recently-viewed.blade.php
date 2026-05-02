@@ -2,7 +2,7 @@
 @if($vistasRecently->count() > 0)
     <div class="recently-viewed-section mb-4">
         <h5 class="mb-3">
-            <i class="fas fa-history me-2"></i>Últimas visitadas
+            <i class="fas fa-history me-2"></i>{{ __('Últimas visitadas') }}
         </h5>
         <div class="row g-2">
             @foreach($vistasRecently as $sneaker)

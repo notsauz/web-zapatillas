@@ -44,7 +44,7 @@ class SneakersSeeder extends Seeder
                 'brand_name' => 'Nike',
                 'category' => 'hombre',
                 'price' => 135.00,
-                'image_url' => 'https://cdn-images.farfetch-contents.com/16/07/06/97/16070697_30563905_1000.jpg',
+                'image_url' => 'https://cdn.shopify.com/s/files/1/2358/2817/products/air-max-90-og-volt-293380.png?v=1638813413',
                 'sizes' => ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45'],
                 'color' => 'Blanco/Negro/Rojo',
                 'description' => 'El Air Max 90 con su clásico Air Cushioning. Comodidad excepcional y diseño atemporal que ha perdurado décadas.',
@@ -55,7 +55,7 @@ class SneakersSeeder extends Seeder
                 'brand_name' => 'Nike',
                 'category' => 'mujer',
                 'price' => 105.00,
-                'image_url' => 'https://cdn.media.amplience.net/i/frasersdev/27435030_o_a1.jpg?v=20240417082012',
+                'image_url' => 'https://limitedresell.com/4864-full_default/nike-blazer-mid-77-next-nature-white-black.jpg',
                 'sizes' => ['35', '36', '37', '38', '39', '40', '41'],
                 'color' => 'Blanco/Gris',
                 'description' => 'Nike Blazer Mid 77 vintage. Un diseño retro con toque moderno. Perfecto para un look casual y elegante.',
@@ -125,7 +125,7 @@ class SneakersSeeder extends Seeder
                 'brand_name' => 'Converse',
                 'category' => 'unisex',
                 'price' => 75.00,
-                'image_url' => 'https://cdn.laredoute.com/cdn-cgi/image/width=500,height=500,fit=pad,dpr=1/products/1/3/b/13bc6c009807cd02e986b932aae58a61.jpg',
+                'image_url' => 'https://m.media-amazon.com/images/I/716Ju-Nv07L._AC_UY900_.jpg',
                 'sizes' => ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46'],
                 'color' => 'Negro',
                 'description' => 'Las icónicas Converse Chuck Taylor All Star. Un clásico que nunca falla, perfeccionadas a través del tiempo.',
@@ -208,7 +208,7 @@ class SneakersSeeder extends Seeder
                 'brand_name' => 'New Balance',
                 'category' => 'mujer',
                 'price' => 185.00,
-                'image_url' => 'https://cdn-images.farfetch-contents.com/20/46/66/89/20466689_50365634_600.jpg',
+                'image_url' => 'https://owp.klarna.com/product/640x640/3007084349/New-Balance-990v6-M-Grey.jpg?ph=true',
                 'sizes' => ['36', '37', '38', '39', '40', '41'],
                 'color' => 'Beige/Negro',
                 'description' => 'New Balance 990v6, el buque insignia. Fabricación premium hecha en USA. Garantía de calidad y durabilidad.',
@@ -221,7 +221,7 @@ class SneakersSeeder extends Seeder
                 'brand_name' => 'Reebok',
                 'category' => 'niño',
                 'price' => 65.00,
-                'image_url' => 'https://cdn-images.farfetch-contents.com/22/25/09/40/22250940_52584596_1000.jpg',
+                'image_url' => 'https://cdn.blazimg.com/1800/product/r/e/reebok-classics_2267_1_footwear_photography_side_lateral_center_view_white_000.webp',
                 'sizes' => ['29', '30', '31', '32', '33', '34', '35', '36', '37'],
                 'color' => 'Blanco',
                 'description' => 'Reebok Classic Leather para niños. Comodidad, durabilidad y diseño atemporal para los pequeños.',
@@ -232,7 +232,7 @@ class SneakersSeeder extends Seeder
                 'brand_name' => 'Reebok',
                 'category' => 'hombre',
                 'price' => 85.00,
-                'image_url' => 'https://cdn-images.farfetch-contents.com/23/10/69/09/23106909_53297455_600.jpg',
+                'image_url' => 'https://www.reebok.eu/cdn/shop/files/JPG-100007797_SLC_eCom_grande.jpg?v=1756828973',
                 'sizes' => ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45'],
                 'color' => 'Blanco/Gris',
                 'description' => 'Reebok Club C 85 vintage. Elegancia retro con tecnología de amortiguación moderna. Perfecto para cualquier estación.',
@@ -266,15 +266,24 @@ class SneakersSeeder extends Seeder
         ];
 
         // Crear todas las zapatillas vinculadas con brand_id
-        foreach ($sneakers as $sneaker) {
-            $brandName = $sneaker['brand_name'];
-            unset($sneaker['brand_name']);
+        foreach ($sneakers as $data) {
+            // Buscamos el ID de la marca por su nombre
+            $brand = Brand::where('name', $data['brand_name'])->first();
 
-            $brand = Brand::where('name', $brandName)->first();
-            if ($brand) {
-                $sneaker['brand_id'] = $brand->id;
-                Sneaker::create($sneaker);
-            }
+            // Usamos updateOrCreate para evitar el error de Duplicate Entry
+            Sneaker::updateOrCreate(
+                ['sku' => $data['sku']], // Condición para buscar (el SKU debe ser único)
+                [
+                    'name' => $data['name'],
+                    'category' => $data['category'],
+                    'price' => $data['price'],
+                    'image_url' => $data['image_url'],
+                    'sizes' => $data['sizes'],
+                    'color' => $data['color'],
+                    'description' => $data['description'],
+                    'brand_id' => $brand ? $brand->id : null, // Asignamos el ID de la marca
+                ]
+            );
         }
     }
 }

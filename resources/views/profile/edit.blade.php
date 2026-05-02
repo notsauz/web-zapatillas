@@ -11,10 +11,10 @@
             <div class="card profile-card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">
-                        Mi Perfil
+                        {{ __('Mi Perfil') }}
                     </h4>
                     <a href="{{ route("profile.favorites") }}" class="btn btn-light btn-sm">
-                        <i class="fas fa-heart"></i> Mis Favoritos
+                        <i class="fas fa-heart"></i> {{ __('Mis Favoritos') }}
                     </a>
                 </div>
 
@@ -50,28 +50,28 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-pane"
                                 type="button" role="tab" aria-selected="true">
-                                Información Personal
+                                {{ __('Información Personal') }}
                             </button>
                         </li>
                         <!-- Cambiar Contraseña -->
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-pane"
                                 type="button" role="tab" aria-selected="false">
-                                Cambiar Contraseña
+                                {{ __('Cambiar Contraseña') }}
                             </button>
                         </li>
                         <!-- Verificación de Email -->
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="verification-tab" data-bs-toggle="tab"
                                 data-bs-target="#verification-pane" type="button" role="tab" aria-selected="false">
-                                Verificación de Email
+                                {{ __('Verificación de Email') }}
                             </button>
                         </li>
                         <!-- Eliminar Cuenta -->
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete-pane"
                                 type="button" role="tab" aria-selected="false">
-                                Eliminar Cuenta
+                                {{ __('Eliminar Cuenta') }}
                             </button>
                         </li>
                     </ul>
@@ -87,7 +87,8 @@
 
                                 <!-- Nombre Completo -->
                                 <div class="mb-3">
-                                    <label for="name" class="form-label"><strong>Nombre Completo</strong></label>
+                                    <label for="name"
+                                        class="form-label"><strong>{{ __('Nombre Completo') }}</strong></label>
                                     <input type="text" class="form-control @error("name") is-invalid @enderror" id="name"
                                         name="name" value="{{ old("name", $usuario->name) }}" required>
                                     @error("name")
@@ -102,21 +103,21 @@
                                     <!-- Email verificado: mostrar solo como información -->
                                     <div class="mb-3">
                                         <label for="email" class="form-label">
-                                            <strong>Correo Electrónico</strong>
-                                            <span class="badge bg-success ms-2">Verificado</span>
+                                            <strong>{{ __('Correo Electrónico') }}</strong>
+                                            <span class="badge bg-success ms-2">{{ __('Verificado') }}</span>
                                         </label>
                                         <input type="email" class="form-control" id="email" name="email"
                                             value="{{ $usuario->email }}" readonly disabled>
                                         <small class="form-text text-muted d-block mt-2">
-                                            Tu correo está verificado y protegido. No puede ser modificado.
+                                            {{ __('Tu correo está verificado y protegido. No puede ser modificado.') }}
                                         </small>
                                     </div>
                                 @else
                                     <!-- Email sin verificar: mostrar editable -->
                                     <div class="mb-3">
                                         <label for="email" class="form-label">
-                                            <strong>Correo Electrónico</strong>
-                                            <span class="badge bg-warning ms-2">Sin Verificar</span>
+                                            <strong>{{ __('Correo Electrónico') }}</strong>
+                                            <span class="badge bg-warning ms-2">{{ __('Sin Verificar') }}</span>
                                         </label>
                                         <input type="email" class="form-control @error("email") is-invalid @enderror" id="email"
                                             name="email" value="{{ old("email", $usuario->email) }}" required>
@@ -126,23 +127,23 @@
                                             </div>
                                         @enderror
                                         <small class="form-text text-muted d-block mt-2">
-                                            Verifica tu correo en la pestaña "Verificación de Email" para proteger tu cuenta.
+                                            {{ __('Verifica tu correo en la pestaña "Verificación de Email" para proteger tu cuenta.') }}
                                         </small>
                                     </div>
                                 @endif
 
                                 <!-- Nota sobre cambios -->
                                 <div class="alert alert-info mt-4" role="alert">
-                                    <strong>Nota:</strong> Los cambios se guardarán inmediatamente.
+                                    <strong>{{ __('Nota:') }}</strong> {{ __('Los cambios se guardarán inmediatamente.') }}
                                 </div>
 
                                 <!-- Botones de Acción -->
                                 <div class="btn-group-custom">
                                     <button type="submit" class="btn btn-primary">
-                                        Guardar Cambios
+                                        {{ __('Guardar Cambios') }}
                                     </button>
                                     <a href="{{ route("catalogo") }}" class="btn btn-secondary">
-                                        Volver
+                                        {{ __('Volver') }}
                                     </a>
                                 </div>
                             </form>
@@ -155,8 +156,8 @@
 
                                 <!-- Contraseña Actual -->
                                 <div class="mb-3">
-                                    <label for="current_password" class="form-label"><strong>Contraseña
-                                            Actual</strong></label>
+                                    <label for="current_password"
+                                        class="form-label"><strong>{{ __('Contraseña Actual') }}</strong></label>
                                     <input type="password"
                                         class="form-control @error("current_password") is-invalid @enderror"
                                         id="current_password" name="current_password" required>
@@ -165,13 +166,14 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <small class="form-text text-muted">Introduce tu contraseña actual para verificación de
-                                        seguridad.</small>
+                                    <small
+                                        class="form-text text-muted">{{ __('Introduce tu contraseña actual para verificación de seguridad.') }}</small>
                                 </div>
 
                                 <!-- Nueva Contraseña -->
                                 <div class="mb-3">
-                                    <label for="new_password" class="form-label"><strong>Nueva Contraseña</strong></label>
+                                    <label for="new_password"
+                                        class="form-label"><strong>{{ __('Nueva Contraseña') }}</strong></label>
                                     <input type="password" class="form-control @error("new_password") is-invalid @enderror"
                                         id="new_password" name="new_password" required>
                                     @error("new_password")
@@ -179,28 +181,29 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    <small class="form-text text-muted">Mínimo 8 caracteres.</small>
+                                    <small class="form-text text-muted">{{ __('Mínimo 8 caracteres.') }}</small>
                                 </div>
 
                                 <!-- Confirmar Nueva Contraseña -->
                                 <div class="mb-3">
-                                    <label for="new_password_confirmation" class="form-label"><strong>Confirmar Nueva
-                                            Contraseña</strong></label>
+                                    <label for="new_password_confirmation"
+                                        class="form-label"><strong>{{ __('Confirmar Nueva Contraseña') }}</strong></label>
                                     <input type="password" class="form-control" id="new_password_confirmation"
                                         name="new_password_confirmation" required>
-                                    <small class="form-text text-muted">Debe coincidir con la nueva contraseña.</small>
+                                    <small
+                                        class="form-text text-muted">{{ __('Debe coincidir con la nueva contraseña.') }}</small>
                                 </div>
 
                                 <!-- Nota sobre cambios -->
                                 <div class="alert alert-warning" role="alert">
-                                    <strong>Importante:</strong> Tu sesión se cerrará después de cambiar la contraseña por
-                                    razones de seguridad.
+                                    <strong>{{ __('Importante:') }}</strong>
+                                    {{ __('Tu sesión se cerrará después de cambiar la contraseña por razones de seguridad.') }}
                                 </div>
 
                                 <!-- Botones de Acción -->
                                 <div class="btn-group-custom">
                                     <button type="submit" class="btn btn-danger">
-                                        Cambiar Contraseña
+                                        {{ __('Cambiar Contraseña') }}
                                     </button>
                                 </div>
                             </form>
@@ -208,60 +211,59 @@
 
                         <!-- 3. VERIFICACIÓN DE EMAIL -->
                         <div class="tab-pane fade" id="verification-pane" role="tabpanel">
-                            <h5 class="mb-3">Estado de Verificación de Email</h5>
+                            <h5 class="mb-3">{{ __('Estado de Verificación de Email') }}</h5>
 
                             <!-- Estado de Verificación -->
                             @if($usuario->email_verified_at)
                                 <div class="verification-badge verified">
-                                    <strong>Email Verificado</strong><br>
-                                    <small>Tu correo electrónico está completamente verificado y protegido</small><br>
-                                    <small style="font-size: 0.75rem; margin-top: 5px; display: block;">Verificado el:
+                                    <strong>{{ __('Email Verificado') }}</strong><br>
+                                    <small>{{ __('Tu correo electrónico está completamente verificado y protegido') }}</small><br>
+                                    <small
+                                        style="font-size: 0.75rem; margin-top: 5px; display: block;">{{ __('Verificado el:') }}
                                         {{ $usuario->email_verified_at->format("d/m/Y H:i") }}</small>
                                 </div>
                             @else
                                 <div class="verification-badge not-verified">
-                                    <strong>Email No Verificado</strong><br>
-                                    <small>Tu correo aún no ha sido validado</small>
+                                    <strong>{{ __('Email No Verificado') }}</strong><br>
+                                    <small>{{ __('Tu correo aún no ha sido validado') }}</small>
                                 </div>
                             @endif
 
                             <!-- Información sobre Verificación -->
                             <div class="alert alert-info mb-4" role="alert">
-                                <strong>¿Por qué verificar tu email?</strong><br>
-                                Verificar tu correo electrónico ayuda a proteger tu cuenta y garantiza que puedas recibir
-                                notificaciones importantes.
+                                <strong>{{ __('¿Por qué verificar tu email?') }}</strong><br>
+                                {{ __('Verificar tu correo electrónico ayuda a proteger tu cuenta y garantiza que puedas recibir notificaciones importantes.') }}
                             </div>
 
                             <!-- Acción de Verificación -->
                             @if(!$usuario->email_verified_at)
                                 <div class="card border-warning">
                                     <div class="card-body">
-                                        <h6 class="card-title text-warning mb-3">Acción Requerida</h6>
+                                        <h6 class="card-title text-warning mb-3">{{ __('Acción Requerida') }}</h6>
                                         <p class="card-text mb-3">
-                                            Tu correo electrónico aún no está verificado. Verifica tu email para aumentar la
-                                            seguridad de tu cuenta.
+                                            {{ __('Tu correo electrónico aún no está verificado. Verifica tu email para aumentar la seguridad de tu cuenta.') }}
                                         </p>
                                         <form action="{{ route("profile.send-verification") }}" method="POST" class="mb-3">
                                             @csrf
                                             <button type="submit" class="btn btn-success">
-                                                Enviar Email de Verificación
+                                                {{ __('Enviar Email de Verificación') }}
                                             </button>
                                         </form>
                                         <small class="form-text text-muted">
-                                            Recibirás un email con un enlace de verificación. El enlace caduca en 60 minutos.
+                                            {{ __('Recibirás un email con un enlace de verificación. El enlace caduca en 60 minutos.') }}
                                         </small>
                                     </div>
                                 </div>
                             @else
                                 <div class="card border-success">
                                     <div class="card-body">
-                                        <h6 class="card-title text-success mb-3">Todo Correcto</h6>
+                                        <h6 class="card-title text-success mb-3">{{ __('Todo Correcto') }}</h6>
                                         <p class="card-text mb-2">
-                                            Tu correo electrónico <strong>{{ $usuario->email }}</strong> está verificado y
-                                            protegido.
+                                            {{ __('Tu correo electrónico') }} <strong>{{ $usuario->email }}</strong>
+                                            {{ __('está verificado y protegido.') }}
                                         </p>
                                         <small class="form-text text-muted">
-                                            Si necesitas cambiar tu email, contacta con soporte.
+                                            {{ __('Si necesitas cambiar tu email, contacta con soporte.') }}
                                         </small>
                                     </div>
                                 </div>
@@ -271,10 +273,10 @@
                         <!-- 4. ELIMINAR CUENTA -->
                         <div class="tab-pane fade" id="delete-pane" role="tabpanel">
                             <div class="alert alert-danger mb-4" role="alert">
-                                <strong>Advertencia Importante</strong><br>
-                                Al eliminar tu cuenta, <strong>se borrarán PERMANENTEMENTE</strong> todos tus datos,
-                                historial de compras y preferencias.
-                                <strong>Esta acción NO se puede deshacer.</strong>
+                                <strong>{{ __('Advertencia Importante') }}</strong><br>
+                                {{ __('Al eliminar tu cuenta,') }} <strong>{{ __('se borrarán PERMANENTEMENTE') }}</strong>
+                                {{ __('todos tus datos, historial de compras y preferencias.') }}
+                                <strong>{{ __('Esta acción NO se puede deshacer.') }}</strong>
                             </div>
 
                             <!-- Nota de Advertencia -->
@@ -289,11 +291,10 @@
                             <div class="card border-danger">
                                 <div class="card-body">
                                     <h6 class="card-title text-danger mb-3">
-                                        Zona de Peligro
+                                        {{ __('Zona de Peligro') }}
                                     </h6>
                                     <p class="card-text mb-3">
-                                        Si realmente deseas eliminar tu cuenta, debes confirmar tu contraseña y luego
-                                        confirmar la eliminación en una segunda pantalla.
+                                        {{ __('Si realmente deseas eliminar tu cuenta, debes confirmar tu contraseña y luego confirmar la eliminación en una segunda pantalla.') }}
                                     </p>
 
                                     @if(!session("delete_account_confirmed"))
@@ -302,35 +303,34 @@
                                             @csrf
                                             <!-- Contraseña Actual -->
                                             <div class="mb-3">
-                                                <label for="delete_password" class="form-label"><strong>Contraseña de
-                                                        Confirmación</strong></label>
+                                                <label for="delete_password"
+                                                    class="form-label"><strong>{{ __('Contraseña de Confirmación') }}</strong></label>
                                                 <input type="password"
                                                     class="form-control @error("password") is-invalid @enderror"
                                                     id="delete_password" name="password" required>
                                                 @error("password")
                                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                                 @enderror
-                                                <small class="form-text text-muted">Introduce tu contraseña para
-                                                    confirmar.</small>
+                                                <small
+                                                    class="form-text text-muted">{{ __('Introduce tu contraseña para confirmar.') }}</small>
                                             </div>
 
                                             <!-- Botón de Verificación -->
                                             <button type="submit" class="btn btn-outline-danger">
-                                                Verificar Contraseña
+                                                {{ __('Verificar Contraseña') }}
                                             </button>
                                         </form>
                                     @else
                                         <!-- Segundo paso: Confirmar eliminación -->
                                         <div class="alert alert-danger mb-3" role="alert">
-                                            <strong>Última Confirmación</strong><br>
-                                            Estás a punto de eliminar tu cuenta permanentemente. Haz clic en el botón rojo para
-                                            confirmar.
+                                            <strong>{{ __('Última Confirmación') }}</strong><br>
+                                            {{ __('Estás a punto de eliminar tu cuenta permanentemente. Haz clic en el botón rojo para confirmar.') }}
                                         </div>
 
                                         <!-- Botón de Confirmación -->
                                         <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal"
                                             data-bs-target="#confirmDeleteModal">
-                                            CONFIRMAR ELIMINACIÓN
+                                            {{ __('CONFIRMAR ELIMINACIÓN') }}
                                         </button>
                                     @endif
                                 </div>
@@ -338,7 +338,7 @@
 
                             <!-- Botón de Volver -->
                             <a href="{{ route("catalogo") }}" class="btn btn-secondary mt-3">
-                                Volver
+                                {{ __('Volver') }}
                             </a>
                         </div>
                     </div>
@@ -356,7 +356,7 @@
                 <div class="modal-header bg-danger text-white">
                     <!-- Título del Modal -->
                     <h1 class="modal-title fs-5" id="confirmDeleteLabel">
-                        CONFIRMAR ELIMINACIÓN DE CUENTA
+                        {{ __('CONFIRMAR ELIMINACIÓN DE CUENTA') }}
                     </h1>
                     <!-- Botón de Cierre -->
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -364,46 +364,40 @@
                 <!-- Contenido del Modal -->
                 <div class="modal-body">
                     <p class="mb-3">
-                        <strong>Esta es tu última oportunidad para cambiar de opinión.</strong>
+                        <strong>{{ __('Esta es tu última oportunidad para cambiar de opinión.') }}</strong>
                     </p>
                     <p class="mb-3">
-                        Si eliminas tu cuenta:
+                        {{ __('Si eliminas tu cuenta:') }}
                     </p>
                     <ul class="list-unstyled ms-3 mb-3">
-                        <li class="mb-2">- Se borrarán todos tus datos personales</li>
-                        <li class="mb-2">- Se perderá tu historial de compras</li>
-                        <li class="mb-2">- No podrás acceder a tu cuenta</li>
-                        <li>- Esta acción es irreversible</li>
+                        <li class="mb-2">- {{ __('Se borrarán todos tus datos personales') }}</li>
+                        <li class="mb-2">- {{ __('Se perderá tu historial de compras') }}</li>
+                        <li class="mb-2">- {{ __('No podrás acceder a tu cuenta') }}</li>
+                        <li>- {{ __('Esta acción es irreversible') }}</li>
                     </ul>
                     <p class="text-danger fw-bold mt-4">
-                        ¿Realmente deseas continuar?
+                        {{ __('¿Realmente deseas continuar?') }}
                     </p>
                 </div>
                 <!-- Pie del Modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancelar
+                        {{ __('Cancelar') }}
                     </button>
                     <form action="{{ route("profile.confirm-delete") }}" method="POST" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-danger">
-                            Sí, ELIMINAR MI CUENTA PERMANENTEMENTE
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+                            {{ __('Sí, ELIMINAR MI CUENTA PERMANENTEMENTE') }}
 
-    <script>
-        // Auto-hide alerts después de 30 segundos
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".alert").forEach(function (alert) {
-                setTimeout(function () {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }, 30000);
-            });
-        });
-    </script>
+                            <script>
+                                // Auto-hide alerts después de 30 segundos
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    document.querySelectorAll(".alert").forEach(function (alert) {
+                                        setTimeout(function () {
+                                            const bsAlert = new bootstrap.Alert(alert);
+                                            bsAlert.close();
+                                        }, 30000);
+                                    });
+                                });
+                            </script>
 @endsection

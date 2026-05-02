@@ -43,7 +43,7 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     position: sticky;
     top: 70px;
@@ -219,6 +219,7 @@
             opacity: 0;
             transform: translateX(-100%);
         }
+
         to {
             opacity: 1;
             transform: translateX(0);
@@ -230,6 +231,7 @@
             opacity: 1;
             transform: translateX(0);
         }
+
         to {
             opacity: 0;
             transform: translateX(-100%);
@@ -241,6 +243,7 @@
             opacity: 0;
             transform: translateX(100%);
         }
+
         to {
             opacity: 1;
             transform: translateX(0);
@@ -252,6 +255,7 @@
             opacity: 1;
             transform: translateX(0);
         }
+
         to {
             opacity: 0;
             transform: translateX(100%);
@@ -348,6 +352,7 @@
             opacity: 0;
             transform: translateY(100%);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -359,6 +364,7 @@
             opacity: 1;
             transform: translateY(0);
         }
+
         to {
             opacity: 0;
             transform: translateY(100%);
@@ -369,6 +375,7 @@
         from {
             opacity: 0;
         }
+
         to {
             opacity: 0.5;
         }
@@ -378,6 +385,7 @@
         from {
             opacity: 0.5;
         }
+
         to {
             opacity: 0;
         }
@@ -417,7 +425,7 @@
 .sneaker-card img {
     transition: transform 0.3s ease;
     width: 100%;
-    height: 250px;
+    height: 100%;
     object-fit: cover;
     background-color: #f0f0f0;
 }
@@ -496,45 +504,37 @@
         row-gap: 0.5rem !important;
         --bs-gutter-x: 0.5rem !important;
     }
-    
-    .col-4.col-sm-6.col-lg-4 {
+
+    .col-6.col-sm-4.col-lg-4 {
         padding-left: 0.25rem !important;
         padding-right: 0.25rem !important;
     }
-    
+
     .sneaker-card {
         border-radius: 6px;
     }
-    
-    .sneaker-card .position-relative {
-        height: 50px !important;
-    }
-    
-    .sneaker-card .position-relative img {
-        height: 50px !important;
-    }
-    
+
     .sneaker-card .card-body {
-        padding: 3px !important;
+        padding: 0.75rem !important;
     }
-    
+
     .sneaker-card .card-title {
         font-size: 0.65rem !important;
         margin-bottom: 2px !important;
         line-height: 1.2 !important;
     }
-    
+
     .sneaker-card .product-sku,
     .sneaker-card .product-brand,
     .sneaker-card .product-color {
         display: none !important;
     }
-    
+
     .sneaker-card h5.text-primary {
         font-size: 0.75rem !important;
         margin-bottom: 3px !important;
     }
-    
+
     .sneaker-card .btn {
         padding: 0.1rem 0.3rem !important;
         font-size: 0.55rem !important;
@@ -554,7 +554,7 @@
 }
 
 /* Grid expandido cuando filtros están ocultos */
-.filters-container.hidden ~ .col-lg-9 {
+.filters-container.hidden~.col-lg-9 {
     flex: 0 0 100%;
     max-width: 100%;
 }
@@ -574,7 +574,7 @@
 
 .top-favorite-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 .recently-viewed-card,
@@ -601,6 +601,7 @@
 }
 
 @media (max-width: 576px) {
+
     .recently-viewed-card,
     .top-favorite-card {
         padding: 0.7rem;

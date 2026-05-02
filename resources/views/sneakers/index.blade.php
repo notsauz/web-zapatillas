@@ -8,7 +8,7 @@
 
     <!-- Botón Toggle Filtros (Móvil) -->
     <button class="btn-toggle-filters" id="toggleFiltersBtn">
-        <i class="fas fa-sliders-h"></i> <span id="filterBtnText">Mostrar Filtros</span>
+        <i class="fas fa-sliders-h"></i> <span id="filterBtnText">{{ __('Mostrar Filtros') }}</span>
     </button>
 
     <div class="row">
@@ -17,7 +17,7 @@
             <div class="filter-sidebar">
                 <div class="filter-section">
                     <h5 class="mb-3" style="display: flex; justify-content: space-between; align-items: center;">
-                        Filtros
+                        {{ __('Filtros') }}
                         <button type="button" class="btn-close d-lg-none" id="closeFiltersBtn" style="font-size: 1.5rem;"></button>
                     </h5>
 
@@ -25,7 +25,7 @@
                         <!-- Categorías -->
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="categoryFilter">
-                                <span>Categoría</span>
+                                <span>{{ __('Categoría') }}</span>
                                 @if(request("category"))
                                     <span style="font-size: 0.8rem; color: #007bff; font-weight: 500;">(Filtrado)</span>
                                 @endif
@@ -34,10 +34,10 @@
                                 @if(request("category"))
                                     <div style="padding: 10px; background: #e7f3ff; border-radius: 6px; margin-bottom: 10px;">
                                         <p style="margin: 0; font-size: 0.9rem; color: #004085;">
-                                            <strong>Categoría actual:</strong> {{ ucfirst(request("category")) }}
+                                            <strong>{{ __('Categoría actual:') }}</strong> {{ __(ucfirst(request("category"))) }}
                                         </p>
                                         <a href="{{ route("catalogo") }}" style="font-size: 0.85rem; color: #007bff; text-decoration: none;">
-                                            Ver todas las categorías
+                                            {{ __('Ver todas las categorías') }}
                                         </a>
                                     </div>
                                 @else
@@ -45,7 +45,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="category" id="cat_{{ $cat }}" value="{{ $cat }}">
                                             <label class="form-check-label" for="cat_{{ $cat }}">
-                                                {{ ucfirst($cat) }}
+                                                {{ __(ucfirst($cat)) }}
                                             </label>
                                         </div>
                                     @endforeach
@@ -62,7 +62,7 @@
                         <!-- Marca (Botones en lugar de Select) -->
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="brandFilter">
-                                <span>Marca</span>
+                                <span>{{ __('Marca') }}</span>
                                 @if(request("brand"))
                                     <span style="font-size: 0.8rem; color: #007bff; font-weight: 500;">(Filtrado)</span>
                                 @endif
@@ -71,17 +71,17 @@
                                 @if(request("brand"))
                                     <div style="padding: 10px; background: #e7f3ff; border-radius: 6px; margin-bottom: 10px;">
                                         <p style="margin: 0; font-size: 0.9rem; color: #004085;">
-                                            <strong>Marca actual:</strong> {{ request("brand") }}
+                                            <strong>{{ __('Marca actual:') }}</strong> {{ request("brand") }}
                                         </p>
                                         <a href="{{ route("catalogo") }}" style="font-size: 0.85rem; color: #007bff; text-decoration: none;">
-                                            Ver todas las marcas
+                                            {{ __('Ver todas las marcas') }}
                                         </a>
                                     </div>
                                 @else
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="brand" id="brand_all" value="" checked>
                                         <label class="form-check-label" for="brand_all">
-                                            Todas las marcas
+                                            {{ __('Todas las marcas') }}
                                         </label>
                                     </div>
                                     @foreach($marcas as $brand)
@@ -99,13 +99,13 @@
                         <!-- Rango de Precio -->
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="priceFilter">
-                                <span>Rango de Precio</span>
+                                <span>{{ __('Rango de Precio') }}</span>
                             </label>
                             <div class="filter-content collapsed" id="priceFilter">
                                 <div class="price-inputs">
-                                    <input type="number" class="form-control" name="min_price" placeholder="Mín" value="{{ request("min_price") }}" min="0">
+                                    <input type="number" class="form-control" name="min_price" placeholder="{{ __('Mín') }}" value="{{ request("min_price") }}" min="0">
                                     <span>-</span>
-                                    <input type="number" class="form-control" name="max_price" placeholder="Máx" value="{{ request("max_price") }}" min="0">
+                                    <input type="number" class="form-control" name="max_price" placeholder="{{ __('Máx') }}" value="{{ request("max_price") }}" min="0">
                                 </div>
                             </div>
                         </div>
@@ -113,20 +113,23 @@
                         <!-- Color -->
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="colorFilter">
-                                <span>Color</span>
+                                <span>{{ __('Color') }}</span>
                             </label>
                             <div class="filter-content collapsed" id="colorFilter">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="color" id="color_all" value="" {{ !request("color") ? "checked" : "" }}>
                                     <label class="form-check-label" for="color_all">
-                                        Todos los colores
+                                        {{ __('Todos los colores') }}
                                     </label>
                                 </div>
                                 @foreach($colores as $color)
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="color" id="color_{{ str_replace(" ", "_", $color) }}" value="{{ $color }}" {{ request("color") == $color ? "checked" : "" }}>
-                                        <label class="form-check-label" for="color_{{ str_replace(" ", "_", $color) }}">
-                                            {{ $color }}
+                                        @php
+                                            $sanitizedColorId = preg_replace('/[^A-Za-z0-9_-]/', '_', $color);
+                                        @endphp
+                                        <input class="form-check-input" type="radio" name="color" id="color_{{ $sanitizedColorId }}" value="{{ $color }}" {{ request("color") == $color ? "checked" : "" }}>
+                                        <label class="form-check-label" for="color_{{ $sanitizedColorId }}">
+                                            {{ \App\Models\Sneaker::translateLabel($color) }}
                                         </label>
                                     </div>
                                 @endforeach
@@ -136,13 +139,13 @@
                         <!-- Talla -->
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="sizeFilter">
-                                <span>Talla</span>
+                                <span>{{ __('Talla') }}</span>
                             </label>
                             <div class="filter-content collapsed" id="sizeFilter">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="size" id="size_all" value="" {{ !request("size") ? "checked" : "" }}>
                                     <label class="form-check-label" for="size_all">
-                                        Todas las tallas
+                                        {{ __('Todas las tallas') }}
                                     </label>
                                 </div>
                                 @foreach($tallas as $size)
@@ -157,10 +160,10 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-apply-filters">
-                            <i class="fas fa-check me-1"></i> Aplicar Filtros
+                            <i class="fas fa-check me-1"></i> {{ __('Aplicar Filtros') }}
                         </button>
                         <a href="{{ route("catalogo") }}" class="btn btn-secondary btn-clear-filters">
-                            <i class="fas fa-times me-1"></i> Limpiar Filtros
+                            <i class="fas fa-times me-1"></i> {{ __('Limpiar Filtros') }}
                         </a>
                     </form>
                 </div>
@@ -172,13 +175,13 @@
             <div class="d-lg-flex justify-content-between align-items-center mb-4">
                 <h2 class="mb-3 mb-lg-0">
                     @if(request("search"))
-                        Resultados para "{{ request("search") }}"
+                        {{ __('Resultados para') }} "{{ request("search") }}"
                     @elseif(request("category"))
-                        Zapatillas para {{ ucfirst(request("category")) }}
+                        {{ __('Zapatillas para') }} {{ __(ucfirst(request("category"))) }}
                     @elseif(request("brand"))
-                        Zapatillas {{ request("brand") }}
+                        {{ __('Zapatillas') }} {{ request("brand") }}
                     @else
-                        Catálogo de Zapatillas
+                        {{ __('Catálogo de Zapatillas') }}
                     @endif
                 </h2>
             </div>
@@ -193,7 +196,7 @@
                 <!-- Grid de Zapatillas con Lazy Load -->
                 <div class="row g-4" id="sneakerGrid">
                     @foreach($zapatillas as $sneaker)
-                        <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="col-6 col-sm-4 col-lg-4">
                             <div class="card sneaker-card" style="position: relative; transition: all 0.3s ease;">
                                 <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
                                 @auth
@@ -251,11 +254,11 @@
                                     </p>
                                     @if($sneaker->color)
                                         <p class="text-muted mb-3 product-color" style="font-size: 0.85rem;">
-                                            <small><strong>Color:</strong> {{ $sneaker->color }}</small></p>
+                                            <small><strong>Color:</strong> {{ $sneaker->translated_color }}</small></p>
                                     @endif
                                     <h5 class="text-primary fw-bold mb-3">${{ number_format($sneaker->price, 2) }}</h5>
                                     <a href="{{ route("sneaker.show", $sneaker->id) }}" class="btn btn-primary btn-sm w-100 mt-auto">
-                                        <i class="fas fa-eye me-1"></i> Ver Detalles
+                                        <i class="fas fa-eye me-1"></i> {{ __('Ver Detalles') }}
                                     </a>
                                 </div>
                             </div>
@@ -274,9 +277,9 @@
                 <div id="sentinel" style="height: 1px; margin-top: 50px;"></div>
             @else
                 <div class="alert alert-info text-center">
-                    <h5>No se encontraron zapatillas</h5>
-                    <p>Intenta ajustar los filtros o la búsqueda</p>
-                    <a href="{{ route("catalogo") }}" class="btn btn-primary">Ver todas las zapatillas</a>
+                    <h5>{{ __('No se encontraron zapatillas') }}</h5>
+                    <p>{{ __('Intenta ajustar los filtros o la búsqueda') }}</p>
+                    <a href="{{ route("catalogo") }}" class="btn btn-primary">{{ __('Ver todas las zapatillas') }}</a>
                 </div>
             @endif
         </div>

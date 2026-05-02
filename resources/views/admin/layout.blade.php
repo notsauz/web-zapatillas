@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
@@ -28,27 +28,28 @@
             <div class="user-section-mobile mobile-user">
                 @auth
                     <div class="btn-group">
-                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-light" title="Mi Perfil">
+                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-light" title="{{ __('Mi Perfil') }}">
                             <i class="fas fa-user-circle"></i>
-                            <span>Perfil</span>
+                            <span>{{ __('Perfil') }}</span>
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="m-0">
                             @csrf
-                            <button type="submit" class="btn btn-outline-light" title="Cerrar Sesión">
+                            <button type="submit" class="btn btn-outline-light" title="{{ __('Cerrar Sesión') }}">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span>Salir</span>
+                                <span>{{ __('Salir') }}</span>
                             </button>
                         </form>
                     </div>
+                    @include('partials.language-switcher')
                 @else
                     <div class="btn-group">
-                        <a href="{{ route('login') }}" class="btn btn-outline-light" title="Iniciar Sesión">
+                        <a href="{{ route('login') }}" class="btn btn-outline-light" title="{{ __('Iniciar Sesión') }}">
                             <i class="fas fa-sign-in-alt"></i>
-                            <span>Login</span>
+                            <span>{{ __('Login') }}</span>
                         </a>
-                        <a href="{{ route('register.form') }}" class="btn btn-primary" title="Registrarse">
+                        <a href="{{ route('register.form') }}" class="btn btn-primary" title="{{ __('Registrarse') }}">
                             <i class="fas fa-user-plus"></i>
-                            <span>Registro</span>
+                            <span>{{ __('Registro') }}</span>
                         </a>
                     </div>
                 @endauth
@@ -72,26 +73,27 @@
                         </span>
                         @if(Auth::user()->is_admin)
                             <a href="{{ route('admin.dashboard') }}" class="btn btn-warning btn-sm me-2">
-                                <i class="fas fa-lock me-1"></i> Admin
+                                <i class="fas fa-lock me-1"></i> {{ __('Admin') }}
                             </a>
                         @endif
                         <a href="{{ route('profile.edit') }}" class="btn btn-outline-light btn-sm me-2">
-                            <i class="fas fa-cog me-1"></i> Mi Perfil
+                            <i class="fas fa-cog me-1"></i> {{ __('Mi Perfil') }}
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="m-0">
                             @csrf
                             <button type="submit" class="btn btn-outline-light btn-sm">
-                                <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+                                <i class="fas fa-sign-out-alt me-1"></i> {{ __('Cerrar Sesión') }}
                             </button>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm me-2">
-                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
+                            <i class="fas fa-sign-in-alt me-1"></i> {{ __('Iniciar Sesión') }}
                         </a>
                         <a href="{{ route('register.form') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-user-plus me-1"></i> Registrarse
+                            <i class="fas fa-user-plus me-1"></i> {{ __('Registrarse') }}
                         </a>
                     @endauth
+                    @include('partials.language-switcher')
                 </div>
             </div>
         </div>
@@ -108,28 +110,28 @@
         <!-- Sidebar -->
         <nav class="bg-light p-3" id="sidebar"
             style="width: 250px; min-height: calc(100vh - 56px); border-right: 1px solid #dee2e6; position: sticky; top: 56px;">
-            <h6 class="text-uppercase text-muted mb-3">Administración</h6>
+            <h6 class="text-uppercase text-muted mb-3">{{ __('Administración') }}</h6>
             <ul class="nav flex-column mb-4">
                 <li class="nav-item">
                     <a class="nav-link {{ Route::currentRouteName() === 'admin.dashboard' ? 'active' : '' }}"
                         href="{{ route('admin.dashboard') }}">
-                        <i class="fas fa-chart-line me-2"></i>Dashboard
+                        <i class="fas fa-chart-line me-2"></i>{{ __('Dashboard') }}
                     </a>
                 </li>
             </ul>
 
-            <h6 class="text-uppercase text-muted mb-3">Gestión</h6>
+            <h6 class="text-uppercase text-muted mb-3">{{ __('Gestión') }}</h6>
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link {{ strpos(Route::currentRouteName(), 'admin.sneakers') !== false ? 'active' : '' }}"
                         href="{{ route('admin.sneakers.index') }}">
-                        <i class="fas fa-shoe-prints me-2"></i>Zapatillas
+                        <i class="fas fa-shoe-prints me-2"></i>{{ __('Zapatillas') }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ strpos(Route::currentRouteName(), 'admin.brands') !== false ? 'active' : '' }}"
                         href="{{ route('admin.brands.index') }}">
-                        <i class="fas fa-tag me-2"></i>Marcas
+                        <i class="fas fa-tag me-2"></i>{{ __('Marcas') }}
                     </a>
                 </li>
             </ul>
@@ -139,7 +141,7 @@
         <main class="flex-grow-1 p-4" style="width: 100%; overflow-x: hidden;">
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>¡Error!</strong> Por favor revisa los siguientes errores:
+                    <strong>{{ __('¡Error!') }}</strong> {{ __('Por favor revisa los siguientes errores:') }}
                     <ul class="mb-0 mt-2">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>

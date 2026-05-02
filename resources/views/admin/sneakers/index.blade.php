@@ -3,9 +3,9 @@
 @section('admin-content')
     <!-- Encabezado con título y botón para crear nueva zapatilla -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Gestión de Zapatillas</h2>
+        <h2>{{ __('Gestión de Zapatillas') }}</h2>
         <a href="{{ route('admin.sneakers.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Agregar Zapatilla
+            <i class="fas fa-plus me-2"></i>{{ __('Agregar Zapatilla') }}
         </a>
     </div>
 
@@ -16,13 +16,13 @@
                 <!-- Encabezado de la tabla -->
                 <thead>
                     <tr class="table-light">
-                        <th>Nombre</th>
-                        <th>Marca</th>
-                        <th>Categoría</th>
-                        <th>Precio</th>
-                        <th>SKU</th>
-                        <th>Tallas</th>
-                        <th>Acciones</th>
+                        <th>{{ __('Nombre') }}</th>
+                        <th>{{ __('Marca') }}</th>
+                        <th>{{ __('Categoría') }}</th>
+                        <th>{{ __('Precio') }}</th>
+                        <th>{{ __('SKU') }}</th>
+                        <th>{{ __('Tallas') }}</th>
+                        <th>{{ __('Acciones') }}</th>
                     </tr>
                 </thead>
 
@@ -35,7 +35,7 @@
                                 @if ($sneaker->brandModel)
                                     <span class="badge bg-secondary">{{ $sneaker->brandModel->name }}</span>
                                 @else
-                                    <span class="badge bg-danger">Sin marca</span>
+                                    <span class="badge bg-danger">{{ __('Sin marca') }}</span>
                                 @endif
                             </td>
                             <td>
@@ -56,7 +56,7 @@
                                 </a>
                                 <form method="POST" action="{{ route('admin.sneakers.destroy', $sneaker->id) }}"
                                     class="d-inline"
-                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta zapatilla?');">
+                                    onsubmit="return confirm('{{ __('¿Estás seguro de que deseas eliminar esta zapatilla?') }}');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">
@@ -68,7 +68,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="text-center text-muted py-4">
-                                <i class="fas fa-inbox me-2"></i>No hay zapatillas registradas
+                                <i class="fas fa-inbox me-2"></i>{{ __('No hay zapatillas registradas') }}
                             </td>
                         </tr>
                     @endforelse

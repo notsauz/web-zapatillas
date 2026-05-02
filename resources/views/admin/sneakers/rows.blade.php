@@ -9,7 +9,7 @@
             @if ($sneaker->brandModel)
                 <span class="badge bg-secondary">{{ $sneaker->brandModel->name }}</span>
             @else
-                <span class="badge bg-danger">Sin marca</span>
+                <span class="badge bg-danger">{{ __('Sin marca') }}</span>
             @endif
         </td>
         <!-- Categoría de la zapatilla formateada en badge -->
@@ -34,7 +34,7 @@
                 <i class="fas fa-edit"></i>
             </a>
             <form method="POST" action="{{ route('admin.sneakers.destroy', $sneaker->id) }}" class="d-inline"
-                onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta zapatilla?');">
+                onsubmit="return confirm('{{ __('¿Estás seguro de que deseas eliminar esta zapatilla?') }}');">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-sm btn-danger">
@@ -43,11 +43,11 @@
             </form>
         </td>
     </tr>
-<!-- Mensaje cuando no hay zapatillas registradas -->
+    <!-- Mensaje cuando no hay zapatillas registradas -->
 @empty
     <tr>
         <td colspan="7" class="text-center text-muted py-4">
-            <i class="fas fa-inbox me-2"></i>No hay más zapatillas
+            <i class="fas fa-inbox me-2"></i>{{ __('No hay más zapatillas') }}
         </td>
     </tr>
 @endforelse

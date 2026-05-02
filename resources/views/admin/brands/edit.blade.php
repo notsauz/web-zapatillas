@@ -5,8 +5,8 @@
 
     <!-- Encabezado de la página -->
     <div class="mb-4">
-        <h2>Editar Marca</h2>
-        <p class="text-muted">Modifica los detalles de la marca</p>
+        <h2>{{ __('Editar Marca') }}</h2>
+        <p class="text-muted">{{ __('Modifica los detalles de la marca') }}</p>
     </div>
 
     <!-- Contenedor del formulario de edición -->
@@ -19,9 +19,11 @@
 
                 <!-- Campo de nombre de la marca (obligatorio) -->
                 <div class="mb-3">
-                    <label for="name" class="form-label">Nombre de la Marca <span class="text-danger">*</span></label>
+                    <label for="name" class="form-label">{{ __('Nombre de la Marca') }} <span
+                            class="text-danger">*</span></label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-                        value="{{ old('name', $marca->name) }}" required placeholder="Ej: Nike, Adidas, Puma...">
+                        value="{{ old('name', $marca->name) }}" required
+                        placeholder="{{ __('Ej: Nike, Adidas, Puma...') }}">
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -29,7 +31,7 @@
 
                 <!-- Sección para cambiar el logo de la marca (opcional) -->
                 <div class="mb-3">
-                    <label class="form-label d-block">Logo de la Marca (opcional)</label>
+                    <label class="form-label d-block">{{ __('Logo de la Marca') }} ({{ __('opcional') }})</label>
 
                     <!-- Zona interactiva para soltar archivo del logo -->
                     <div class="row mb-3">
@@ -38,8 +40,8 @@
                                 style="min-height: 150px; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: #f8f9fa; transition: all 0.3s;">
                                 <div class="text-center">
                                     <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
-                                    <p class="mb-2"><strong>Arrastra el logo aquí</strong></p>
-                                    <p class="text-muted mb-0 small">o haz clic para seleccionar</p>
+                                    <p class="mb-2"><strong>{{ __('Arrastra el logo aquí') }}</strong></p>
+                                    <p class="text-muted mb-0 small">{{ __('o haz clic para seleccionar') }}</p>
                                 </div>
                             </div>
                             <input type="file" id="logoFile" name="logo_file"
@@ -52,7 +54,7 @@
                                 <img id="logoPreview" src="{{ $marca->logo_url }}" alt="Preview"
                                     style="max-width: 100%; max-height: 200px; border-radius: 8px;">
                                 <button type="button" class="btn btn-sm btn-danger mt-2 w-100" id="clearLogoBtn">
-                                    <i class="fas fa-trash me-2"></i>Limpiar logo
+                                    <i class="fas fa-trash me-2"></i>{{ __('Limpiar logo') }}
                                 </button>
                             </div>
                         </div>
@@ -60,9 +62,10 @@
 
                     <!-- Campo alternativo para ingresar URL del logo -->
                     <div class="mb-3">
-                        <label for="logo_url" class="form-label">O ingresa una URL del logo</label>
+                        <label for="logo_url" class="form-label">{{ __('O ingresa una URL del logo') }}</label>
                         <input type="url" class="form-control @error('logo_url') is-invalid @enderror" id="logo_url"
-                            name="logo_url" value="{{ old('logo_url', '') }}" placeholder="https://ejemplo.com/logo.png">
+                            name="logo_url" value="{{ old('logo_url', '') }}"
+                            placeholder="{{ __('https://ejemplo.com/logo.png') }}">
                         @error('logo_url')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -71,10 +74,10 @@
 
                 <!-- Descripción de la marca (campo opcional) -->
                 <div class="mb-3">
-                    <label for="description" class="form-label">Descripción</label>
+                    <label for="description" class="form-label">{{ __('Descripción') }}</label>
                     <textarea class="form-control @error('description') is-invalid @enderror" id="description"
                         name="description" rows="4"
-                        placeholder="Describe la marca, su historia, sus características...">{{ old('description', $marca->description) }}</textarea>
+                        placeholder="{{ __('Describe la marca, su historia, sus características...') }}">{{ old('description', $marca->description) }}</textarea>
                     @error('description')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -83,10 +86,10 @@
                 <!-- Botones de acción para enviar cambios o cancelar -->
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Actualizar Marca
+                        <i class="fas fa-save me-2"></i>{{ __('Actualizar Marca') }}
                     </button>
                     <a href="{{ route('admin.brands.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-times me-2"></i>Cancelar
+                        <i class="fas fa-times me-2"></i>{{ __('Cancelar') }}
                     </a>
                 </div>
             </form>

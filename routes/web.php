@@ -54,6 +54,20 @@ Route::middleware("auth")->group(function () {
 // Email verification (sin autenticación requerida)
 Route::get("/verification/verify/{id}/{hash}", [ProfileController::class, "verifyEmail"])->name("verification.verify");
 
+// Cambio de idioma
+Route::get('/lang/{locale}', function ($locale) {
+    $availableLocales = ['es', 'en'];
+
+    if (!in_array($locale, $availableLocales)) {
+        abort(404);
+    }
+
+    session(['locale' => $locale]);
+    app()->setLocale($locale);
+
+    return redirect()->back();
+})->name('lang.switch');
+
 // Dashboard redirect
 Route::get("/home", function () {
     return auth()->check() ? view("home") : redirect()->route("login");
