@@ -18,6 +18,9 @@ class LocaleMiddleware
     {
         if (session()->has('locale') && in_array(session('locale'), ['es', 'en'])) {
             App::setLocale(session('locale'));
+        } else {
+            App::setLocale(config('app.locale'));
+            session(['locale' => config('app.locale')]);
         }
 
         return $next($request);

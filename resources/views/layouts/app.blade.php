@@ -131,8 +131,8 @@
                             <i class="fas fa-user-plus me-1"></i> {{ __('Registrarse') }}
                         </a>
                     @endauth
+                    @include('partials.language-switcher')
                 </div>
-                @include('partials.language-switcher')
             </div>
         </div>
     </nav>
