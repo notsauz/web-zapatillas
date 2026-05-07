@@ -5,11 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Descubre las mejores zapatillas y sneakers populares en TopSneakers. Catálogo actualizado con marcas como Nike, Adidas y más.">
+    <meta name="description"
+        content="Descubre las mejores zapatillas y sneakers populares en TopSneakers. Catálogo actualizado con marcas como Nike, Adidas y más.">
     <title>TopSneakers: Sneakers populares</title>
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preload"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-solid-900.woff2" as="font"
+        type="font/woff2" crossorigin>
     @vite('resources/css/layouts.css')
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2" type="image/x-icon">
@@ -23,11 +28,8 @@
         <div class="container-fluid">
             <!-- Logo y Nombre - siempre visible completo -->
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('catalogo') }}">
-                <picture>
-                    <source srcset="{{ secure_asset('logo.webp') }}" type="image/webp">
-                    <img src="{{ secure_asset('logo.png') }}" alt="Logo TopSneakers" class="rounded"
-                        style="height: 40px; width: 40px; object-fit: contain; display: block;">
-                </picture>
+                <img src="{{ asset('logo.png') }}" alt="Logo TopSneakers" class="rounded"
+                    style="height: 40px; width: 40px; object-fit: contain;">
                 <span class="d-none d-lg-inline">TopSneakers</span>
             </a>
 
@@ -39,12 +41,14 @@
                             aria-label="{{ __('Mis Favoritos') }}" title="{{ __('Mis Favoritos') }}">
                             <i class="fas fa-heart"></i>
                         </a>
-                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-light" aria-label="{{ __('Mi Perfil') }}" title="{{ __('Mi Perfil') }}">
+                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-light"
+                            aria-label="{{ __('Mi Perfil') }}" title="{{ __('Mi Perfil') }}">
                             <i class="fas fa-user-circle"></i>
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="m-0">
                             @csrf
-                            <button type="submit" class="btn btn-outline-light" aria-label="{{ __('Cerrar Sesión') }}" title="{{ __('Cerrar Sesión') }}">
+                            <button type="submit" class="btn btn-outline-light" aria-label="{{ __('Cerrar Sesión') }}"
+                                title="{{ __('Cerrar Sesión') }}">
                                 <i class="fas fa-sign-out-alt"></i>
                             </button>
                         </form>
@@ -52,7 +56,8 @@
                     @include('partials.language-switcher')
                 @else
                     <div class="btn-group">
-                        <a href="{{ route('login') }}" class="btn btn-outline-light" aria-label="{{ __('Iniciar Sesión') }}" title="{{ __('Iniciar Sesión') }}">
+                        <a href="{{ route('login') }}" class="btn btn-outline-light" aria-label="{{ __('Iniciar Sesión') }}"
+                            title="{{ __('Iniciar Sesión') }}">
                             <i class="fas fa-sign-in-alt"></i>
                             <span>{{ __('Iniciar Sesión') }}</span>
                         </a>
@@ -66,7 +71,8 @@
                 @endauth
             </div>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
