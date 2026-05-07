@@ -24,8 +24,8 @@
             <!-- Logo y Nombre - siempre visible completo -->
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('catalogo') }}">
                 <picture>
-                    <source srcset="{{ asset('logo.webp') }}" type="image/webp">
-                    <img src="{{ asset('logo.png') }}" alt="Logo TopSneakers" class="rounded"
+                    <source srcset="/logo.webp" type="image/webp">
+                    <img src="/logo.png" alt="Logo TopSneakers" class="rounded"
                         style="height: 40px; width: 40px; object-fit: contain;">
                 </picture>
                 <span class="d-none d-lg-inline">TopSneakers</span>
