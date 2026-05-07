@@ -72,6 +72,10 @@
                             </button>
                         </form>
                     @endif
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-heart"></i> {{ __('Iniciar sesión para favoritos') }}
+                    </a>
                 @endauth
             </div>
         </div>
