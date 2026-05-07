@@ -18,7 +18,7 @@
                 <div class="filter-section">
                     <h5 class="mb-3" style="display: flex; justify-content: space-between; align-items: center;">
                         {{ __('Filtros') }}
-                        <button type="button" class="btn-close d-lg-none" id="closeFiltersBtn" style="font-size: 1.5rem;"></button>
+                        <button type="button" class="btn-close d-lg-none" id="closeFiltersBtn" style="font-size: 1.5rem;" aria-label="{{ __('Cerrar filtros') }}"></button>
                     </h5>
 
                     <form id="filterForm" class="filter-form">
@@ -211,7 +211,7 @@
                                             @csrf
                                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
                                             <button type="submit" class="btn btn-danger btn-sm shadow-sm"
-                                                style="width: 40px; height: 40px; border-radius: 50%;">
+                                                style="width: 40px; height: 40px; border-radius: 50%;" aria-label="{{ __('Quitar de favoritos') }}">
                                                 <i class="fas fa-heart text-white"></i>
                                             </button>
                                         </form>
@@ -223,14 +223,14 @@
                                             @csrf
                                             <input type="hidden" name="sneaker_id" value="{{ $sneaker->id }}">
                                             <button type="submit" class="btn btn-outline-danger btn-sm shadow-sm"
-                                                style="width: 40px; height: 40px; border-radius: 50%;">
+                                                style="width: 40px; height: 40px; border-radius: 50%;" aria-label="{{ __('Añadir a favoritos') }}">
                                                 <i class="far fa-heart"></i>
                                             </button>
                                         </form>
                                     @endif
                                 @else
                                     <a href="{{ route("login") }}" class="btn btn-outline-primary btn-sm shadow-sm"
-                                        style="width: 40px; height: 40px; border-radius: 50%;">
+                                        style="width: 40px; height: 40px; border-radius: 50%;" aria-label="{{ __('Iniciar sesión para añadir a favoritos') }}">
                                         <i class="fas fa-heart"></i>
                                     </a>
                                 @endauth
