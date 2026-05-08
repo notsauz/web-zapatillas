@@ -51,8 +51,11 @@
             @endif
 
             <!-- Botones -->
+            @php
+                $loginUrl = route('login', ['redirect_to' => $returnTo]);
+            @endphp
             <div class="d-flex flex-column flex-sm-row gap-2">
-                <a href="{{ route("catalogo") }}" class="btn btn-outline-secondary">{{ __('Volver al Catálogo') }}</a>
+                <a href="{{ $returnTo }}" class="btn btn-outline-secondary">{{ __('Volver al Catálogo') }}</a>
                 @auth
                     @if($esFavorito)
                         <form action="{{ route("favorites.remove") }}" method="POST" class="d-inline">
@@ -73,7 +76,7 @@
                         </form>
                     @endif
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-outline-primary">
+                    <a href="{{ $loginUrl }}" class="btn btn-outline-primary">
                         <i class="fas fa-heart"></i> {{ __('Iniciar sesión para favoritos') }}
                     </a>
                 @endauth
@@ -99,7 +102,7 @@
                                 <small>{{ $related->sku }}</small>
                             </p>
                             <h6 class="text-success">${{ number_format($related->price, 2) }}</h6>
-                            <a href="{{ route("sneaker.show", $related->id) }}" class="btn btn-outline-primary btn-sm w-100">
+                            <a href="{{ route('sneaker.show', [$related->id, 'return_url' => $returnTo]) }}" class="btn btn-outline-primary btn-sm w-100">
                                 {{ __('Ver Detalles') }}
                             </a>
                         </div>

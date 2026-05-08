@@ -1,22 +1,26 @@
 // Gestor del catálogo con carga diferida (lazy load)
 class GestorCatalogo {
     constructor() {
-        this.paginaActual = 1; // Página actual de la paginación
+        this.paginaActual = this.parseQueryParam("page") || 1; // Página actual de la paginación
         this.estaCargando = false; // Evita peticiones simultáneas
         this.hayMasPaginas = true; // Indica si el servidor tiene más productos
         this.filtroForm = document.getElementById("filterForm");
         this.urlBase = this.filtroForm ? this.filtroForm.action : window.location.pathname || "/";
         this.temporizadorBusqueda = null; // Para el debounce del input de búsqueda
         this.iniciar();
+        this.syncFormWithUrl();
         this.updateFilterSummaryDisplay();
+        this.syncRedirectTargets(window.location.href);
     }
 
     iniciar() {
         this.configurarEventosFiltros();
         this.configurarCargaInfinita();
         window.addEventListener("popstate", () => {
+            this.paginaActual = this.parseQueryParam("page") || 1;
             this.cargarProductos(true);
             this.updateFilterSummaryDisplay();
+            this.syncRedirectTargets(window.location.href);
         });
     }
 
@@ -50,52 +54,33 @@ class GestorCatalogo {
             radio.addEventListener("change", () => this.reiniciarYAplicarFiltros());
         });
 
-        // Inputs de precio mínimo y máximo
-        let inputPrecioMin = document.querySelector('input[name="min_price"]');
-        let inputPrecioMax = document.querySelector('input[name="max_price"]');
-        let minPriceRange = document.getElementById("minPriceRange");
-        let maxPriceRange = document.getElementById("maxPriceRange");
-
-        if (inputPrecioMin) {
-            inputPrecioMin.addEventListener("change", () => {
-                this.syncSliderWithInputs();
-                this.updatePriceRangeUI();
-                this.reiniciarYAplicarFiltros();
-            });
-        }
-        if (inputPrecioMax) {
-            inputPrecioMax.addEventListener("change", () => {
-                this.syncSliderWithInputs();
-                this.updatePriceRangeUI();
-                this.reiniciarYAplicarFiltros();
-            });
-        }
-
-        if (minPriceRange) {
-            minPriceRange.addEventListener("input", () => {
-                this.handleMinSliderInput();
-                this.updatePriceRangeUI();
-                this.reiniciarYAplicarFiltros();
-            });
-        }
-        if (maxPriceRange) {
-            maxPriceRange.addEventListener("input", () => {
-                this.handleMaxSliderInput();
-                this.updatePriceRangeUI();
-                this.reiniciarYAplicarFiltros();
-            });
-        }
-
-        if (minPriceRange || maxPriceRange) {
-            this.normalizePriceSlider();
-            this.updatePriceRangeUI();
-        }
-
         // Radio buttons de talla
         let radiosTalla = document.querySelectorAll('input[name="size"]');
         radiosTalla.forEach(radio => {
             radio.addEventListener("change", () => this.reiniciarYAplicarFiltros());
         });
+
+        // Inputs de precio
+        let inputMinPrecio = document.querySelector('input[name="min_price"]');
+        if (inputMinPrecio) {
+            inputMinPrecio.addEventListener("input", () => this.reiniciarYAplicarFiltros());
+        }
+
+        let inputMaxPrecio = document.querySelector('input[name="max_price"]');
+        if (inputMaxPrecio) {
+            inputMaxPrecio.addEventListener("input", () => this.reiniciarYAplicarFiltros());
+        }
+
+        // Sliders de precio
+        let sliderMin = document.getElementById("minRange");
+        if (sliderMin) {
+            sliderMin.addEventListener("input", () => this.reiniciarYAplicarFiltros());
+        }
+
+        let sliderMax = document.getElementById("maxRange");
+        if (sliderMax) {
+            sliderMax.addEventListener("input", () => this.reiniciarYAplicarFiltros());
+        }
     }
 
     configurarCargaInfinita() {
@@ -119,7 +104,7 @@ class GestorCatalogo {
     reiniciarYAplicarFiltros() {
         this.paginaActual = 1;           // Volver a la primera página
         this.hayMasPaginas = true;       // Asumir que hay más páginas con los nuevos filtros
-        const parametros = this.construirParametrosURL();
+        let parametros = this.construirParametrosURL();
         this.updateBrowserUrl(parametros);
         this.updateFilterSummaryDisplay();
         this.cargarProductos(true);      // true = reemplazar contenido existente
@@ -179,7 +164,7 @@ class GestorCatalogo {
     }
 
     getActiveFilters() {
-        const filters = [];
+        let filters = [];
 
         let inputBusqueda = document.getElementById("searchInput");
         if (inputBusqueda && inputBusqueda.value.trim() !== "") {
@@ -201,7 +186,7 @@ class GestorCatalogo {
             filters.push({ key: "color", label: `Color: ${radioColor.value}` });
         }
 
-        const priceFilters = this.getPriceFilterValues();
+        let priceFilters = this.getPriceFilterValues();
         if (priceFilters.isActive) {
             if (priceFilters.minValue > 0) {
                 filters.push({ key: "min_price", label: `Desde: ${priceFilters.minValue}` });
@@ -224,7 +209,7 @@ class GestorCatalogo {
         let summaryEl = document.getElementById("filterSummary");
         let labelEl = document.getElementById("filterSummaryLabel");
         let homeWidgets = document.getElementById("homeWidgets");
-        const filters = this.getActiveFilters();
+        let filters = this.getActiveFilters();
 
         if (summaryContainer && summaryEl && labelEl) {
             summaryEl.innerHTML = "";
@@ -246,9 +231,9 @@ class GestorCatalogo {
     }
 
     updateFilterSectionBadges() {
-        const hasActiveFilters = this.getActiveFilters().length > 0;
-        const priceFilters = this.getPriceFilterValues();
-        const badgeMap = {
+        let hasActiveFilters = this.getActiveFilters().length > 0;
+        let priceFilters = this.getPriceFilterValues();
+        let badgeMap = {
             filters: hasActiveFilters ? 'active' : null,
             category: document.querySelector('input[name="category"]:checked')?.value,
             brand: document.querySelector('input[name="brand"]:checked')?.value,
@@ -258,9 +243,9 @@ class GestorCatalogo {
         };
 
         document.querySelectorAll('.filter-badge').forEach(badge => {
-            const section = badge.dataset.section;
+            let section = badge.dataset.section;
             if (!section) return;
-            const isActive = badgeMap[section] && badgeMap[section] !== '';
+            let isActive = badgeMap[section] && badgeMap[section] !== '';
             badge.style.display = isActive ? 'inline' : 'none';
         });
     }
@@ -277,7 +262,7 @@ class GestorCatalogo {
 
         let minValue = parseInt(minRange.value, 10);
         let maxValue = parseInt(maxRange.value, 10);
-        const maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || parseInt(maxRange.max, 10);
+        let maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || parseInt(maxRange.max, 10);
 
         if (minValue > maxValue) {
             minValue = maxValue;
@@ -301,7 +286,7 @@ class GestorCatalogo {
         let maxRange = document.getElementById("maxPriceRange");
         let minInput = document.getElementById("minPriceInput");
         let maxInput = document.getElementById("maxPriceInput");
-        const maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || 0;
+        let maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || 0;
 
         if (!minRange || !maxRange || !minInput || !maxInput) {
             return;
@@ -328,7 +313,7 @@ class GestorCatalogo {
         let maxRange = document.getElementById("maxPriceRange");
         let minInput = document.getElementById("minPriceInput");
         let maxInput = document.getElementById("maxPriceInput");
-        const maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || 0;
+        let maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || 0;
 
         if (!minRange || !maxRange || !minInput || !maxInput) {
             return;
@@ -362,7 +347,7 @@ class GestorCatalogo {
 
         let minValue = parseInt(minInput.value, 10);
         let maxValue = parseInt(maxInput.value, 10);
-        const maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || parseInt(maxRange.max, 10);
+        let maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || parseInt(maxRange.max, 10);
 
         if (Number.isNaN(minValue) || minValue < 0) {
             minValue = 0;
@@ -403,7 +388,7 @@ class GestorCatalogo {
 
         let minValue = parseInt(minRange.value, 10);
         let maxValue = parseInt(maxRange.value, 10);
-        const maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || parseInt(maxRange.max, 10);
+        let maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || parseInt(maxRange.max, 10);
 
         if (minValue > maxValue) {
             minValue = maxValue;
@@ -430,7 +415,7 @@ class GestorCatalogo {
     getPriceFilterValues() {
         let minInput = document.getElementById("minPriceInput");
         let maxInput = document.getElementById("maxPriceInput");
-        const defaultMax = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || 0;
+        let defaultMax = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || 0;
 
         if (!minInput || !maxInput) {
             return { isActive: false, minValue: 0, maxValue: defaultMax, maxPrice: defaultMax };
@@ -447,7 +432,7 @@ class GestorCatalogo {
             minValue = maxValue;
         }
 
-        const isActive = minValue > 0 || maxValue < defaultMax;
+        let isActive = minValue > 0 || maxValue < defaultMax;
         return { isActive, minValue, maxValue, maxPrice: defaultMax };
     }
 
@@ -455,30 +440,30 @@ class GestorCatalogo {
         let minRange = document.getElementById("minPriceRange");
         let maxRange = document.getElementById("maxPriceRange");
         let rangeHighlight = document.getElementById("priceSliderRange");
-        const maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || 0;
+        let maxPrice = parseInt(document.querySelector('.price-slider')?.dataset.maxPrice, 10) || 0;
 
         if (!minRange || !maxRange || !rangeHighlight || maxPrice === 0) {
             return;
         }
 
-        const minValue = Math.min(parseInt(minRange.value, 10), maxPrice);
-        const maxValue = Math.min(parseInt(maxRange.value, 10), maxPrice);
+        let minValue = Math.min(parseInt(minRange.value, 10), maxPrice);
+        let maxValue = Math.min(parseInt(maxRange.value, 10), maxPrice);
 
-        const minPercent = (minValue / maxPrice) * 100;
-        const maxPercent = (maxValue / maxPrice) * 100;
+        let minPercent = (minValue / maxPrice) * 100;
+        let maxPercent = (maxValue / maxPrice) * 100;
 
         rangeHighlight.style.left = `${minPercent}%`;
         rangeHighlight.style.width = `${Math.max(maxPercent - minPercent, 0)}%`;
     }
 
     createFilterChip(filter) {
-        const chip = document.createElement("span");
+        let chip = document.createElement("span");
         chip.className = "filter-chip";
 
-        const labelSpan = document.createElement("span");
+        let labelSpan = document.createElement("span");
         labelSpan.textContent = filter.label;
 
-        const closeButton = document.createElement("button");
+        let closeButton = document.createElement("button");
         closeButton.type = "button";
         closeButton.className = "chip-close";
         closeButton.setAttribute("aria-label", `Eliminar filtro ${filter.label}`);
@@ -541,8 +526,115 @@ class GestorCatalogo {
     }
 
     isCatalogRoot() {
-        const path = window.location.pathname.replace(/\/+$/, "");
+        let path = window.location.pathname.replace(/\/+$/, "");
         return path === "" || path === "/" || path === "/catalogo";
+    }
+
+    parseQueryParam(name) {
+        let params = new URLSearchParams(window.location.search);
+        let value = params.get(name);
+        if (!value) {
+            return null;
+        }
+        let parsed = parseInt(value, 10);
+        return Number.isNaN(parsed) ? null : parsed;
+    }
+
+    normalizeRedirectUrl(url) {
+        try {
+            let parsedUrl = new URL(url, window.location.origin);
+            parsedUrl.searchParams.delete("ajax");
+            parsedUrl.searchParams.delete("page");
+            return parsedUrl.pathname + (parsedUrl.search ? `?${parsedUrl.searchParams.toString()}` : "");
+        } catch (error) {
+            return url;
+        }
+    }
+
+    syncRedirectTargets(currentUrl) {
+        let normalizedUrl = this.normalizeRedirectUrl(currentUrl);
+
+        document.querySelectorAll('input[name="return_to"]').forEach(input => {
+            input.value = normalizedUrl;
+        });
+
+        document.querySelectorAll('a.login-redirect').forEach(link => {
+            let hrefUrl = new URL(link.href, window.location.origin);
+            hrefUrl.searchParams.set("redirect_to", normalizedUrl);
+            link.href = hrefUrl.toString();
+        });
+
+        document.querySelectorAll('a.register-redirect').forEach(link => {
+            let hrefUrl = new URL(link.href, window.location.origin);
+            hrefUrl.searchParams.set("redirect_to", normalizedUrl);
+            link.href = hrefUrl.toString();
+        });
+    }
+
+    syncFormWithUrl() {
+        let params = new URLSearchParams(window.location.search);
+
+        // Sincronizar búsqueda
+        let searchValue = params.get("search");
+        if (searchValue) {
+            let searchInput = document.getElementById("searchInput");
+            if (searchInput) searchInput.value = searchValue;
+        }
+
+        // Sincronizar categoría
+        let categoryValue = params.get("category");
+        if (categoryValue) {
+            let categoryRadio = document.querySelector(`input[name="category"][value="${categoryValue}"]`);
+            if (categoryRadio) categoryRadio.checked = true;
+        }
+
+        // Sincronizar marca
+        let brandValue = params.get("brand");
+        if (brandValue) {
+            let brandRadio = document.querySelector(`input[name="brand"][value="${brandValue}"]`);
+            if (brandRadio) brandRadio.checked = true;
+        }
+
+        // Sincronizar color
+        let colorValue = params.get("color");
+        if (colorValue) {
+            let colorRadio = document.querySelector(`input[name="color"][value="${colorValue}"]`);
+            if (colorRadio) colorRadio.checked = true;
+        }
+
+        // Sincronizar precio mínimo
+        let minPriceValue = params.get("min_price");
+        if (minPriceValue) {
+            let minPriceInput = document.querySelector('input[name="min_price"]');
+            if (minPriceInput) minPriceInput.value = minPriceValue;
+        }
+
+        // Sincronizar precio máximo
+        let maxPriceValue = params.get("max_price");
+        if (maxPriceValue) {
+            let maxPriceInput = document.querySelector('input[name="max_price"]');
+            if (maxPriceInput) maxPriceInput.value = maxPriceInput.value = maxPriceValue;
+        }
+
+        // Sincronizar talla
+        let sizeValue = params.get("size");
+        if (sizeValue) {
+            let sizeRadio = document.querySelector(`input[name="size"][value="${sizeValue}"]`);
+            if (sizeRadio) sizeRadio.checked = true;
+        }
+
+        // Sincronizar sliders de precio si hay valores
+        if (minPriceValue || maxPriceValue) {
+            this.syncSliderWithInputs();
+            this.updatePriceRangeUI();
+        }
+    }
+
+    hasActiveFiltersInUrl() {
+        let params = new URLSearchParams(window.location.search);
+        return params.has("search") || params.has("category") || params.has("brand") || 
+               params.has("color") || params.has("min_price") || params.has("max_price") || 
+               params.has("size");
     }
 
     updateBrowserUrl(parametros) {
@@ -551,6 +643,7 @@ class GestorCatalogo {
             url += `?${parametros}`;
         }
         history.replaceState(null, "", url);
+        this.syncRedirectTargets(url);
     }
 
     cargarProductos(reemplazarContenido = false) {
@@ -605,6 +698,7 @@ class GestorCatalogo {
                 if (spinner) spinner.style.display = "none";
 
                 this.updateFilterSummaryDisplay();
+                this.syncRedirectTargets(window.location.href);
             })
             .catch(error => {
                 console.error("Error al cargar productos:", error);
@@ -615,7 +709,7 @@ class GestorCatalogo {
 
     cargarSiguientePagina() {
         this.paginaActual++;                    // Incrementar página
-        const parametros = this.construirParametrosURL();
+        let parametros = this.construirParametrosURL();
         this.updateBrowserUrl(parametros);
         this.cargarProductos(false);            // false = añadir al final, no reemplazar
     }

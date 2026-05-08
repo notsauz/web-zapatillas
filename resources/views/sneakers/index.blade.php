@@ -167,6 +167,14 @@
             @include('sneakers.partials.filter-summary')
 
             @if($zapatillas->count() > 0)
+                @php
+                    $catalogReturnUrl = request()->url();
+                    $catalogQuery = http_build_query(request()->except(['ajax', 'page']));
+                    if ($catalogQuery) {
+                        $catalogReturnUrl .= '?' . $catalogQuery;
+                    }
+                @endphp
+
                 @include('sneakers.partials.home-widgets')
 
                 <!-- Grid de Zapatillas con Lazy Load -->
@@ -205,14 +213,14 @@
                                         </form>
                                     @endif
                                 @else
-                                    <a href="{{ route("login") }}" class="btn btn-outline-primary btn-sm shadow-sm"
+                                    <a href="{{ route('login', ['redirect_to' => $catalogReturnUrl]) }}" class="btn btn-outline-primary btn-sm shadow-sm login-redirect"
                                         style="width: 40px; height: 40px; border-radius: 50%;" aria-label="{{ __('Iniciar sesión para añadir a favoritos') }}">
                                         <i class="fas fa-heart"></i>
                                     </a>
                                 @endauth
                             </div>
 
-                            <a href="{{ route("sneaker.show", $sneaker->id) }}" class="text-decoration-none">
+                            <a href="{{ route('sneaker.show', [$sneaker->id, 'return_url' => $catalogReturnUrl]) }}" class="text-decoration-none">
                                     <div class="position-relative overflow-hidden" style="height: 250px;">
                                         <img src="{{ $sneaker->image_url }}"
                                             alt="{{ $sneaker->name }}" class="w-100 h-100"
@@ -233,7 +241,7 @@
                                             <small><strong>Color:</strong> {{ $sneaker->translated_color }}</small></p>
                                     @endif
                                     <h5 class="text-primary fw-bold mb-3">${{ number_format($sneaker->price, 2) }}</h5>
-                                    <a href="{{ route("sneaker.show", $sneaker->id) }}" class="btn btn-primary btn-sm w-100 mt-auto">
+                                    <a href="{{ route('sneaker.show', [$sneaker->id, 'return_url' => $catalogReturnUrl]) }}" class="btn btn-primary btn-sm w-100 mt-auto">
                                         <i class="fas fa-eye me-1"></i> {{ __('Ver Detalles') }}
                                     </a>
                                 </div>

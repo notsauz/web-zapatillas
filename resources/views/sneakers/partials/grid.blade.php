@@ -31,14 +31,28 @@
                         </form>
                     @endif
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm shadow-sm"
+                    @php
+                        $redirectAfterLogin = request()->url();
+                        $redirectQuery = http_build_query(request()->except(['ajax', 'page']));
+                        if ($redirectQuery) {
+                            $redirectAfterLogin .= '?' . $redirectQuery;
+                        }
+                    @endphp
+                    <a href="{{ route('login', ['redirect_to' => $redirectAfterLogin]) }}" class="btn btn-outline-primary btn-sm shadow-sm login-redirect"
                         style="width: 40px; height: 40px; border-radius: 50%;">
                         <i class="fas fa-heart"></i>
                     </a>
                 @endauth
             </div>
 
-            <a href="{{ route('sneaker.show', $sneaker->id) }}" class="text-decoration-none">
+            @php
+                $catalogReturnUrl = request()->url();
+                $catalogQuery = http_build_query(request()->except('ajax'));
+                if ($catalogQuery) {
+                    $catalogReturnUrl .= '?' . $catalogQuery;
+                }
+            @endphp
+            <a href="{{ route('sneaker.show', [$sneaker->id, 'return_url' => $catalogReturnUrl]) }}" class="text-decoration-none">
                 <!-- Imagen del Producto -->
                 <div class="card sneaker-card h-100" style="transition: all 0.3s ease;">
                     <div class="position-relative overflow-hidden" style="height: 250px;">

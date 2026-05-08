@@ -45,8 +45,9 @@
                             aria-label="{{ __('Mi Perfil') }}" title="{{ __('Mi Perfil') }}">
                             <i class="fas fa-user-circle"></i>
                         </a>
-                        <form action="{{ route('logout') }}" method="POST" class="m-0">
+                        <form action="{{ route('logout') }}" method="POST" class="m-0 logout-form">
                             @csrf
+                            <input type="hidden" name="return_to" value="{{ request()->url() . (request()->except(['ajax', 'page']) ? '?' . http_build_query(request()->except(['ajax', 'page'])) : '') }}">
                             <button type="submit" class="btn btn-outline-light" aria-label="{{ __('Cerrar Sesión') }}"
                                 title="{{ __('Cerrar Sesión') }}">
                                 <i class="fas fa-sign-out-alt"></i>
@@ -56,12 +57,12 @@
                     @include('partials.language-switcher')
                 @else
                     <div class="btn-group">
-                        <a href="{{ route('login') }}" class="btn btn-outline-light" aria-label="{{ __('Iniciar Sesión') }}"
+                        <a href="{{ route('login', ['redirect_to' => request()->url() . (request()->except(['ajax', 'page']) ? '?' . http_build_query(request()->except(['ajax', 'page'])) : '')]) }}" class="btn btn-outline-light login-redirect" aria-label="{{ __('Iniciar Sesión') }}"
                             title="{{ __('Iniciar Sesión') }}">
                             <i class="fas fa-sign-in-alt"></i>
                             <span>{{ __('Iniciar Sesión') }}</span>
                         </a>
-                        <a href="{{ route('register.form') }}" class="btn btn-primary btn-sm"
+                        <a href="{{ route('register.form', ['redirect_to' => request()->url() . (request()->except(['ajax', 'page']) ? '?' . http_build_query(request()->except(['ajax', 'page'])) : '')]) }}" class="btn btn-primary btn-sm register-redirect"
                             aria-label="{{ __('Registrarse') }}" title="{{ __('Registrarse') }}">
                             <i class="fas fa-user-plus"></i>
                             <span>{{ __('Registrarse') }}</span>
@@ -128,17 +129,18 @@
                         <a href="{{ route('profile.edit') }}" class="btn btn-outline-light btn-sm me-2">
                             <i class="fas fa-cog me-1"></i> {{ __('Mi Perfil') }}
                         </a>
-                        <form action="{{ route('logout') }}" method="POST" class="m-0">
+                        <form action="{{ route('logout') }}" method="POST" class="m-0 logout-form">
                             @csrf
+                            <input type="hidden" name="return_to" value="{{ request()->url() . (request()->except(['ajax', 'page']) ? '?' . http_build_query(request()->except(['ajax', 'page'])) : '') }}">
                             <button type="submit" class="btn btn-outline-light btn-sm">
                                 <i class="fas fa-sign-out-alt me-1"></i> {{ __('Cerrar Sesión') }}
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm me-2">
+                        <a href="{{ route('login', ['redirect_to' => request()->url() . (request()->except(['ajax', 'page']) ? '?' . http_build_query(request()->except(['ajax', 'page'])) : '')]) }}" class="btn btn-outline-light btn-sm me-2 login-redirect">
                             <i class="fas fa-sign-in-alt me-1"></i> {{ __('Iniciar Sesión') }}
                         </a>
-                        <a href="{{ route('register.form') }}" class="btn btn-primary btn-sm">
+                        <a href="{{ route('register.form', ['redirect_to' => request()->url() . (request()->except(['ajax', 'page']) ? '?' . http_build_query(request()->except(['ajax', 'page'])) : '')]) }}" class="btn btn-primary btn-sm register-redirect">
                             <i class="fas fa-user-plus me-1"></i> {{ __('Registrarse') }}
                         </a>
                     @endauth
@@ -180,6 +182,18 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('form.logout-form').forEach(function (form) {
+                var returnInput = form.querySelector('input[name="return_to"]');
+                if (returnInput) {
+                    form.addEventListener('submit', function () {
+                        returnInput.value = window.location.href;
+                    });
+                }
+            });
+        });
+    </script>
     @yield('scripts')
     @stack('scripts')
 </body>

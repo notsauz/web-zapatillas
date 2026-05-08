@@ -20,8 +20,9 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('login') }}" method="POST" novalidate>
+                    <form action="{{ route('login.submit') }}" method="POST" novalidate>
                         @csrf
+                        <input type="hidden" name="redirect_to" value="{{ old('redirect_to', request()->query('redirect_to')) }}">
 
                         <!-- Email o Usuario -->
                         <div class="mb-3">
@@ -60,7 +61,7 @@
                     <!-- Enlace para registrarse -->
                     <p class="text-center mb-0">
                         {{ __('¿No tienes una cuenta?') }}
-                        <a href="{{ route('register.form') }}">{{ __('Regístrate aquí') }}</a>
+                        <a href="{{ route('register.form', ['redirect_to' => request()->query('redirect_to')]) }}">{{ __('Regístrate aquí') }}</a>
                     </p>
                 </div>
             </div>

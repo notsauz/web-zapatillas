@@ -21,6 +21,7 @@
 
                     <form action="{{ route('register') }}" method="POST" novalidate>
                         @csrf
+                        <input type="hidden" name="redirect_to" value="{{ old('redirect_to', request()->query('redirect_to')) }}">
 
                         <!-- Nombre -->
                         <div class="mb-3">
@@ -80,7 +81,7 @@
                     <!-- Enlace para iniciar sesión -->
                     <p class="text-center mb-0">
                         {{ __('¿Ya tienes una cuenta?') }}
-                        <a href="{{ route('login') }}">{{ __('Inicia sesión aquí') }}</a>
+                        <a href="{{ route('login', ['redirect_to' => request()->query('redirect_to')]) }}">{{ __('Inicia sesión aquí') }}</a>
                     </p>
                 </div>
             </div>

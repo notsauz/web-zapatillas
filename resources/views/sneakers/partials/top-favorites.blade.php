@@ -1,4 +1,11 @@
-@php $zapatillasTop = $zapatillasTop ?? collect([]); @endphp
+@php
+    $topFavoritesReturnUrl = request()->url();
+    $topFavoritesQuery = http_build_query(request()->except('ajax'));
+    if ($topFavoritesQuery) {
+        $topFavoritesReturnUrl .= '?' . $topFavoritesQuery;
+    }
+    $zapatillasTop = $zapatillasTop ?? collect([]);
+@endphp
 <div id="topFavoritesSection" data-url="{{ route('sneaker.top-favorites.ajax') }}">
     @if($zapatillasTop->count() > 0)
         <div class="top-favorites-section mb-4">
@@ -8,7 +15,7 @@
             <div class="row g-2">
                 @foreach($zapatillasTop as $index => $sneaker)
                     <div class="col-6 col-md-4 col-lg-2">
-                        <a href="{{ route("sneaker.show", $sneaker->id) }}" class="text-decoration-none">
+                        <a href="{{ route('sneaker.show', [$sneaker->id, 'return_url' => $topFavoritesReturnUrl]) }}" class="text-decoration-none">
                             <div class="top-favorite-card p-2 border rounded shadow-sm h-100">
                                 <img src="{{ $sneaker->image_url }}" alt="{{ $sneaker->name }}" class="img-fluid rounded"
                                     style="height: 80px; object-fit: cover; width: 100%;">

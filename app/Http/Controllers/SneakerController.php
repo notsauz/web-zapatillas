@@ -188,7 +188,33 @@ class SneakerController extends Controller
         // Obtener zapatillas vistas recientemente
         $vistasRecently = $this->getViewedSneakers();
 
-        return view("sneakers.show", compact("sneaker", "relacionadas", "esFavorito", "vistasRecently"));
+        $returnTo = $this->normalizeReturnUrl(request()->query('return_url')) ?? route('catalogo');
+
+        return view("sneakers.show", compact("sneaker", "relacionadas", "esFavorito", "vistasRecently", "returnTo"));
+    }
+
+    private function normalizeReturnUrl(?string $returnUrl): ?string
+    {
+        if (!$returnUrl) {
+            return null;
+        }
+
+        $parsed = parse_url($returnUrl);
+        if ($parsed === false) {
+            return null;
+        }
+
+        parse_str($parsed['query'] ?? '', $query);
+        unset($query['ajax']);
+        unset($query['page']);
+
+        $path = $parsed['scheme'] ? ($parsed['scheme'] . '://' . $parsed['host'] . (isset($parsed['port']) ? ":{$parsed['port']}" : '') . ($parsed['path'] ?? '')) : ($parsed['path'] ?? '');
+        if ($path === '') {
+            return null;
+        }
+
+        $queryString = http_build_query($query);
+        return $queryString ? $path . '?' . $queryString : $path;
     }
 
     // Mostrar ranking de zapatillas más favoritas

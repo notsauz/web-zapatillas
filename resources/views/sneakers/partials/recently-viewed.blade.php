@@ -1,4 +1,11 @@
-@php $vistasRecently = $vistasRecently ?? collect([]); @endphp
+@php
+    $recentReturnUrl = request()->url();
+    $recentQuery = http_build_query(request()->except('ajax'));
+    if ($recentQuery) {
+        $recentReturnUrl .= '?' . $recentQuery;
+    }
+    $vistasRecently = $vistasRecently ?? collect([]);
+@endphp
 @if($vistasRecently->count() > 0)
     <div class="recently-viewed-section mb-4">
         <h5 class="mb-3">
@@ -7,7 +14,7 @@
         <div class="row g-2">
             @foreach($vistasRecently as $sneaker)
                 <div class="col-6 col-md-4 col-lg-2">
-                    <a href="{{ route("sneaker.show", $sneaker->id) }}" class="text-decoration-none">
+                    <a href="{{ route('sneaker.show', [$sneaker->id, 'return_url' => $recentReturnUrl]) }}" class="text-decoration-none">
                         <div class="recently-viewed-card p-2 border rounded shadow-sm h-100">
                             <img src="{{ $sneaker->image_url }}" alt="{{ $sneaker->name }}" class="img-fluid rounded"
                                 style="height: 80px; object-fit: cover; width: 100%;">
