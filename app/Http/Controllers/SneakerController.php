@@ -131,6 +131,7 @@ class SneakerController extends Controller
         $marcas = Sneaker::getBrands();
         $colores = Sneaker::getColors();
         $tallas = Sneaker::getAvailableSizes();
+        $maxPrice = (int) ceil(Sneaker::max("price") ?? 0);
 
         // Si es una solicitud AJAX o lazy load, retornar JSON con datos
         if ($peticion->ajax() || $peticion->get("ajax")) {
@@ -141,7 +142,7 @@ class SneakerController extends Controller
             ]);
         }
 
-        return view("sneakers.index", compact("zapatillas", "marcas", "colores", "tallas", "idsFavoritos", "vistasRecently", "zapatillasTop"));
+        return view("sneakers.index", compact("zapatillas", "marcas", "colores", "tallas", "idsFavoritos", "vistasRecently", "zapatillasTop", "maxPrice"));
     }
 
     // Mostrar zapatillas filtradas por categoría

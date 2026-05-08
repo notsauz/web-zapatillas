@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/css/layouts.css',
                 'resources/css/sneakers.index.css',
                 'resources/css/profile.edit.css',
+                "resources/css/filter-summary.css",
                 'resources/js/app.js',
                 'resources/js/catalog-lazy-load.js',
                 'resources/js/catalog-favorites.js',

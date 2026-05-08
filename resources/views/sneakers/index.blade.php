@@ -1,7 +1,7 @@
 @extends("layouts.app")
 
 @section("styles")
-    @vite("resources/css/sneakers.index.css")
+    @vite(["resources/css/sneakers.index.css", "resources/css/filter-summary.css"])
 @endsection
 
 @section("content")
@@ -17,45 +17,35 @@
             <div class="filter-sidebar">
                 <div class="filter-section">
                     <h5 class="mb-3" style="display: flex; justify-content: space-between; align-items: center;">
-                        {{ __('Filtros') }}
+                        <span>
+                            {{ __('Filtros') }}
+                            <span class="filter-badge" data-section="filters" style="display: {{ request()->filled('search') || request()->filled('category') || request()->filled('brand') || request()->filled('min_price') || request()->filled('max_price') || request()->filled('color') || request()->filled('size') ? 'inline' : 'none' }}; font-size: 0.9rem; color: #007bff; font-weight: 500; margin-left: 0.5rem;">({{ __('Filtrado') }})</span>
+                        </span>
                         <button type="button" class="btn-close d-lg-none" id="closeFiltersBtn" style="font-size: 1.5rem;" aria-label="{{ __('Cerrar filtros') }}"></button>
                     </h5>
 
-                    <form id="filterForm" class="filter-form">
+                    <form id="filterForm" class="filter-form" action="{{ route('catalogo') }}" method="GET">
                         <!-- Categorías -->
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="categoryFilter">
                                 <span>{{ __('Categoría') }}</span>
-                                @if(request("category"))
-                                    <span style="font-size: 0.8rem; color: #007bff; font-weight: 500;">(Filtrado)</span>
-                                @endif
+                                <span class="filter-badge" data-section="category" style="display: {{ request('category') ? 'inline' : 'none' }}; font-size: 0.8rem; color: #007bff; font-weight: 500;">({{ __('Filtrado') }})</span>
                             </label>
                             <div class="filter-content collapsed" id="categoryFilter">
-                                @if(request("category"))
-                                    <div style="padding: 10px; background: #e7f3ff; border-radius: 6px; margin-bottom: 10px;">
-                                        <p style="margin: 0; font-size: 0.9rem; color: #004085;">
-                                            <strong>{{ __('Categoría actual:') }}</strong> {{ __(ucfirst(request("category"))) }}
-                                        </p>
-                                        <a href="{{ route("catalogo") }}" style="font-size: 0.85rem; color: #007bff; text-decoration: none;">
-                                            {{ __('Ver todas las categorías') }}
-                                        </a>
-                                    </div>
-                                @else
-                                    @foreach(["hombre", "mujer", "niño", "unisex"] as $cat)
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="category" id="cat_{{ $cat }}" value="{{ $cat }}">
-                                            <label class="form-check-label" for="cat_{{ $cat }}">
-                                                {{ __(ucfirst($cat)) }}
-                                            </label>
-                                        </div>
-                                    @endforeach
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="category" id="cat_all" value="" {{ !request("category") ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="cat_all">
+                                        {{ __('Todas') }}
+                                    </label>
+                                </div>
+                                @foreach(["hombre", "mujer", "niño", "unisex"] as $cat)
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="category" id="cat_all" value="" checked>
-                                        <label class="form-check-label" for="cat_all">
-                                            Todas
+                                        <input class="form-check-input" type="radio" name="category" id="cat_{{ $cat }}" value="{{ $cat }}" {{ request("category") === $cat ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="cat_{{ $cat }}">
+                                            {{ __(ucfirst($cat)) }}
                                         </label>
                                     </div>
-                                @endif
+                                @endforeach
                             </div>
                         </div>
 
@@ -63,36 +53,23 @@
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="brandFilter">
                                 <span>{{ __('Marca') }}</span>
-                                @if(request("brand"))
-                                    <span style="font-size: 0.8rem; color: #007bff; font-weight: 500;">(Filtrado)</span>
-                                @endif
+                                <span class="filter-badge" data-section="brand" style="display: {{ request('brand') ? 'inline' : 'none' }}; font-size: 0.8rem; color: #007bff; font-weight: 500;">({{ __('Filtrado') }})</span>
                             </label>
                             <div class="filter-content collapsed" id="brandFilter">
-                                @if(request("brand"))
-                                    <div style="padding: 10px; background: #e7f3ff; border-radius: 6px; margin-bottom: 10px;">
-                                        <p style="margin: 0; font-size: 0.9rem; color: #004085;">
-                                            <strong>{{ __('Marca actual:') }}</strong> {{ request("brand") }}
-                                        </p>
-                                        <a href="{{ route("catalogo") }}" style="font-size: 0.85rem; color: #007bff; text-decoration: none;">
-                                            {{ __('Ver todas las marcas') }}
-                                        </a>
-                                    </div>
-                                @else
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="brand" id="brand_all" value="" {{ !request("brand") ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="brand_all">
+                                        {{ __('Todas las marcas') }}
+                                    </label>
+                                </div>
+                                @foreach($marcas as $brand)
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="brand" id="brand_all" value="" checked>
-                                        <label class="form-check-label" for="brand_all">
-                                            {{ __('Todas las marcas') }}
+                                        <input class="form-check-input" type="radio" name="brand" id="brand_{{ str_replace(" ", "_", $brand) }}" value="{{ $brand }}" {{ request("brand") === $brand ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="brand_{{ str_replace(" ", "_", $brand) }}">
+                                            {{ $brand }}
                                         </label>
                                     </div>
-                                    @foreach($marcas as $brand)
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="brand" id="brand_{{ str_replace(" ", "_", $brand) }}" value="{{ $brand }}">
-                                            <label class="form-check-label" for="brand_{{ str_replace(" ", "_", $brand) }}">
-                                                {{ $brand }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                @endif
+                                @endforeach
                             </div>
                         </div>
 
@@ -100,12 +77,25 @@
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="priceFilter">
                                 <span>{{ __('Rango de Precio') }}</span>
+                                <span class="filter-badge" data-section="price" style="display: {{ request()->filled('min_price') || request()->filled('max_price') ? 'inline' : 'none' }}; font-size: 0.8rem; color: #007bff; font-weight: 500;">({{ __('Filtrado') }})</span>
                             </label>
                             <div class="filter-content collapsed" id="priceFilter">
-                                <div class="price-inputs">
-                                    <input type="number" class="form-control" name="min_price" placeholder="{{ __('Mín') }}" value="{{ request("min_price") }}" min="0">
-                                    <span>-</span>
-                                    <input type="number" class="form-control" name="max_price" placeholder="{{ __('Máx') }}" value="{{ request("max_price") }}" min="0">
+                                <div class="price-range-wrapper">
+                                    <div class="price-inputs">
+                                        <input type="number" class="form-control" name="min_price" id="minPriceInput" placeholder="{{ __('Mín') }}" value="{{ request('min_price') ?: 0 }}" min="0" max="{{ $maxPrice }}">
+                                        <span>-</span>
+                                        <input type="number" class="form-control" name="max_price" id="maxPriceInput" placeholder="{{ __('Máx') }}" value="{{ request('max_price') ?: $maxPrice }}" min="0" max="{{ $maxPrice }}">
+                                    </div>
+                                    <div class="price-slider" data-max-price="{{ $maxPrice }}">
+                                        <input type="range" id="minPriceRange" min="0" max="{{ $maxPrice }}" step="1" value="{{ request('min_price') ?: 0 }}">
+                                        <input type="range" id="maxPriceRange" min="0" max="{{ $maxPrice }}" step="1" value="{{ request('max_price') ?: $maxPrice }}">
+                                        <div class="slider-track"></div>
+                                        <div class="slider-range" id="priceSliderRange"></div>
+                                    </div>
+                                    <div class="price-values">
+                                        <span id="minPriceLabel">0</span>
+                                        <span id="maxPriceLabel">{{ $maxPrice }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -114,6 +104,7 @@
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="colorFilter">
                                 <span>{{ __('Color') }}</span>
+                                <span class="filter-badge" data-section="color" style="display: {{ request('color') ? 'inline' : 'none' }}; font-size: 0.8rem; color: #007bff; font-weight: 500;">({{ __('Filtrado') }})</span>
                             </label>
                             <div class="filter-content collapsed" id="colorFilter">
                                 <div class="form-check">
@@ -140,6 +131,7 @@
                         <div>
                             <label class="filter-title collapsible collapsed" data-target="sizeFilter">
                                 <span>{{ __('Talla') }}</span>
+                                <span class="filter-badge" data-section="size" style="display: {{ request('size') ? 'inline' : 'none' }}; font-size: 0.8rem; color: #007bff; font-weight: 500;">({{ __('Filtrado') }})</span>
                             </label>
                             <div class="filter-content collapsed" id="sizeFilter">
                                 <div class="form-check">
@@ -172,26 +164,10 @@
 
         <!-- Grid de Zapatillas -->
         <div class="col-lg-9">
-            <div class="d-lg-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-3 mb-lg-0">
-                    @if(request("search"))
-                        {{ __('Resultados para') }} "{{ request("search") }}"
-                    @elseif(request("category"))
-                        {{ __('Zapatillas para') }} {{ __(ucfirst(request("category"))) }}
-                    @elseif(request("brand"))
-                        {{ __('Zapatillas') }} {{ request("brand") }}
-                    @else
-                        {{ __('Catálogo de Zapatillas') }}
-                    @endif
-                </h2>
-            </div>
+            @include('sneakers.partials.filter-summary')
 
             @if($zapatillas->count() > 0)
-                <!-- Zapatillas Más Favoritas -->
-                @include("sneakers.partials.top-favorites")
-
-                <!-- Zapatillas Visitadas Recientemente (cargado desde PHP) -->
-                @include("sneakers.partials.recently-viewed")
+                @include('sneakers.partials.home-widgets')
 
                 <!-- Grid de Zapatillas con Lazy Load -->
                 <div class="row g-4" id="sneakerGrid">
