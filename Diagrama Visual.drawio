@@ -1,0 +1,39 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1653" dy="777" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-2" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="WIyWlLk6GJQsqaUBKTNV-3" style="rounded=0;html=1;jettySize=auto;orthogonalLoop=1;fontSize=11;endArrow=block;endFill=0;endSize=8;strokeWidth=1;shadow=1;labelBackgroundColor=none;edgeStyle=orthogonalEdgeStyle;" target="dp6fMrCyD0qQyVPKc4s2-0" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="390" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-3" parent="WIyWlLk6GJQsqaUBKTNV-1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=1;fillColor=#D4E1F5;strokeColor=#0000FF;" value="&lt;b&gt;Usuario&lt;/b&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp;(PC o Móvil)&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dp6fMrCyD0qQyVPKc4s2-0" parent="WIyWlLk6GJQsqaUBKTNV-1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=1;fillColor=#FFF4C3;strokeColor=#FFC711;" value="&lt;b&gt;Internet&lt;/b&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp;(IONOS + Cloudflare Tunnel)&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="186" x="330" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dp6fMrCyD0qQyVPKc4s2-1" parent="WIyWlLk6GJQsqaUBKTNV-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=light-dark(#FF0019,#FF0019);shadow=1;" value="" vertex="1">
+          <mxGeometry height="150" width="380" x="240" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="dp6fMrCyD0qQyVPKc4s2-4" parent="WIyWlLk6GJQsqaUBKTNV-1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=1;fillColor=light-dark(#F8CECC,#F8CECC);strokeColor=#FF0019;" value="&lt;b&gt;NGINX&lt;/b&gt;&lt;div&gt;&lt;b&gt;(Servidor Web)&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="100" x="265" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="dp6fMrCyD0qQyVPKc4s2-5" parent="WIyWlLk6GJQsqaUBKTNV-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&lt;font style=&quot;color: rgb(255, 0, 25);&quot;&gt;Mini PC&amp;nbsp;&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;font style=&quot;color: rgb(255, 0, 25);&quot;&gt;(Entorno Docker)&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="130" x="365" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="dp6fMrCyD0qQyVPKc4s2-6" parent="WIyWlLk6GJQsqaUBKTNV-1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=1;fillColor=light-dark(#F8CECC,#F8CECC);strokeColor=#FF0019;" value="&lt;b&gt;LARAVEL&lt;/b&gt;&lt;div&gt;&lt;b&gt;(Código PHP)&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="100" x="380" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="dp6fMrCyD0qQyVPKc4s2-7" parent="WIyWlLk6GJQsqaUBKTNV-1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=1;fillColor=light-dark(#F8CECC,#F8CECC);strokeColor=#FF0019;" value="&lt;b&gt;MySQL&lt;/b&gt;&lt;br&gt;&lt;div&gt;&lt;b&gt;(BBDD)&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="100" x="495" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="dp6fMrCyD0qQyVPKc4s2-8" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="dp6fMrCyD0qQyVPKc4s2-0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.482;entryY=0.007;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" target="dp6fMrCyD0qQyVPKc4s2-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
