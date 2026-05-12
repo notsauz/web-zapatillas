@@ -221,9 +221,11 @@ class AdminController extends Controller
             "price" => "required|numeric|min:0",
             "image_url" => "required_without:image_file|nullable|url",
             "image_file" => "required_without:image_url|nullable|file|mimes:" . implode(",", self::EXTENSIONES_VALIDAS) . "|max:5120",
-            "color" => "nullable|string",
+            "color_es" => "nullable|string",
+            "color_en" => "nullable|string",
             "sizes" => "nullable|string",
-            "description" => "nullable|string",
+            "description_es" => "nullable|string",
+            "description_en" => "nullable|string",
         ], [
             "image_url.required_without" => "Debes proporcionar una URL de imagen o cargar un archivo",
             "image_file.required_without" => "Debes cargar un archivo de imagen o proporcionar una URL",
@@ -238,7 +240,8 @@ class AdminController extends Controller
 
         return $peticion->validate([
             "name" => "required|string|{$reglaNombre}",
-            "description" => "nullable|string",
+            "description_es" => "nullable|string",
+            "description_en" => "nullable|string",
             "logo_url" => "required_without:logo_file|nullable|url",
             "logo_file" => "required_without:logo_url|nullable|file|mimes:" . implode(",", self::EXTENSIONES_VALIDAS) . "|max:5120",
         ], [

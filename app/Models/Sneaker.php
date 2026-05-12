@@ -23,8 +23,10 @@ class Sneaker extends Model
         "price",
         "image_url",
         "sizes",
-        "color",
-        "description",
+        "color_es",
+        "color_en",
+        "description_es",
+        "description_en",
     ];
 
     // Conversión de tipos de datos
@@ -59,13 +61,16 @@ class Sneaker extends Model
         });
     }
 
-    // Scope: búsqueda por nombre, SKU, color o marca
+    // Scope: búsqueda por nombre, SKU, color, descripción o marca
     public function scopeSearch($consulta, $termino)
     {
         return $consulta->where(function ($q) use ($termino) {
             $q->where("name", "like", "%{$termino}%")
                 ->orWhere("sku", "like", "%{$termino}%")
-                ->orWhere("color", "like", "%{$termino}%")
+                ->orWhere("color_es", "like", "%{$termino}%")
+                ->orWhere("color_en", "like", "%{$termino}%")
+                ->orWhere("description_es", "like", "%{$termino}%")
+                ->orWhere("description_en", "like", "%{$termino}%")
                 ->orWhereHas("brandModel", function ($subQ) use ($termino) {
                     $subQ->where("name", "like", "%{$termino}%");
                 });
@@ -88,7 +93,13 @@ class Sneaker extends Model
     // Scope: filtrar por color
     public function scopeByColor($consulta, $color)
     {
-        return $consulta->where("color", $color);
+        $normalizedColor = trim(mb_strtolower($color));
+
+        // Buscar en ambos campos de color (español e inglés)
+        return $consulta->where(function ($query) use ($normalizedColor) {
+            $query->whereRaw('LOWER(color_es) = ?', [$normalizedColor])
+                ->orWhereRaw('LOWER(color_en) = ?', [$normalizedColor]);
+        });
     }
 
     // Scope: filtrar por talla
@@ -125,13 +136,98 @@ class Sneaker extends Model
 
     public function getTranslatedColorAttribute()
     {
-        return self::translateLabel($this->color);
+        $locale = substr(app()->getLocale(), 0, 2);
+        $localizedField = $locale === "en" ? "color_en" : "color_es";
+        $localizedValue = $this->{$localizedField} ?? null;
+
+        if ($localizedValue) {
+            return $localizedValue;
+        }
+
+        // Si no hay valor localizado, intentar usar el campo de fallback del otro idioma
+        $fallbackField = $locale === "en" ? "color_es" : "color_en";
+        return $this->{$fallbackField} ?? '';
     }
 
-    // Obtener todos los colores únicos
+    public function getTranslatedDescriptionAttribute()
+    {
+        $locale = substr(app()->getLocale(), 0, 2);
+
+        if ($locale === "en" && $this->description_en) {
+            return $this->description_en;
+        }
+
+        if ($locale === "es" && $this->description_es) {
+            return $this->description_es;
+        }
+
+        return $this->description_en ?: $this->description_es ?: '';
+    }
+
+    // Obtener todos los colores únicos localizados según el idioma actual
     public static function getColors()
     {
-        return self::select("color")->distinct()->whereNotNull("color")->pluck("color")->sort();
+        $locale = substr(app()->getLocale(), 0, 2);
+
+        $sneakers = self::select('color_es', 'color_en')
+            ->where(function ($query) {
+                $query->whereNotNull('color_es')->where('color_es', '!=', '')
+                    ->orWhereNotNull('color_en')->where('color_en', '!=', '');
+            })
+            ->get();
+
+        $grupos = collect();
+
+        foreach ($sneakers as $sneaker) {
+            $colorEs = trim($sneaker->color_es ?? '');
+            $colorEn = trim($sneaker->color_en ?? '');
+
+            if ($colorEs === '' && $colorEn === '') {
+                continue;
+            }
+
+            $key = mb_strtolower($colorEs) . '||' . mb_strtolower($colorEn);
+            $canonical = $colorEn ?: $colorEs;
+
+            if (!$grupos->has($key)) {
+                $grupos->put($key, [
+                    'es' => $colorEs,
+                    'en' => $colorEn,
+                    'value' => $canonical,
+                    'sort' => mb_strtolower($canonical),
+                ]);
+            }
+        }
+
+        return $grupos->sortBy('sort')->map(function ($colores) use ($locale) {
+            return [
+                'value' => $colores['value'],
+                'label' => $locale === 'en' ? ($colores['en'] ?: $colores['es']) : ($colores['es'] ?: $colores['en']),
+            ];
+        })->values();
+    }
+
+    // Traducir un color al idioma actual
+    public static function translateColor($color)
+    {
+        $locale = substr(app()->getLocale(), 0, 2);
+
+        $sneaker = self::where(function ($query) use ($color) {
+            $query->where('color_es', $color)
+                ->orWhere('color_en', $color);
+        })->first();
+
+        if (!$sneaker) {
+            return $color;
+        }
+
+        if ($locale === 'es' && $sneaker->color_es) {
+            return $sneaker->color_es;
+        } elseif ($locale === 'en' && $sneaker->color_en) {
+            return $sneaker->color_en;
+        }
+
+        return $sneaker->color_es ?: $sneaker->color_en ?: $color;
     }
 
     // Obtener todas las tallas disponibles

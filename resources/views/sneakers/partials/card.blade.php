@@ -1,7 +1,6 @@
 <div class="sneaker-card">
     <div class="sneaker-image">
-        <img src="{{ $sneaker->image_url }}"
-            alt="{{ $sneaker->name }}" loading="lazy">
+        <img src="{{ $sneaker->image_url }}" alt="{{ $sneaker->name }}" loading="lazy">
     </div>
     <!-- Información del Producto -->
     <div class="sneaker-info">
@@ -15,8 +14,8 @@
             <span class="badge bg-secondary">{{ $sneaker->brand }}</span>
         </small>
         <!-- Color -->
-        @if($sneaker->color)
-            <small class="sneaker-meta"><strong>Color:</strong> {{ $sneaker->color }}</small>
+        @if($sneaker->translated_color)
+            <small class="sneaker-meta"><strong>Color:</strong> {{ $sneaker->translated_color }}</small>
         @endif
         <div class="sneaker-price">${{ number_format($sneaker->price, 2) }}</div>
     </div>

@@ -92,25 +92,44 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="color" class="form-label">{{ __('Color') }}</label>
-                    <input type="text" class="form-control @error('color') is-invalid @enderror" 
-                        id="color" name="color" value="{{ old('color', $sneaker->color) }}" 
+                    <label for="color_es" class="form-label">{{ __('Color (ES)') }}</label>
+                    <input type="text" class="form-control @error('color_es') is-invalid @enderror"
+                        id="color_es" name="color_es" value="{{ old('color_es', $sneaker->color_es) }}"
                         placeholder="{{ __('Ej: Negro, Rojo, etc.') }}">
-                    @error('color')
+                    @error('color_es')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="color_en" class="form-label">{{ __('Color (EN)') }}</label>
+                    <input type="text" class="form-control @error('color_en') is-invalid @enderror"
+                        id="color_en" name="color_en" value="{{ old('color_en', $sneaker->color_en) }}"
+                        placeholder="{{ __('Ej: Black, Red, etc.') }}">
+                    @error('color_en')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
             
-            <!-- Descripción de la zapatilla (campo opcional) -->
-            <div class="mb-3">
-                <label for="description" class="form-label">{{ __('Descripción') }}</label>
-                <textarea class="form-control @error('description') is-invalid @enderror" 
-                        id="description" name="description" rows="3" 
-                        placeholder="{{ __('Describe las características de la zapatilla...') }}">{{ old('description', $sneaker->description) }}</textarea>
-                @error('description')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label for="description_es" class="form-label">{{ __('Descripción (ES)') }}</label>
+                    <textarea class="form-control @error('description_es') is-invalid @enderror" 
+                        id="description_es" name="description_es" rows="3" 
+                        placeholder="{{ __('Describe las características de la zapatilla en español...') }}">{{ old('description_es', $sneaker->description_es) }}</textarea>
+                    @error('description_es')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="description_en" class="form-label">{{ __('Descripción (EN)') }}</label>
+                    <textarea class="form-control @error('description_en') is-invalid @enderror" 
+                        id="description_en" name="description_en" rows="3" 
+                        placeholder="{{ __('Describe the sneaker features in English...') }}">{{ old('description_en', $sneaker->description_en) }}</textarea>
+                    @error('description_en')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <!-- Selector de tallas disponibles (botones interactivos) -->

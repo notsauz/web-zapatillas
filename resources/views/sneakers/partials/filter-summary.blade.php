@@ -12,7 +12,7 @@
         $filterLabels[] = __('Marca') . ': ' . request('brand');
     }
     if (request('color')) {
-        $filterLabels[] = __('Color') . ': ' . \App\Models\Sneaker::translateLabel(request('color'));
+        $filterLabels[] = __('Color') . ': ' . request('color');
     }
     if (request('size')) {
         $filterLabels[] = __('Talla') . ': ' . request('size');

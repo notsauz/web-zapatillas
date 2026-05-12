@@ -29,7 +29,7 @@
                 <p>
                     <strong>{{ __('Categoría:') }}</strong> {{ __(ucfirst($sneaker->category)) }}
                 </p>
-                @if($sneaker->color)
+                @if($sneaker->translated_color)
                     <p>
                         <strong>{{ __('Color:') }}</strong> {{ $sneaker->translated_color }}
                     </p>
@@ -43,10 +43,10 @@
             </div>
 
             <!-- Descripción -->
-            @if($sneaker->description)
+            @if($sneaker->translated_description)
                 <div class="mb-4">
                     <h5>{{ __('Descripción') }}</h5>
-                    <p>{{ __($sneaker->description) }}</p>
+                    <p>{{ $sneaker->translated_description }}</p>
                 </div>
             @endif
 

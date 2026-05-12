@@ -10,6 +10,7 @@ class GestorCatalogo {
         this.iniciar();
         this.syncFormWithUrl();
         this.updateFilterSummaryDisplay();
+        this.updatePriceRangeUI();
         this.syncRedirectTargets(window.location.href);
     }
 
@@ -72,14 +73,20 @@ class GestorCatalogo {
         }
 
         // Sliders de precio
-        let sliderMin = document.getElementById("minRange");
+        let sliderMin = document.getElementById("minPriceRange");
         if (sliderMin) {
-            sliderMin.addEventListener("input", () => this.reiniciarYAplicarFiltros());
+            sliderMin.addEventListener("input", () => {
+                this.handleMinSliderInput();
+                this.reiniciarYAplicarFiltros();
+            });
         }
 
-        let sliderMax = document.getElementById("maxRange");
+        let sliderMax = document.getElementById("maxPriceRange");
         if (sliderMax) {
-            sliderMax.addEventListener("input", () => this.reiniciarYAplicarFiltros());
+            sliderMax.addEventListener("input", () => {
+                this.handleMaxSliderInput();
+                this.reiniciarYAplicarFiltros();
+            });
         }
     }
 
@@ -306,6 +313,7 @@ class GestorCatalogo {
         maxInput.value = maxValue;
         document.getElementById("minPriceLabel").textContent = minValue;
         document.getElementById("maxPriceLabel").textContent = maxValue;
+        this.updatePriceRangeUI();
     }
 
     handleMaxSliderInput() {
@@ -331,8 +339,11 @@ class GestorCatalogo {
         maxRange.setAttribute('min', minValue);
         minInput.value = minValue;
         maxInput.value = maxValue;
+        minRange.value = minValue;
+        maxRange.value = maxValue;
         document.getElementById("minPriceLabel").textContent = minValue;
         document.getElementById("maxPriceLabel").textContent = maxValue;
+        this.updatePriceRangeUI();
     }
 
     syncSliderWithInputs() {
@@ -374,6 +385,7 @@ class GestorCatalogo {
         maxRange.min = minValue;
         document.getElementById("minPriceLabel").textContent = minValue;
         document.getElementById("maxPriceLabel").textContent = maxValue;
+        this.updatePriceRangeUI();
     }
 
     normalizePriceSlider() {
@@ -410,6 +422,7 @@ class GestorCatalogo {
         maxInput.value = maxValue;
         document.getElementById("minPriceLabel").textContent = minValue;
         document.getElementById("maxPriceLabel").textContent = maxValue;
+        this.updatePriceRangeUI();
     }
 
     getPriceFilterValues() {
@@ -613,7 +626,7 @@ class GestorCatalogo {
         let maxPriceValue = params.get("max_price");
         if (maxPriceValue) {
             let maxPriceInput = document.querySelector('input[name="max_price"]');
-            if (maxPriceInput) maxPriceInput.value = maxPriceInput.value = maxPriceValue;
+            if (maxPriceInput) maxPriceInput.value = maxPriceValue;
         }
 
         // Sincronizar talla

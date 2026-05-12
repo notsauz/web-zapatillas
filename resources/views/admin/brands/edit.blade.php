@@ -71,16 +71,25 @@
                         @enderror
                     </div>
                 </div>
-
-                <!-- Descripción de la marca (campo opcional) -->
-                <div class="mb-3">
-                    <label for="description" class="form-label">{{ __('Descripción') }}</label>
-                    <textarea class="form-control @error('description') is-invalid @enderror" id="description"
-                        name="description" rows="4"
-                        placeholder="{{ __('Describe la marca, su historia, sus características...') }}">{{ old('description', $marca->description) }}</textarea>
-                    @error('description')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="description_es" class="form-label">{{ __('Descripción (ES)') }}</label>
+                        <textarea class="form-control @error('description_es') is-invalid @enderror" id="description_es"
+                            name="description_es" rows="4"
+                            placeholder="{{ __('Describe la marca en español...') }}">{{ old('description_es', $marca->description_es) }}</textarea>
+                        @error('description_es')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-6">
+                        <label for="description_en" class="form-label">{{ __('Descripción (EN)') }}</label>
+                        <textarea class="form-control @error('description_en') is-invalid @enderror" id="description_en"
+                            name="description_en" rows="4"
+                            placeholder="{{ __('Describe the brand in English...') }}">{{ old('description_en', $marca->description_en) }}</textarea>
+                        @error('description_en')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <!-- Botones de acción para enviar cambios o cancelar -->

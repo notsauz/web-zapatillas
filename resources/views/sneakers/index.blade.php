@@ -116,11 +116,11 @@
                                 @foreach($colores as $color)
                                     <div class="form-check">
                                         @php
-                                            $sanitizedColorId = preg_replace('/[^A-Za-z0-9_-]/', '_', $color);
+                                            $sanitizedColorId = preg_replace('/[^A-Za-z0-9_-]/', '_', $color['value']);
                                         @endphp
-                                        <input class="form-check-input" type="radio" name="color" id="color_{{ $sanitizedColorId }}" value="{{ $color }}" {{ request("color") == $color ? "checked" : "" }}>
+                                        <input class="form-check-input" type="radio" name="color" id="color_{{ $sanitizedColorId }}" value="{{ $color['value'] }}" {{ request("color") == $color['value'] ? "checked" : "" }}>
                                         <label class="form-check-label" for="color_{{ $sanitizedColorId }}">
-                                            {{ \App\Models\Sneaker::translateLabel($color) }}
+                                            {{ $color['label'] }}
                                         </label>
                                     </div>
                                 @endforeach
@@ -236,7 +236,7 @@
                                     <p class="text-muted mb-2 product-brand" style="font-size: 0.85rem;">
                                         <small><strong>Marca:</strong> {{ $sneaker->brand }}</small>
                                     </p>
-                                    @if($sneaker->color)
+                                    @if($sneaker->translated_color)
                                         <p class="text-muted mb-3 product-color" style="font-size: 0.85rem;">
                                             <small><strong>Color:</strong> {{ $sneaker->translated_color }}</small></p>
                                     @endif

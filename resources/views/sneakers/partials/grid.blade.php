@@ -72,7 +72,7 @@
                             <small><strong>{{ __('Marca:') }}</strong> {{ $sneaker->brand }}</small>
                         </p>
                         <!-- Color (si existe) -->
-                        @if($sneaker->color)
+                        @if($sneaker->translated_color)
                             <p class="text-muted mb-3 product-color" style="font-size: 0.85rem;">
                                 <small><strong>{{ __('Color:') }}</strong> {{ $sneaker->translated_color }}</small>
                             </p>
