@@ -55,24 +55,24 @@ class ProfileController extends Controller
                 Rule::unique("users")->ignore($usuario->id),
             ],
         ], [
-            "name.required" => "El nombre es obligatorio.",
-            "name.string" => "El nombre debe ser texto.",
-            "name.max" => "El nombre no puede exceder 255 caracteres.",
-            "email.required" => "El email es obligatorio.",
-            "email.email" => "El email debe ser válido.",
-            "email.unique" => "El correo electrónico ya está registrado.",
+            "name.required" => __("El nombre es obligatorio."),
+            "name.string" => __("El nombre debe ser texto."),
+            "name.max" => __("El nombre no puede exceder 255 caracteres."),
+            "email.required" => __("El email es obligatorio."),
+            "email.email" => __("El email debe ser válido."),
+            "email.unique" => __("El correo electrónico ya está registrado."),
         ]);
 
         // Si el email está verificado, no permitir cambios
         if ($usuario->email_verified_at && $datos["email"] !== $usuario->email) {
             return redirect()->route("profile.edit")
-                ->with("error", "No puedes cambiar tu email porque ya está verificado. Si necesitas cambiar tu email, contacta con soporte.");
+                ->with("error", __("No puedes cambiar tu email porque ya está verificado. Si necesitas cambiar tu email, contacta con soporte."));
         }
 
         $usuario->update($datos);
 
         return redirect()->route("profile.edit")
-            ->with("success", "Perfil actualizado correctamente.");
+            ->with("success", __("Perfil actualizado correctamente."));
     }
 
     // Cambiar contraseña del usuario con validación de la contraseña actual y mensajes personalizados
@@ -87,7 +87,7 @@ class ProfileController extends Controller
                 "required",
                 function ($atributo, $valor, $fallo) use ($usuario) {
                     if (!Hash::check($valor, $usuario->password)) {
-                        $fallo("La contraseña actual es incorrecta.");
+                        $fallo(__('La contraseña actual es incorrecta.'));
                     }
                 },
             ],
@@ -100,11 +100,11 @@ class ProfileController extends Controller
             ],
             "new_password_confirmation" => "required",
         ], [
-            "current_password.required" => "La contraseña actual es obligatoria.",
-            "new_password.required" => "La nueva contraseña es obligatoria.",
-            "new_password.min" => "La nueva contraseña debe tener al menos 8 caracteres.",
-            "new_password.confirmed" => "Las contraseñas nuevas no coinciden.",
-            "new_password.different" => "La nueva contraseña debe ser diferente a la actual.",
+            "current_password.required" => __("La contraseña actual es obligatoria."),
+            "new_password.required" => __("La nueva contraseña es obligatoria."),
+            "new_password.min" => __("La nueva contraseña debe tener al menos 8 caracteres."),
+            "new_password.confirmed" => __("Las contraseñas nuevas no coinciden."),
+            "new_password.different" => __("La nueva contraseña debe ser diferente a la actual."),
         ]);
 
         // Actualizar contraseña
@@ -119,7 +119,7 @@ class ProfileController extends Controller
 
         // Redirigir al login con mensaje de éxito
         return redirect()->route("login")
-            ->with("success", "Contraseña actualizada correctamente. Por favor inicia sesión de nuevo.");
+            ->with("success", __("Contraseña actualizada correctamente. Por favor inicia sesión de nuevo."));
     }
 
     // Enviar email de verificación si el email no está verificado
@@ -131,7 +131,7 @@ class ProfileController extends Controller
         // Si el email ya está verificado
         if ($usuario->email_verified_at) {
             return redirect()->route("profile.edit")
-                ->with("info", "Tu correo electrónico ya está verificado.");
+                ->with("info", __("Tu correo electrónico ya está verificado."));
         }
 
         // Enviar notificación
@@ -139,7 +139,7 @@ class ProfileController extends Controller
 
         // Redirigir con mensaje de éxito
         return redirect()->route("profile.edit")
-            ->with("success", "Email de verificación enviado a " . $usuario->email . ". Revisa tu bandeja de entrada.");
+            ->with("success", __("Email de verificación enviado a :email. Revisa tu bandeja de entrada.", ["email" => $usuario->email]));
     }
 
     // Verificar email (este método se llamará desde el enlace en el email de verificación)
@@ -160,7 +160,7 @@ class ProfileController extends Controller
             if ($usuario->email_verified_at) {
                 Log::info("Email ya verificado");
                 return redirect()->route("profile.edit")
-                    ->with("info", "Tu correo electrónico ya estaba verificado.");
+                    ->with("info", __("Tu correo electrónico ya estaba verificado."));
             }
 
             // Calcular el hash esperado
@@ -176,7 +176,7 @@ class ProfileController extends Controller
             if ($hash !== $hashEsperado) {
                 Log::error("Hash no coincide");
                 return redirect()->route("profile.edit")
-                    ->with("error", "El enlace de verificación es inválido o ha expirado.");
+                    ->with("error", __("El enlace de verificación es inválido o ha expirado."));
             }
 
             // Marcar como verificado
@@ -193,7 +193,7 @@ class ProfileController extends Controller
 
             // Redirigir con mensaje de éxito
             return redirect()->route("profile.edit")
-                ->with("success", "Tu correo electrónico ha sido verificado correctamente.");
+                ->with("success", __("Tu correo electrónico ha sido verificado correctamente."));
 
             // Manejo de excepciones
         } catch (\Exception $e) {
@@ -203,7 +203,7 @@ class ProfileController extends Controller
             ]);
             // Redirigir con mensaje de error
             return redirect()->route("profile.edit")
-                ->with("error", "Error al verificar el correo: " . $e->getMessage());
+                ->with("error", __("Error al verificar el correo: :error", ["error" => $e->getMessage()]));
         }
     }
 
@@ -217,12 +217,12 @@ class ProfileController extends Controller
                 "required",
                 function ($atributo, $valor, $fallo) use ($usuario) {
                     if (!Hash::check($valor, $usuario->password)) {
-                        $fallo("La contraseña es incorrecta.");
+                        $fallo(__('La contraseña es incorrecta.'));
                     }
                 },
             ],
         ], [
-            "password.required" => "Debes ingresar tu contraseña para continuar.",
+            "password.required" => __("Debes ingresar tu contraseña para continuar."),
         ]);
 
         // Guardar el ID del usuario en sesión para la segunda confirmación
@@ -230,7 +230,7 @@ class ProfileController extends Controller
 
         // Redirigir con mensaje de advertencia para confirmar eliminación
         return redirect()->route("profile.edit")
-            ->with("warning", "Confirmación pendiente: Haz clic en \"CONFIRMAR ELIMINACIÓN\" para borrar permanentemente tu cuenta.");
+            ->with("warning", __("Confirmación pendiente: Haz clic en \"CONFIRMAR ELIMINACIÓN\" para borrar permanentemente tu cuenta."));
     }
 
     // Confirmar eliminación de cuenta (segunda confirmación)
@@ -239,7 +239,7 @@ class ProfileController extends Controller
         // Validar que el usuario confirmó la contraseña
         if (!session("delete_account_confirmed") || session("delete_account_id") !== auth()->id()) {
             return redirect()->route("profile.edit")
-                ->with("error", "Debes completar la confirmación de contraseña primero.");
+                ->with("error", __("Debes completar la confirmación de contraseña primero."));
         }
 
         // Obtener el usuario autenticado
@@ -260,7 +260,7 @@ class ProfileController extends Controller
 
         // Redirigir al login con mensaje de éxito
         return redirect()->route("login")
-            ->with("success", "Tu cuenta ha sido eliminada permanentemente. Lamentamos verte partir.");
+            ->with("success", __("Tu cuenta ha sido eliminada permanentemente. Lamentamos verte partir."));
     }
 
     // Agregar una zapatilla a favoritos
@@ -276,18 +276,18 @@ class ProfileController extends Controller
 
         if ($usuario->favoriteSneakers()->where("sneaker_id", $zapatilla->id)->exists()) {
             if ($peticion->ajax() || $peticion->wantsJson()) {
-                return response()->json(["message" => "Esta zapatilla ya está en tus favoritos."], 200);
+                return response()->json(["message" => __("Esta zapatilla ya está en tus favoritos.")], 200);
             }
-            return redirect()->back()->with("info", "Esta zapatilla ya está en tus favoritos.");
+            return redirect()->back()->with("info", __("Esta zapatilla ya está en tus favoritos."));
         }
 
         $usuario->favoriteSneakers()->attach($zapatilla->id);
 
         if ($peticion->ajax() || $peticion->wantsJson()) {
-            return response()->json(["message" => "Zapatilla agregada a favoritos."], 200);
+            return response()->json(["message" => __("Zapatilla agregada a favoritos.")], 200);
         }
 
-        return redirect()->back()->with("success", "Zapatilla agregada a favoritos.");
+        return redirect()->back()->with("success", __("Zapatilla agregada a favoritos."));
     }
 
     // Eliminar zapatilla de favoritos
@@ -304,9 +304,9 @@ class ProfileController extends Controller
         $usuario->favoriteSneakers()->detach($zapatilla->id);
 
         if ($peticion->ajax() || $peticion->wantsJson()) {
-            return response()->json(["message" => "Zapatilla eliminada de favoritos."], 200);
+            return response()->json(["message" => __("Zapatilla eliminada de favoritos.")], 200);
         }
 
-        return redirect()->back()->with("success", "Zapatilla eliminada de favoritos.");
+        return redirect()->back()->with("success", __("Zapatilla eliminada de favoritos."));
     }
 }
